@@ -32,3 +32,15 @@ This file tracks significant changes to the project setup that are not easily re
     dotnet sln add code-writer
     ```
 
+6. Created new xUnit test project (tests for Delphi Source Code Writer).
+
+    ```powershell
+    dotnet new xunit --name code-writer.tests --framework netcoreapp3.1 --output code-writer.tests
+    ```
+
+7. Added `code-writer.tests` project to `delphi-tools` solution.
+
+    ```powershell
+    dotnet sln add code-writer.tests
+    ```
+

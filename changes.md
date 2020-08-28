@@ -1,0 +1,34 @@
+# About this file
+This file tracks significant changes to the project setup that are not easily recognizable from file diffs (e.g., project creation wizard operations).
+
+# Changes
+1. Created a *[global.json file](https://docs.microsoft.com/en-us/dotnet/core/tools/global-json?tabs=netcore3x)* to fix .NET Core SDK version.
+
+    ```powershell
+    dotnet new globaljson --sdk-version $(dotnet --version)
+    ```
+
+2. Created a *[nuget.config file](https://docs.microsoft.com/en-us/nuget/reference/nuget-config-file)* to fix package sources.
+
+    ```powershell
+    dotnet new nugetconfig
+    ```
+
+3. Created new .NET Core project for a Class library (Delphi Source Code Writer).
+
+    ```powershell
+    dotnet new classlib --language C`# --name code-writer --framework netcoreapp3.1 --output code-writer
+    ```
+
+4. Created new .NET Core solution (Delphi Tools).
+
+    ```powershell
+    dotnet new sln --name delphi-tools
+    ```
+
+5. Added `code-writer` project to `delphi-tools` solution.
+
+    ```powershell
+    dotnet sln add code-writer
+    ```
+

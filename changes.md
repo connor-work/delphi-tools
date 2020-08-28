@@ -44,3 +44,9 @@ This file tracks significant changes to the project setup that are not easily re
     dotnet sln add code-writer.tests
     ```
 
+8. Added SonarAnalyzer for static code analysis to `code-writer` project
+
+    ```powershell
+    dotnet add code-writer package SonarAnalyzer.CSharp --version 8.12.0.21095
+    ```
+

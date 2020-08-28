@@ -50,3 +50,15 @@ This file tracks significant changes to the project setup that are not easily re
     dotnet add code-writer package SonarAnalyzer.CSharp --version 8.12.0.21095
     ```
 
+9. Created a *[manifest file](https://docs.microsoft.com/de-de/dotnet/core/tools/local-tools-how-to-use)* for .NET Core local tools.
+
+    ```powershell
+    dotnet new tool-manifest
+    ```
+
+9. Installed [`dotnet-grpc`](https://docs.microsoft.com/de-de/aspnet/core/grpc/dotnet-grpc?view=aspnetcore-3.1) tool to manage protobuf references.
+
+    ```powershell
+    dotnet tool install dotnet-grpc
+    ```
+

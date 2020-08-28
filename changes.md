@@ -44,7 +44,7 @@ This file tracks significant changes to the project setup that are not easily re
     dotnet sln add code-writer.tests
     ```
 
-8. Added SonarAnalyzer for static code analysis to `code-writer` project
+8. Added SonarAnalyzer for static code analysis to `code-writer` project. Further package additions do not need to be tracked here.
 
     ```powershell
     dotnet add code-writer package SonarAnalyzer.CSharp --version 8.12.0.21095
@@ -60,5 +60,13 @@ This file tracks significant changes to the project setup that are not easily re
 
     ```powershell
     dotnet tool install dotnet-grpc
+    ```
+
+10. Added first protobuf reference using `dotnet-grpc` to the `code-writer` project. Further reference additions do not need to be tracked here.
+Note that this tool silently fails when invoked from the top level with `--project` reference (we consider this a bug).
+
+    ```powershell
+    cd code-writer
+    dotnet grpc add-file --services None --access Public ..\proto\work\connor\delphi\source-code.proto
     ```
 

@@ -19,9 +19,9 @@ option csharp_namespace = "Work.Connor.Delphi";
   * See [Program Organization](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Language_Overview#Program_Organization).
   * See [Unit Structure and Syntax](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_Structure_and_Syntax). */
 message Unit {
-  UnitName heading = 1; /** *Unit heading* that specifies the unit's name.
-                          * See [The Unit Heading](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Unit_Heading).
-                          * Required. */
+  UnitIdentifier heading = 1; /** *Unit heading* that specifies the unit's name.
+                                * See [The Unit Heading](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Unit_Heading).
+                                * Required. */
   // TODO interface and implementation section
 }
 
@@ -30,7 +30,7 @@ message Unit {
   * > The uses clause must either refer to a module by its fully qualified name (i.e. including the full namespace specification), or by its generic name.
   * Unit scope names are not supported by this schema.
   * See [Using Namespaces](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Using_Namespaces_with_Delphi#Using_Namespaces). */
-message UnitName {
+message UnitIdentifier {
   string unit               = 1; /** *Unit name* (*unqualified name*) of the unit. Required. */
   repeated string namespace = 2; /** Full sequence of the *namespace parts* of the *full namespace specification* of the unit, without the dots.
                                    * If empty, the identifier is the generic name of the unit. */

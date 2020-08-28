@@ -1,0 +1,37 @@
+/** Schema for simple Delphi source code files, as described in the [Delphi Language Reference](http://docwiki.embarcadero.com/RADStudio/Rio/en/Delphi_Language_Reference).
+  * Some Delphi features may currently be excluded from this schema (documented as "not supported"), if they are not required for any of the following use cases:
+  * 1. The generation of schema messages by the Protobuf Delphi Compiler Plug-in `protoc-gen-delphi` (`Work.Connor.Delphi.Protobuf.ProtocGenDelphi`)
+  * 2. The generation of source code text from schema messages by the Delphi Source Code Writer (`Work.Connor.Delphi.CodeWriter`). */
+
+syntax = "proto3";
+
+package work.connor.delphi;
+
+option csharp_namespace = "Work.Connor.Delphi";
+
+/** Delphi program *unit* containing application source code.
+  * > Delphi programs are usually divided into source-code modules called units.
+  *
+  * <!-- blockquote_separator -->
+  * > A unit consists of types (including classes), constants, variables, and routines (functions and procedures).
+  * > Each unit is defined in its own source (`.pas`) file.
+  * The optional *initialization section* and *finalization section* are not supported by this schema.
+  * See [Program Organization](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Language_Overview#Program_Organization).
+  * See [Unit Structure and Syntax](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_Structure_and_Syntax). */
+message Unit {
+  UnitName heading = 1; /** *Unit heading* that specifies the unit's name.
+                          * See [The Unit Heading](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Unit_Heading).
+                          * Required. */
+  // TODO interface and implementation section
+}
+
+/** Delphi identifier for a unit, used within a unit heading or a uses clause.
+  * This is either the module's *fully qualified name* or its *generic name*.
+  * > The uses clause must either refer to a module by its fully qualified name (i.e. including the full namespace specification), or by its generic name.
+  * Unit scope names are not supported by this schema.
+  * See [Using Namespaces](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Using_Namespaces_with_Delphi#Using_Namespaces). */
+message UnitName {
+  string unit               = 1; /** *Unit name* (*unqualified name*) of the unit. Required. */
+  repeated string namespace = 2; /** Full sequence of the *namespace parts* of the *full namespace specification* of the unit, without the dots.
+                                   * If empty, the identifier is the generic name of the unit. */
+}

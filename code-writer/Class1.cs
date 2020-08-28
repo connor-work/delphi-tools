@@ -1,4 +1,4 @@
-﻿namespace code_writer
+﻿namespace Work.Connor.Delphi.CodeWriter
 {
     public class Class1
     {

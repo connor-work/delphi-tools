@@ -70,3 +70,9 @@ Note that this tool silently fails when invoked from the top level with `--proje
     dotnet grpc add-file --services None --access Public ..\proto\work\connor\delphi\source-code.proto
     ```
 
+11. Added `code-writer` project as a dependency of its test project `code-writer.tests`.
+
+    ```powershell
+    dotnet grpc add-file --services None --access Public ..\proto\work\connor\delphi\source-code.proto
+    ```
+

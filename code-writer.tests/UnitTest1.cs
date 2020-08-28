@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace code_writer.tests
+namespace Work.Connor.Delphi.CodeWriter.Tests
 {
     public class UnitTest1
     {

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>code_writer</RootNamespace>
+    <RootNamespace>Work.Connor.Delphi.CodeWriter</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

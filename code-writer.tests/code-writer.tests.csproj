@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>code_writer.tests</RootNamespace>
+    <RootNamespace>Work.Connor.Delphi.CodeWriter.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>

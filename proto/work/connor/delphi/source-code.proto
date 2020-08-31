@@ -22,7 +22,10 @@ message Unit {
   UnitIdentifier heading = 1; /** *Unit heading* that specifies the unit's name.
                                 * See [The Unit Heading](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Unit_Heading).
                                 * Required. */
-  // TODO interface and implementation section
+  Interface interface    = 2; /** *Interface section* of a unit that declares entities that are available to clients.
+                                * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section).
+                                * Required. */
+  // TODO implementation section
 }
 
 /** Delphi identifier for a unit, used within a unit heading or a uses clause.
@@ -34,4 +37,27 @@ message UnitIdentifier {
   string unit               = 1; /** *Unit name* (*unqualified name*) of the unit. Required. */
   repeated string namespace = 2; /** Full sequence of the *namespace parts* of the *full namespace specification* of the unit, without the dots.
                                    * If empty, the identifier is the generic name of the unit. */
+}
+
+/** *Interface section* of a unit.
+  * > The interface section declares constants, types, variables, procedures, and functions that are available to clients.
+  * > That is, to other units or programs that wish to use elements from this unit.
+  * > These entities are called public because code in other units can access them as if they were declared in the unit itself.
+  * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section). */
+message Interface {
+  repeated UnitReference usesClause = 1; /** List of unit references (*uses clause*).
+                                           * > The interface section can include its own uses clause...
+                                           * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
+  // TODO declarations
+}
+
+/** Reference to a unit (element of a *uses clause*).
+  * > A uses clause lists units used by the program, library, or unit in which the clause appears.
+  * > Use the keyword in after a unit name when you need to specify the unit's source file.
+  * Use of the keyword `in` for source file specification is not supported by this schema.
+  * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
+message UnitReference {
+  UnitIdentifier unit = 1; /** Identifier of the referenced unit.
+                             * > A uses clause consists of the reserved word `uses`, followed by one or more comma delimited unit names...
+                             * Required. */
 }

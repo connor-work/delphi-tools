@@ -50,19 +50,19 @@ This file tracks significant changes to the project setup that are not easily re
     dotnet add code-writer package SonarAnalyzer.CSharp --version 8.12.0.21095
     ```
 
-9. Created a *[manifest file](https://docs.microsoft.com/de-de/dotnet/core/tools/local-tools-how-to-use)* for .NET Core local tools.
+9. Created a *[manifest file](https://docs.microsoft.com/en-us/dotnet/core/tools/local-tools-how-to-use)* for .NET Core local tools.
 
     ```powershell
     dotnet new tool-manifest
     ```
 
-9. Installed [`dotnet-grpc`](https://docs.microsoft.com/de-de/aspnet/core/grpc/dotnet-grpc?view=aspnetcore-3.1) tool to manage protobuf references.
+10. Installed [`dotnet-grpc`](https://docs.microsoft.com/en-us/aspnet/core/grpc/dotnet-grpc?view=aspnetcore-3.1) tool to manage protobuf references.
 
     ```powershell
     dotnet tool install dotnet-grpc
     ```
 
-10. Added first protobuf reference using `dotnet-grpc` to the `code-writer` project. Further reference additions do not need to be tracked here.
+11. Added first protobuf reference using `dotnet-grpc` to the `code-writer` project. Further reference additions do not need to be tracked here.
 Note that this tool silently fails when invoked from the top level with `--project` reference (we consider this a bug).
 
     ```powershell
@@ -70,9 +70,9 @@ Note that this tool silently fails when invoked from the top level with `--proje
     dotnet grpc add-file --services None --access Public ..\proto\work\connor\delphi\source-code.proto
     ```
 
-11. Added `code-writer` project as a dependency of its test project `code-writer.tests`.
+12. Added `code-writer` project as a dependency of its test project `code-writer.tests`.
 
     ```powershell
-    dotnet grpc add-file --services None --access Public ..\proto\work\connor\delphi\source-code.proto
+    dotnet add code-writer.tests reference code-writer
     ```
 

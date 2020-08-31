@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
@@ -73,6 +74,16 @@ namespace Work.Connor.Delphi.CodeWriter
         }
 
         /// <summary>
+        /// Appends the default line terminator.
+        /// </summary>
+        /// <returns><c>this</c></returns>
+        private DelphiSourceCodeWriter AppendLine()
+        {
+            codeBuilder.AppendLine();
+            return this;
+        }
+
+        /// <summary>
         /// Appends arbitrary Delphi source code and applies indentation.
         /// </summary>
         /// <param name="lines">Delphi source code string, potentially multi-line</param>
@@ -92,10 +103,48 @@ namespace Work.Connor.Delphi.CodeWriter
 $@"unit {unit.Heading.ToSourceCode()};
 "
             )
+            .Append(unit.Interface)
             .AppendDelphiCode(
 $@"
 end.
 "
             );
+
+        /// <summary>
+        /// Appends Delphi source code for an interface section of a unit.
+        /// </summary>
+        /// <param name="interface">The interface section</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(Interface @interface) => AppendDelphiCode(
+ $@"
+interface
+"
+            ).AppendUsesClause(@interface.UsesClause);
+
+        /// <summary>
+        /// Appends Delphi source code for a uses clause.
+        /// </summary>
+        /// <param name="interface">List of unit references in the uses clause</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter AppendUsesClause(IList<UnitReference> references)
+        {
+            // No clause required without references
+            if (references.Count == 0) return this;
+            AppendDelphiCode(
+ $@"
+uses"
+            );
+            bool first = true;
+            foreach (UnitReference reference in references)
+            {
+                if (!first) Append(",");
+                first = false;
+                AppendDelphiCode(
+$@"
+{reference.Unit.ToSourceCode()}"
+                , 1);
+            }
+            return Append(";").AppendLine();
+        }
     }
 }

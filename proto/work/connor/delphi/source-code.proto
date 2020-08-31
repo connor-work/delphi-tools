@@ -19,13 +19,15 @@ option csharp_namespace = "Work.Connor.Delphi";
   * See [Program Organization](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Language_Overview#Program_Organization).
   * See [Unit Structure and Syntax](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_Structure_and_Syntax). */
 message Unit {
-  UnitIdentifier heading = 1; /** *Unit heading* that specifies the unit's name.
-                                * See [The Unit Heading](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Unit_Heading).
-                                * Required. */
-  Interface interface    = 2; /** *Interface section* of a unit that declares entities that are available to clients.
-                                * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section).
-                                * Required. */
-  // TODO implementation section
+  UnitIdentifier heading        = 1; /** *Unit heading* that specifies the unit's name.
+                                       * See [The Unit Heading](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Unit_Heading).
+                                       * Required. */
+  Interface interface           = 2; /** *Interface section* of a unit that declares entities that are available to clients.
+                                       * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section).
+                                       * Required. */
+  Implementation implementation = 3; /** *Implementation section* of a unit that defines procedures and functions declared in the interface section.
+                                       * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Rio/en/Programs_and_Units_(Delphi)#The_Implementation_Section).
+                                       *  Required. */
 }
 
 /** Delphi identifier for a unit, used within a unit heading or a uses clause.

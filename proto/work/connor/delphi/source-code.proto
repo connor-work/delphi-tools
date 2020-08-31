@@ -61,3 +61,16 @@ message UnitReference {
                              * > A uses clause consists of the reserved word `uses`, followed by one or more comma delimited unit names...
                              * Required. */
 }
+
+
+/** *Implementation section* of a unit.
+  * > The implementation section defines procedures and functions that are declared in the interface section.
+  * > ... the implementation section can declare constants, types (including classes), variables, procedures, and functions that are private to the unit.
+  * Private declarations are not supported by this schema.
+  * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section). */
+message Implementation {
+  repeated UnitReference usesClause               = 1; /** List of unit references (*uses clause*).
+                                                         * > The implementation section can include its own uses clause...
+                                                         * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
+  // TODO declarations
+}

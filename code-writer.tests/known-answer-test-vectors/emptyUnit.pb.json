@@ -3,5 +3,6 @@
         "unit": "UnitX",
         "namespace": [ "Space1", "Space2" ]
     },
-    "interface": {}
+    "interface": {},
+    "implementation": {}
 }

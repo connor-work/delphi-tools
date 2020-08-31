@@ -33,6 +33,11 @@ namespace Work.Connor.Delphi.CodeWriter
     public class DelphiSourceCodeWriter
     {
         /// <summary>
+        /// Default file name extension (without leading dot) for Delphi unit source files
+        /// </summary>
+        public static readonly string unitSourceFileExtension = "pas";
+
+        /// <summary>
         /// String used to indent source code lines by one level
         /// </summary>
         private static readonly string singleIndent = new String(' ', 2);

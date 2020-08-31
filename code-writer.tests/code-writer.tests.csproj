@@ -18,4 +18,9 @@
     <ProjectReference Include="..\code-writer\code-writer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="known-answer-test-vectors\*.pb.json" />
+    <EmbeddedResource Include="known-answer-test-vectors\*.pas" />
+  </ItemGroup>
+
 </Project>

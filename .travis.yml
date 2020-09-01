@@ -22,6 +22,7 @@ before_install:
 
 before_script:
     - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew cask install powershell; fi
+    - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install powershell-core; fi
 
 script:
     - dotnet test

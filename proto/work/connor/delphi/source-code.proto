@@ -49,10 +49,10 @@ message UnitIdentifier {
   * > These entities are called public because code in other units can access them as if they were declared in the unit itself.
   * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section). */
 message Interface {
-  repeated UnitReference usesClause = 1; /** List of unit references (*uses clause*).
-                                           * > The interface section can include its own uses clause...
-                                           * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
-  // TODO declarations
+  repeated UnitReference usesClause          = 1; /** List of unit references (*uses clause*).
+                                                    * > The interface section can include its own uses clause...
+                                                    * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
+  repeated InterfaceDeclaration declarations = 2; /** Declarations that are available to clients */
 }
 
 /** Reference to a unit (element of a *uses clause*).
@@ -79,4 +79,26 @@ message Implementation {
                                                          * > The implementation section can include its own uses clause...
                                                          * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
   // TODO declarations
+}
+
+/** Declaration within the interface section of a unit, that is available to clients.
+  * > The interface section declares constants, types, variables, procedures, and functions ...
+  * Declarations of constants, variables, procedures, functions and types other than classes and enumerated types are not supported by this schema.
+  * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section) */
+message InterfaceDeclaration {
+  oneof declaration {
+    ClassDeclaration classDeclaration = 1; /** Declaration of a class */
+    // TODO enums
+  } /** Specific declaration (polymorphic). Required. */
+}
+
+/** Declaration of a *class* (also called *class type*).
+  * > A class, or class type, defines a structure consisting of fields, methods, and properties.
+  * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)) */
+message ClassDeclaration {
+  string name  = 1; /** Name of the class (*className*). Required (non-empty). */
+  // TODO ancestor  
+  // TODO nested types
+  // TODO nested consts
+  // TODO members
 }

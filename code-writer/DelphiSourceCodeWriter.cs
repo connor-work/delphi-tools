@@ -94,6 +94,8 @@ namespace Work.Connor.Delphi.CodeWriter
             Indent(level) + "$&" /* is prefixed with indentation */,
             RegexOptions.Multiline));
 
+#pragma warning disable S4136 // Method overloads should be grouped together -> "Append* method order reflects order in protobuf schema here
+
         /// <summary>
         /// Appends Delphi source code defining a unit.
         /// </summary>
@@ -104,6 +106,7 @@ $@"unit {unit.Heading.ToSourceCode()};
 "
             )
             .Append(unit.Interface)
+            .Append(unit.Implementation)
             .AppendDelphiCode(
 $@"
 end.
@@ -146,5 +149,18 @@ $@"
             }
             return Append(";").AppendLine();
         }
+
+        /// <summary>
+        /// Appends Delphi source code for an implementation section of a unit.
+        /// </summary>
+        /// <param name="interface">The implementation section</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(Implementation implementation) => AppendDelphiCode(
+ $@"
+implementation
+"
+            ).AppendUsesClause(implementation.UsesClause);
     }
 }
+
+#pragma warning restore S4136 // Method overloads should be grouped together

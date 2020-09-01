@@ -1,11 +1,8 @@
 ﻿using Google.Protobuf;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Xunit;
 
 namespace Work.Connor.Delphi.CodeWriter.Tests
@@ -16,7 +13,7 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
     public class KnownAnswerTest
     {
         /// <summary>
-        /// Formatter settings for encoding protobuf messages as JSON for test data. Can be used when creating new test files.
+        /// Formatter settings for encoding protobuf messages as JSON for test data. Can be used when creating new test vectors.
         /// </summary>
         public static readonly JsonFormatter.Settings protobufJsonFormatSettings = JsonFormatter.Settings.Default.WithFormatDefaultValues(false).WithFormatEnumsAsIntegers(false);
 
@@ -26,7 +23,7 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         public static readonly JsonParser.Settings protobufJsonParseSettings = JsonParser.Settings.Default.WithIgnoreUnknownFields(false);
 
         /// <summary>
-        /// File name extension for JSON-encoded protobuf messages in test data
+        /// File name extension (without leading dot) for JSON-encoded protobuf messages in test data
         /// </summary>
         public static readonly string protobufJsonFileExtension = "pb.json";
 
@@ -47,7 +44,6 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         {
             JsonParser jsonParser = new JsonParser(protobufJsonParseSettings);
             Assembly assembly = Assembly.GetExecutingAssembly();
-            string[] names = assembly.GetManifestResourceNames();
             // Resources contain pairs of JSON-encoded Unit messages and expected unit source files
             foreach (string sourceCodeFileName in assembly.GetManifestResourceNames().Where(name => name.EndsWith(DelphiSourceCodeWriter.unitSourceFileExtension)))
             {

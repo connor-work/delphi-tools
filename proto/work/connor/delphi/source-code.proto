@@ -43,6 +43,8 @@ message UnitIdentifier {
 
 /** *Interface section* of a unit.
   * > The interface section declares constants, types, variables, procedures, and functions that are available to clients.
+  * 
+  * <!-- blockquote_separator -->
   * > That is, to other units or programs that wish to use elements from this unit.
   * > These entities are called public because code in other units can access them as if they were declared in the unit itself.
   * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section). */
@@ -67,6 +69,8 @@ message UnitReference {
 
 /** *Implementation section* of a unit.
   * > The implementation section defines procedures and functions that are declared in the interface section.
+  * 
+  * <!-- blockquote_separator -->
   * > ... the implementation section can declare constants, types (including classes), variables, procedures, and functions that are private to the unit.
   * Private declarations are not supported by this schema.
   * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section). */

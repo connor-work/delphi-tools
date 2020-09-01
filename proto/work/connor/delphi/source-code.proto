@@ -26,7 +26,7 @@ message Unit {
                                        * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section).
                                        * Required. */
   Implementation implementation = 3; /** *Implementation section* of a unit that defines procedures and functions declared in the interface section.
-                                       * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Rio/en/Programs_and_Units_(Delphi)#The_Implementation_Section).
+                                       * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section).
                                        *  Required. */
 }
 
@@ -65,7 +65,6 @@ message UnitReference {
                              * > A uses clause consists of the reserved word `uses`, followed by one or more comma delimited unit names...
                              * Required. */
 }
-
 
 /** *Implementation section* of a unit.
   * > The implementation section defines procedures and functions that are declared in the interface section.

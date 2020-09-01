@@ -76,3 +76,9 @@ Note that this tool silently fails when invoked from the top level with `--proje
     dotnet add code-writer.tests reference code-writer
     ```
 
+13. Upgraded fixed .NET Core SDK version.
+
+    ```powershell
+    dotnet new globaljson --sdk-version $(($(dotnet --list-sdks | tail -1) -split ' ')[0]) --force
+    ```
+

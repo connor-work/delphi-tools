@@ -1,0 +1,118 @@
+/** Copyright 2020 Connor Roehricht (connor.work)
+  * Copyright 2020 Sotax AG
+  * 
+  * Licensed under the Apache License, Version 2.0 (the "License");
+  * you may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at
+  * 
+  *     http://www.apache.org/licenses/LICENSE-2.0
+  * 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License. */
+
+/** Schema for simple Delphi source code files, as described in the [Delphi Language Reference](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Delphi_Language_Reference).
+  * Some Delphi features may currently be excluded from this schema (documented as "not supported"), if they are not required for any of the following use cases:
+  * 1. The generation of schema messages by the Protobuf Delphi Compiler Plug-in `protoc-gen-delphi` (`Work.Connor.Delphi.Protobuf.ProtocGenDelphi`)
+  * 2. The generation of source code text from schema messages by the Delphi Source Code Writer (`Work.Connor.Delphi.CodeWriter`). */
+
+syntax = "proto3";
+
+package work.connor.delphi;
+
+option csharp_namespace = "Work.Connor.Delphi";
+
+/** Delphi program *unit* containing application source code.
+  * > Delphi programs are usually divided into source-code modules called units.
+  *
+  * <!-- blockquote_separator -->
+  * > A unit consists of types (including classes), constants, variables, and routines (functions and procedures).
+  * > Each unit is defined in its own source (`.pas`) file.
+  * The optional *initialization section* and *finalization section* are not supported by this schema.
+  * See [Program Organization](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Language_Overview#Program_Organization).
+  * See [Unit Structure and Syntax](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_Structure_and_Syntax). */
+message Unit {
+  UnitIdentifier heading        = 1; /** *Unit heading* that specifies the unit's name.
+                                       * See [The Unit Heading](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Unit_Heading).
+                                       * Required. */
+  Interface interface           = 2; /** *Interface section* of a unit that declares entities that are available to clients.
+                                       * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section).
+                                       * Required. */
+  Implementation implementation = 3; /** *Implementation section* of a unit that defines procedures and functions declared in the interface section.
+                                       * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section).
+                                       *  Required. */
+}
+
+/** Delphi identifier for a unit, used within a unit heading or a uses clause.
+  * This is either the module's *fully qualified name* or its *generic name*.
+  * > The uses clause must either refer to a module by its fully qualified name (i.e. including the full namespace specification), or by its generic name.
+  * Unit scope names are not supported by this schema.
+  * See [Using Namespaces](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Using_Namespaces_with_Delphi#Using_Namespaces). */
+message UnitIdentifier {
+  string unit               = 1; /** *Unit name* (*unqualified name*) of the unit. Required. */
+  repeated string namespace = 2; /** Full sequence of the *namespace parts* of the *full namespace specification* of the unit, without the dots.
+                                   * If empty, the identifier is the generic name of the unit. */
+}
+
+/** *Interface section* of a unit.
+  * > The interface section declares constants, types, variables, procedures, and functions that are available to clients.
+  * 
+  * <!-- blockquote_separator -->
+  * > That is, to other units or programs that wish to use elements from this unit.
+  * > These entities are called public because code in other units can access them as if they were declared in the unit itself.
+  * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section). */
+message Interface {
+  repeated UnitReference usesClause          = 1; /** List of unit references (*uses clause*).
+                                                    * > The interface section can include its own uses clause...
+                                                    * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
+  repeated InterfaceDeclaration declarations = 2; /** Declarations that are available to clients */
+}
+
+/** Reference to a unit (element of a *uses clause*).
+  * > A uses clause lists units used by the program, library, or unit in which the clause appears.
+  * > Use the keyword in after a unit name when you need to specify the unit's source file.
+  * Use of the keyword `in` for source file specification is not supported by this schema.
+  * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
+message UnitReference {
+  UnitIdentifier unit = 1; /** Identifier of the referenced unit.
+                             * > A uses clause consists of the reserved word `uses`, followed by one or more comma delimited unit names...
+                             * Required. */
+}
+
+/** *Implementation section* of a unit.
+  * > The implementation section defines procedures and functions that are declared in the interface section.
+  * 
+  * <!-- blockquote_separator -->
+  * > ... the implementation section can declare constants, types (including classes), variables, procedures, and functions that are private to the unit.
+  * Private declarations are not supported by this schema.
+  * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section). */
+message Implementation {
+  repeated UnitReference usesClause               = 1; /** List of unit references (*uses clause*).
+                                                         * > The implementation section can include its own uses clause...
+                                                         * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
+  // TODO declarations
+}
+
+/** Declaration within the interface section of a unit, that is available to clients.
+  * > The interface section declares constants, types, variables, procedures, and functions ...
+  * Declarations of constants, variables, procedures, functions and types other than classes and enumerated types are not supported by this schema.
+  * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section) */
+message InterfaceDeclaration {
+  oneof declaration {
+    ClassDeclaration classDeclaration = 1; /** Declaration of a class */
+    // TODO enums
+  } /** Specific declaration (polymorphic). Required. */
+}
+
+/** Declaration of a *class* (also called *class type*).
+  * > A class, or class type, defines a structure consisting of fields, methods, and properties.
+  * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)) */
+message ClassDeclaration {
+  string name  = 1; /** Name of the class (*className*). Required (non-empty). */
+  // TODO ancestor  
+  // TODO nested types
+  // TODO nested consts
+  // TODO members
+}

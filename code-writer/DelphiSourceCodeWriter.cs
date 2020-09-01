@@ -118,11 +118,16 @@ end.
         /// </summary>
         /// <param name="interface">The interface section</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(Interface @interface) => AppendDelphiCode(
- $@"
+        public DelphiSourceCodeWriter Append(Interface @interface)
+        {
+            AppendDelphiCode(
+$@"
 interface
 "
             ).AppendUsesClause(@interface.UsesClause);
+            foreach (InterfaceDeclaration declaration in @interface.Declarations) Append(declaration);
+            return this;
+        }
 
         /// <summary>
         /// Appends Delphi source code for a uses clause.
@@ -160,6 +165,37 @@ $@"
 implementation
 "
             ).AppendUsesClause(implementation.UsesClause);
+
+        /// <summary>
+        /// Appends Delphi source code for a declaration that appears in an interface section.
+        /// </summary>
+        /// <param name="declaration">The declaration</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(InterfaceDeclaration declaration) => declaration.DeclarationCase switch
+        {
+            InterfaceDeclaration.DeclarationOneofCase.ClassDeclaration => Append(declaration.ClassDeclaration),
+            _ => throw new NotImplementedException()
+        };
+
+        /// <summary>
+        /// Appends Delphi source code for a class declaration.
+        /// </summary>
+        /// <param name="class">The class declaration</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(ClassDeclaration @class)
+        {
+            AppendDelphiCode(
+$@"
+type
+"
+            );
+            AppendDelphiCode(
+$@"{@class.Name} = class
+end;
+"
+            , 1);
+            return this;
+        }
     }
 }
 

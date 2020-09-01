@@ -24,7 +24,6 @@ before_script:
     - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew cask install powershell; fi
     - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install pwsh; fi
     # Path refresh command based on https://travis-ci.community/t/windows-builds-refreshenv-command-not-found/5803/5
-    - if [ "$TRAVIS_OS_NAME" = "windows" ]; then echo $(powershell -NonInteractive -Command 'write("export PATH=`"" + ([Environment]::GetEnvironmentVariable("PATH","Machine") + ";" + [Environment]::GetEnvironmentVariable("PATH","User")).replace("\","/").replace("C:","/c").replace(";",":") + ":`$PATH`"")'); fi
     - if [ "$TRAVIS_OS_NAME" = "windows" ]; then eval $(powershell -NonInteractive -Command 'write("export PATH=`"" + ([Environment]::GetEnvironmentVariable("PATH","Machine") + ";" + [Environment]::GetEnvironmentVariable("PATH","User")).replace("\","/").replace("C:","/c").replace(";",":") + ":`$PATH`"")'); fi
 
 script:

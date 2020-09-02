@@ -1,0 +1,14 @@
+{
+    "heading": {
+        "unit": "UnitX"
+    },
+    "interface": {
+        "declarations": [{
+            "classDeclaration": {
+                "name": "ClassX",
+                "ancestor": "ClassY"
+            }
+        }]
+    },
+    "implementation": {}
+}

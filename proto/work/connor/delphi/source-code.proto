@@ -110,8 +110,10 @@ message InterfaceDeclaration {
   * > A class, or class type, defines a structure consisting of fields, methods, and properties.
   * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)) */
 message ClassDeclaration {
-  string name  = 1; /** Name of the class (*className*). Required (non-empty). */
-  // TODO ancestor  
+  string name     = 1; /** Name of the class (*className*). Required (non-empty). */
+  string ancestor = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
+                         * > When you declare a class, you can specify its immediate ancestor.
+                         * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
   // TODO nested types
   // TODO nested consts
   // TODO members

@@ -35,6 +35,13 @@ namespace Work.Connor.Delphi.CodeWriter
         internal static string ToSourceCode(this UnitIdentifier identifier) => string.Join(".", identifier.Namespace.Concat(new[] { identifier.Unit }));
 
         /// <summary>
+        /// Constructs the recommended source file path for a unit.
+        /// </summary>
+        /// <param name="unit">The unit</param>
+        /// <returns>Sequence of path components for the recommended source file</returns>
+        public static IEnumerable<string> ToSourceFilePath(this Unit unit) => unit.Heading.Namespace.Append($"{unit.Heading.Unit}.pas");
+
+        /// <summary>
         /// Constructs Delphi source code defining a unit.
         /// </summary>
         /// <param name="unit">The unit to define</param>

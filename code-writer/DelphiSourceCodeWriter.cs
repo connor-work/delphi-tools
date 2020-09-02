@@ -80,9 +80,21 @@ namespace Work.Connor.Delphi.CodeWriter
         public static readonly string unitSourceFileExtension = "pas";
 
         /// <summary>
+        /// Line separator for Delphi source code
+        /// </summary>
+        private static readonly string lineSeparator = "\n";
+
+        /// <summary>
         /// String used to indent source code lines by one level
         /// </summary>
         private static readonly string singleIndent = new String(' ', 2);
+
+        /// <summary>
+        /// Constructs a prefix string for indenting source code lines.
+        /// </summary>
+        /// <param name="level">The indentation level</param>
+        /// <returns>Resulting prefix string</returns>
+        private static string Indent(int level) => string.Concat(Enumerable.Repeat(singleIndent, level));
 
         /// <summary>
         /// Currently produced Delphi source code
@@ -97,20 +109,13 @@ namespace Work.Connor.Delphi.CodeWriter
         public override string ToString() => codeBuilder.ToString();
 
         /// <summary>
-        /// Constructs a prefix string for indenting source code lines.
-        /// </summary>
-        /// <param name="level">The indentation level</param>
-        /// <returns>Resulting prefix string</returns>
-        private string Indent(int level) => string.Concat(Enumerable.Repeat(singleIndent, level));
-
-        /// <summary>
-        /// Appends an arbitrary string to the source code.
+        /// Appends an arbitrary string to the source code, performing line separator conversion.
         /// </summary>
         /// <param name="text">The string to append</param>
         /// <returns><c>this</c></returns>
         private DelphiSourceCodeWriter Append(string text)
         {
-            codeBuilder.Append(text);
+            codeBuilder.Append(Regex.Replace(text, @"\r\n?|\n", lineSeparator));
             return this;
         }
 
@@ -120,7 +125,7 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <returns><c>this</c></returns>
         private DelphiSourceCodeWriter AppendLine()
         {
-            codeBuilder.AppendLine();
+            codeBuilder.Append(lineSeparator);
             return this;
         }
 

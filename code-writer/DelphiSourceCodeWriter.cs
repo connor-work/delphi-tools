@@ -50,6 +50,25 @@ namespace Work.Connor.Delphi.CodeWriter
     }
 
     /// <summary>
+    /// Extensions to <see cref="string"/> for source code production.
+    /// </summary>
+    public static partial class StringExtensions
+    {
+        /// <summary>
+        /// Recognized separators for syllables in an identifier string.
+        /// </summary>
+        private static readonly string[] syllableSeparators = new string[] { "-", "_" };
+
+        /// <summary>
+        /// Converts an identifier string to pascal case, removing syllable separators and capitalizing the first letter of each syllable.
+        /// </summary>
+        /// <param name="identifier">The identifier</param>
+        /// <returns>Pascal-case equivalent identifier</returns>
+        public static string ToPascalCase(this string identifier) => string.Concat(identifier.Split(syllableSeparators, StringSplitOptions.RemoveEmptyEntries)
+                                                                                             .Select(syllable => syllable.First().ToString().ToUpper() + syllable.Substring(1)));
+    }
+
+    /// <summary>
     /// Tool for the programmatic production of Delphi language source code.
     /// Usage is similar to <see cref="StringBuilder"/>. The resulting string is a fragment of a Delphi source code file.
     /// </summary>

@@ -66,6 +66,14 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <returns>Pascal-case equivalent identifier</returns>
         public static string ToPascalCase(this string identifier) => string.Concat(identifier.Split(syllableSeparators, StringSplitOptions.RemoveEmptyEntries)
                                                                                              .Select(syllable => syllable.First().ToString().ToUpper() + syllable.Substring(1)));
+
+        /// <summary>
+        /// Converts all line separators in a string to the same form.
+        /// </summary>
+        /// <param name="text">The original string</param>
+        /// <param name="lineSeparator">The new line separator</param>
+        /// <returns>The new string</returns>
+        internal static string ConvertLineSeparators(this string text, string lineSeparator) => Regex.Replace(text, @"\r\n?|\n", lineSeparator);
     }
 
     /// <summary>
@@ -115,7 +123,7 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <returns><c>this</c></returns>
         private DelphiSourceCodeWriter Append(string text)
         {
-            codeBuilder.Append(Regex.Replace(text, @"\r\n?|\n", lineSeparator));
+            codeBuilder.Append(text.ConvertLineSeparators(lineSeparator));
             return this;
         }
 
@@ -135,10 +143,14 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <param name="lines">Delphi source code string, potentially multi-line</param>
         /// <param name="level">The indentation level to shift source code lines by</param>
         /// <returns><c>this</c></returns>
-        private DelphiSourceCodeWriter AppendDelphiCode(string lines, int level = 0) => Append(Regex.Replace(lines,
-            "^.+$" /* any non-empty line */,
-            Indent(level) + "$&" /* is prefixed with indentation */,
-            RegexOptions.Multiline));
+        private DelphiSourceCodeWriter AppendDelphiCode(string lines, int level = 0)
+        {
+            codeBuilder.Append(Regex.Replace(lines.ConvertLineSeparators(lineSeparator),
+                                             "^.+$" /* any non-empty line */,
+                                             Indent(level) + "$&" /* is prefixed with indentation */,
+                                             RegexOptions.Multiline));
+            return this;
+        }
 
 #pragma warning disable S4136 // Method overloads should be grouped together -> "Append* method order reflects order in protobuf schema here
 

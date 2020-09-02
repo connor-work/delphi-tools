@@ -247,8 +247,9 @@ $@"
 type
 "
             );
+            string ancestorSpecifier = @class.Ancestor.Length != 0 ? $"({@class.Ancestor})" : "";
             AppendDelphiCode(
-$@"{@class.Name} = class
+$@"{@class.Name} = class{ancestorSpecifier}
 end;
 "
             , 1);

@@ -160,7 +160,6 @@ message Prototype {
   }
 
   string name                      = 1; /** Name of the procedure (*procedure name*). Required (non-empty). */
-  repeated Parameter parameterList = 2; /** List of parameters of the procedure (*parameterList*) */
   Type type                        = 3; /** Type of procedure. Required, explicit construction should avoid default initialization. */
   // TODO directives
 }

@@ -1,0 +1,41 @@
+{
+    "heading": {
+        "unit": "UnitX"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "memberList": [
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureX",
+                                    "type": "PROCEDURE"
+                                }
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ConstructorX",
+                                    "type": "CONSTRUCTOR"
+                                }
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "DestructorX",
+                                    "type": "DESTRUCTOR"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

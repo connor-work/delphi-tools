@@ -110,11 +110,57 @@ message InterfaceDeclaration {
   * > A class, or class type, defines a structure consisting of fields, methods, and properties.
   * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)) */
 message ClassDeclaration {
-  string name     = 1; /** Name of the class (*className*). Required (non-empty). */
-  string ancestor = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
-                         * > When you declare a class, you can specify its immediate ancestor.
-                         * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
+  string name                                = 1; /** Name of the class (*className*). Required (non-empty). */
+  string ancestor                            = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
+                                                    * > When you declare a class, you can specify its immediate ancestor.
+                                                    * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
   // TODO nested types
   // TODO nested consts
-  // TODO members
+  repeated ClassMemberDeclaration memberList = 3; /** Declared members of the class (*memberList*).
+                                                    * > The fields, methods, and properties of a class are called its components or members. */
+}
+
+/** Declaration of a *member* (also called *component*) of a class.
+  * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)). */
+message ClassMemberDeclaration {
+  // TODO visibility
+  oneof declaration {
+    MethodInterfaceDeclaration methodDeclaration = 2; /** Interface declaration of a method */
+  } /** Specific member declaration (polymorphic). Required. */
+}
+
+/** *Interface declaration* of a method of a class, within a class declaration.
+  * > A method is a procedure or function associated with a class.
+  * > A call to a method specifies the object (or, if it is a class method, the class) that the method should operate on.
+  *
+  * [//]: # (blockquote_separator)
+  * > Within a class declaration, methods appear as procedure and function headings, which work like forward declarations.
+  * See [Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)).
+  * See [Forward and Interface Declarations](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Forward_and_Interface_Declarations). */
+message MethodInterfaceDeclaration {
+  Prototype prototype = 1; /** Prototype (heading) of the method. Required. */
+}
+
+/** *Prototype* of a Delphi procedure.
+  * > When you declare a procedure or function, you specify its name, the number and type of parameters it takes, and, in the case of a function, the type of its return value;
+  * > this part of the declaration is sometimes called the prototype, heading, or header.
+  * *Functions* are not supported by this schema.
+  * See [Declaring Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Declaring_Procedures_and_Functions). */
+message Prototype {
+  /** Types of Delphi procedures. */
+  enum Type {
+    PROCEDURE   = 0; /** Normal procedure that is neither a constructor nor a destructor.
+                       * See [Procedure Declarations](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Procedure_Declarations). */
+    CONSTRUCTOR = 1; /** Method that is a *constructor*.
+                       * > A constructor is a special method that creates and initializes instance objects.
+                       * See [Constructors](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Constructors). */
+    DESTRUCTOR  = 2; /** Method that is a *destructor*.
+                       * > A destructor is a special method that destroys the object where it is called and deallocates its memory.
+                       * See [Destructors](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Destructors). */
+  }
+
+  string name                      = 1; /** Name of the procedure (*procedure name*). Required (non-empty). */
+  repeated Parameter parameterList = 2; /** List of parameters of the procedure (*parameterList*) */
+  Type type                        = 3; /** Type of procedure. Required, explicit construction should avoid default initialization. */
+  // TODO directives
 }

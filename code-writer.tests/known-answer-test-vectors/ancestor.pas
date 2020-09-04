@@ -2,8 +2,11 @@ unit UnitX;
 
 interface
 
+uses
+  UnitY;
+
 type
-  ClassX = class(ClassY)
+  ClassX = class(UnitY.ClassY)
   end;
 
 implementation

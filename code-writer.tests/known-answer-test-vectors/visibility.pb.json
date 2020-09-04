@@ -1,0 +1,49 @@
+{
+    "heading": {
+        "unit": "UnitX"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "memberList": [
+                        {
+
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureX"
+                                }
+                            }
+                        },
+                        {
+                            "visibility": "PRIVATE",
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureY"
+                                }
+                            }
+                        },
+                        {
+                            "visibility": "PROTECTED",
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureZ"
+                                }
+                            }
+                        },
+                        {
+                            "visibility": "PUBLIC",
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureA"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

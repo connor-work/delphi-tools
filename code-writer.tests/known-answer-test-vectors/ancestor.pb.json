@@ -3,6 +3,13 @@
         "unit": "UnitX"
     },
     "interface": {
+        "usesClause": [
+            {
+                "unit": {
+                    "unit": "UnitY"
+                }
+            }
+        ],
         "declarations": [
             {
                 "classDeclaration": {

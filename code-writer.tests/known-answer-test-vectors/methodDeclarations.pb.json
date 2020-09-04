@@ -11,8 +11,7 @@
                         {
                             "methodDeclaration": {
                                 "prototype": {
-                                    "name": "ProcedureX",
-                                    "type": "PROCEDURE"
+                                    "name": "ProcedureX"
                                 }
                             }
                         },

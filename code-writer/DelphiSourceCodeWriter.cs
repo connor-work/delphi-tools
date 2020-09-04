@@ -53,7 +53,12 @@ namespace Work.Connor.Delphi.CodeWriter
         /// </summary>
         /// <param name="prototype">The prototype</param>
         /// <returns>The Delphi source code string</returns>
-        internal static string ToSourceCode(this Prototype prototype) => $"{prototype.Type.ToSourceCode()} {prototype.Name}";
+        internal static string ToSourceCode(this Prototype prototype)
+        {
+            string parameterSuffix = "";
+            if (prototype.ParameterList.Count != 0) parameterSuffix = $"({string.Join("; ", prototype.ParameterList.Select(parameter => parameter.ToSourceCode()))})";
+            return $"{prototype.Type.ToSourceCode()} {prototype.Name}{parameterSuffix}";
+        }
 
         /// <summary>
         /// Constructs a Delphi keyword string for declaring the specific type of a Delphi procedure prototype.
@@ -80,6 +85,13 @@ namespace Work.Connor.Delphi.CodeWriter
             MethodInterfaceDeclaration.Types.Binding.Override => "override",
             _ => throw new NotImplementedException()
         };
+
+        /// <summary>
+        /// Constructs a Delphi source code string for a parameter declaration in a parameter list.
+        /// </summary>
+        /// <param name="parameter">The parameter declaration</param>
+        /// <returns>The Delphi source code string</returns>
+        internal static string ToSourceCode(this Parameter parameter) => $"{parameter.Name}: {parameter.Type}";
     }
 
     /// <summary>

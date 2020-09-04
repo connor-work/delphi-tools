@@ -138,13 +138,34 @@ message ClassMemberDeclaration {
   * See [Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)).
   * See [Forward and Interface Declarations](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Forward_and_Interface_Declarations). */
 message MethodInterfaceDeclaration {
+  /** *Binding* of an instance method.
+    * > Method bindings can be **static** (the default), **virtual**, or **dynamic**. Virtual and dynamic methods can be overridden, and they can be abstract.
+    * > These designations come into play when a variable of one class type holds a value of a descendent class type.
+    * > They determine which implementation is activated when a method is called.
+    * 
+    * [//]: # (blockquote_separator)    
+    * > To override a method, redeclare it with the **override** directive.
+    * Note that *override* is also considered a binding specification in this schema (it implies *virtual* or *dynamic*, depending on the ancestor declaration).
+    * Dynamic methods are not supported by this schema.
+    * See [Method Binding](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Method_Binding).
+    * See [Virtual and Dynamic Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Virtual_and_Dynamic_Methods). */
+  enum Binding {
+    STATIC   = 0; /** *Static* method binding.
+                    * See [Static Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Static_Methods). */
+    VIRTUAL  = 1; /** *Virtual* method binding.
+                    * See [Virtual and Dynamic Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Virtual_and_Dynamic_Methods). */
+    OVERRIDE = 2; /** Method with an *override declaration* that inherits its binding from the ancestor declaration.
+                    * See [Virtual and Dynamic Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Virtual_and_Dynamic_Methods). */
+  }
+
   Prototype prototype = 1; /** Prototype (heading) of the method. Required. */
+  Binding binding     = 2; /** Binding of the method. Required, explicit construction should avoid default initialization. */
 }
 
 /** *Prototype* of a Delphi procedure.
   * > When you declare a procedure or function, you specify its name, the number and type of parameters it takes, and, in the case of a function, the type of its return value;
   * > this part of the declaration is sometimes called the prototype, heading, or header.
-  * *Functions* are not supported by this schema.
+  * *Functions* and *directives* (except for the *special method directives* used to implement `MethodInterfaceDeclaration.Binding`) are not supported by this schema.
   * See [Declaring Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Declaring_Procedures_and_Functions). */
 message Prototype {
   /** Types of Delphi procedures. */
@@ -161,5 +182,4 @@ message Prototype {
 
   string name                      = 1; /** Name of the procedure (*procedure name*). Required (non-empty). */
   Type type                        = 3; /** Type of procedure. Required, explicit construction should avoid default initialization. */
-  // TODO directives
 }

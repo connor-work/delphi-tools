@@ -28,13 +28,6 @@ namespace Work.Connor.Delphi.CodeWriter
     public static partial class SourceCodeExtensions
     {
         /// <summary>
-        /// Constructs a Delphi identifier string for a Delphi unit identifier.
-        /// </summary>
-        /// <param name="name">The unit identifier, either a generic name or fully qualified name of the unit</param>
-        /// <returns>The Delphi identifier string</returns>
-        internal static string ToSourceCode(this UnitIdentifier identifier) => string.Join(".", identifier.Namespace.Concat(new[] { identifier.Unit }));
-
-        /// <summary>
         /// Constructs the recommended source file path for a unit.
         /// </summary>
         /// <param name="unit">The unit</param>
@@ -47,6 +40,13 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <param name="unit">The unit to define</param>
         /// <returns>The Delphi source code</returns>
         public static string ToSourceCode(this Unit unit) => new DelphiSourceCodeWriter().Append(unit).ToString();
+
+        /// <summary>
+        /// Constructs a Delphi identifier string for a Delphi unit identifier.
+        /// </summary>
+        /// <param name="name">The unit identifier, either a generic name or fully qualified name of the unit</param>
+        /// <returns>The Delphi identifier string</returns>
+        internal static string ToSourceCode(this UnitIdentifier identifier) => string.Join(".", identifier.Namespace.Concat(new[] { identifier.Unit }));
     }
 
     /// <summary>

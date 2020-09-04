@@ -73,11 +73,11 @@ message Interface {
 /** Reference to a unit (element of a *uses clause*).
   * > A uses clause lists units used by the program, library, or unit in which the clause appears.
   * > Use the keyword in after a unit name when you need to specify the unit's source file.
-  * Use of the keyword `in` for source file specification is not supported by this schema.
+  * Use of the keyword **in** for source file specification is not supported by this schema.
   * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
 message UnitReference {
   UnitIdentifier unit = 1; /** Identifier of the referenced unit.
-                             * > A uses clause consists of the reserved word `uses`, followed by one or more comma delimited unit names...
+                             * > A uses clause consists of the reserved word **uses**, followed by one or more comma delimited unit names...
                              * Required. */
 }
 

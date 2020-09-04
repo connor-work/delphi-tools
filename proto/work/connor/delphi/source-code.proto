@@ -181,5 +181,21 @@ message Prototype {
   }
 
   string name                      = 1; /** Name of the procedure (*procedure name*). Required (non-empty). */
-  Type type                        = 3; /** Type of procedure. Required, explicit construction should avoid default initialization. */
+  Type type                        = 2; /** Type of procedure. Required, explicit construction should avoid default initialization. */
+  repeated Parameter parameterList = 3; /** List of the procedure's parameter declarations (*parameter list*).
+                                          * > A parameter list is a sequence of parameter declarations separated by semicolons and enclosed in parentheses.
+                                          * See [Parameters](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Parameters_(Delphi)). */
 }
+
+/** *Parameter declaration* within a parameter list.
+  * > Each declaration is a comma-delimited series of parameter names, followed in most cases by a colon and a type identifier, and in some cases by the = symbol and a default value.
+  * > Parameter names must be valid identifiers.
+  * The declaration of multiple parameter names in the same parameter declaration is not supported by this schema.
+  * *Variable* (**var**), constant (**const**) and **out** parameters are not supported by this schema (i.e., only *value parameters* are supported).
+  * Default parameter values are not supported by this schema.
+  * See [Parameters](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Parameters_(Delphi)). */
+message Parameter {
+  string name = 1; /** Name of the declared parameter (*parameter name*). Required (non-empty). */
+  string type = 2; /** Type identifier for the type of the parameter. Required (non-empty). */
+}
+  

@@ -6,11 +6,11 @@ type
   ClassX = class
   procedure ProcedureX;
 
-  public procedure ProcedureY;
+  private procedure ProcedureY;
 
   protected procedure ProcedureZ;
 
-  private procedure ProcedureA;
+  public procedure ProcedureA;
   end;
 
 implementation

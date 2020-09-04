@@ -11,4 +11,12 @@ type
 
 implementation
 
+procedure ClassX.ProcedureX(ParamX: Integer);
+begin
+end;
+
+procedure ClassX.ProcedureY(ParamY1: Integer; ParamY2: array of Integer);
+begin
+end;
+
 end.

@@ -1,0 +1,47 @@
+{
+    "heading": {
+        "unit": "UnitX"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "memberList": [
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureX",
+                                    "parameterList": [
+                                        {
+                                            "name": "ParamX",
+                                            "type": "Integer"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureY",
+                                    "parameterList": [
+                                        {
+                                            "name": "ParamY1",
+                                            "type": "Integer"
+                                        },
+                                        {
+                                            "name": "ParamY2",
+                                            "type": "array of Integer"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

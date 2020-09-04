@@ -67,6 +67,19 @@ namespace Work.Connor.Delphi.CodeWriter
             Prototype.Types.Type.Destructor => "destructor",
             _ => throw new NotImplementedException()
         };
+
+        /// <summary>
+        /// Constructs an optional Delphi directive string for declaring the binding of a Delphi method.
+        /// </summary>
+        /// <param name="binding">The type of method binding</param>
+        /// <returns>The Delphi directive string, if one is required</returns>
+        internal static string? ToSourceCode(this MethodInterfaceDeclaration.Types.Binding binding) => binding switch
+        {
+            MethodInterfaceDeclaration.Types.Binding.Static => null,
+            MethodInterfaceDeclaration.Types.Binding.Virtual => "virtual",
+            MethodInterfaceDeclaration.Types.Binding.Override => "override",
+            _ => throw new NotImplementedException()
+        };
     }
 
     /// <summary>
@@ -320,10 +333,15 @@ $@"end;
         /// </summary>
         /// <param name="method">The method interface declaration</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method) => AppendDelphiCode(
-$@"{method.Prototype.ToSourceCode()};
+        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method)
+        {
+            string? directive = method.Binding.ToSourceCode();
+            string bindingSuffix = directive == null ? "" : $" {directive};";
+            return AppendDelphiCode(
+$@"{method.Prototype.ToSourceCode()};{bindingSuffix}
 "
-            );
+);
+        }
     }
 }
 

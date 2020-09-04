@@ -47,6 +47,26 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <param name="name">The unit identifier, either a generic name or fully qualified name of the unit</param>
         /// <returns>The Delphi identifier string</returns>
         internal static string ToSourceCode(this UnitIdentifier identifier) => string.Join(".", identifier.Namespace.Concat(new[] { identifier.Unit }));
+
+        /// <summary>
+        /// Constructs a Delphi source code string for a Delphi prototype of a procedure.
+        /// </summary>
+        /// <param name="prototype">The prototype</param>
+        /// <returns>The Delphi source code string</returns>
+        internal static string ToSourceCode(this Prototype prototype) => $"{prototype.Type.ToSourceCode()} {prototype.Name}";
+
+        /// <summary>
+        /// Constructs a Delphi keyword string for declaring the specific type of a Delphi procedure prototype.
+        /// </summary>
+        /// <param name="type">The prototype type</param>
+        /// <returns>The Delphi keyword string</returns>
+        internal static string ToSourceCode(this Prototype.Types.Type type) => type switch
+        {
+            Prototype.Types.Type.Procedure => "procedure",
+            Prototype.Types.Type.Constructor => "constructor",
+            Prototype.Types.Type.Destructor => "destructor",
+            _ => throw new NotImplementedException()
+        };
     }
 
     /// <summary>
@@ -102,7 +122,7 @@ namespace Work.Connor.Delphi.CodeWriter
         /// </summary>
         /// <param name="level">The indentation level</param>
         /// <returns>Resulting prefix string</returns>
-        private static string Indent(int level) => string.Concat(Enumerable.Repeat(singleIndent, level));
+        private static string IndentPrefix(int level) => string.Concat(Enumerable.Repeat(singleIndent, level));
 
         /// <summary>
         /// Currently produced Delphi source code
@@ -110,11 +130,27 @@ namespace Work.Connor.Delphi.CodeWriter
         private readonly StringBuilder codeBuilder = new StringBuilder();
 
         /// <summary>
+        /// Current indentation level
+        /// </summary>
+        private int indentLevel = 0;
+
+        /// <summary>
         /// Converts the already produced Delphi source code to a string.
         /// </summary>
         /// <returns>Delphi source code string</returns>
         [Pure]
         public override string ToString() => codeBuilder.ToString();
+
+        /// <summary>
+        /// Changes the base identation level for the Delphi source code appended afterwards.
+        /// </summary>
+        /// <param name="shift">Change to the identation level</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Indent(int shift)
+        {
+            indentLevel += shift;
+            return this;
+        }
 
         /// <summary>
         /// Appends an arbitrary string to the source code, performing line separator conversion.
@@ -141,14 +177,16 @@ namespace Work.Connor.Delphi.CodeWriter
         /// Appends arbitrary Delphi source code and applies indentation.
         /// </summary>
         /// <param name="lines">Delphi source code string, potentially multi-line</param>
-        /// <param name="level">The indentation level to shift source code lines by</param>
+        /// <param name="shift">Optional change to the indentation level applied only to this source code string</param>
         /// <returns><c>this</c></returns>
-        private DelphiSourceCodeWriter AppendDelphiCode(string lines, int level = 0)
+        private DelphiSourceCodeWriter AppendDelphiCode(string lines, int shift = 0)
         {
+            Indent(shift);
             codeBuilder.Append(Regex.Replace(lines.ConvertLineSeparators(lineSeparator),
                                              "^.+$" /* any non-empty line */,
-                                             Indent(level) + "$&" /* is prefixed with indentation */,
+                                             IndentPrefix(indentLevel) + "$&" /* is prefixed with indentation */,
                                              RegexOptions.Multiline));
+            Indent(-shift);
             return this;
         }
 
@@ -247,14 +285,45 @@ $@"
 type
 "
             );
+            Indent(1);
             string ancestorSpecifier = @class.Ancestor.Length != 0 ? $"({@class.Ancestor})" : "";
             AppendDelphiCode(
 $@"{@class.Name} = class{ancestorSpecifier}
-end;
 "
-            , 1);
-            return this;
+            );
+            bool firstLine = true;
+            foreach (ClassMemberDeclaration member in @class.MemberList)
+            {
+                if (!firstLine) AppendLine();
+                firstLine = false;
+                Append(member);
+            }
+            return AppendDelphiCode(
+$@"end;
+"
+            ).Indent(-1);
         }
+
+        /// <summary>
+        /// Appends Delphi source code for the declaration of a member of a class.
+        /// </summary>
+        /// <param name="classMember">The class member's declaration</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(ClassMemberDeclaration classMember) => classMember.DeclarationCase switch
+        {
+            ClassMemberDeclaration.DeclarationOneofCase.MethodDeclaration => Append(classMember.MethodDeclaration),
+            _ => throw new NotImplementedException()
+        };
+
+        /// <summary>
+        /// Appends Delphi source code for the interface declaration of a method of a class.
+        /// </summary>
+        /// <param name="method">The method interface declaration</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method) => AppendDelphiCode(
+$@"{method.Prototype.ToSourceCode()};
+"
+            );
     }
 }
 

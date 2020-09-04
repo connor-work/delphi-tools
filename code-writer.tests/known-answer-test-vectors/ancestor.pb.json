@@ -3,12 +3,14 @@
         "unit": "UnitX"
     },
     "interface": {
-        "declarations": [{
-            "classDeclaration": {
-                "name": "ClassX",
-                "ancestor": "ClassY"
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "ancestor": "UnitY.ClassY"
+                }
             }
-        }]
+        ]
     },
     "implementation": {}
 }

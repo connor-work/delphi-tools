@@ -52,12 +52,14 @@ namespace Work.Connor.Delphi.CodeWriter
         /// Constructs a Delphi source code string for a Delphi prototype of a procedure.
         /// </summary>
         /// <param name="prototype">The prototype</param>
+        /// <param name="@class">Optional name of the containing class, if the prototype is part of a method's defining declaration</param>
         /// <returns>The Delphi source code string</returns>
-        internal static string ToSourceCode(this Prototype prototype)
+        internal static string ToSourceCode(this Prototype prototype, string? @class = null)
         {
+            string classPrefix = @class == null ? "" : $"{@class}.";
             string parameterSuffix = "";
             if (prototype.ParameterList.Count != 0) parameterSuffix = $"({string.Join("; ", prototype.ParameterList.Select(parameter => parameter.ToSourceCode()))})";
-            return $"{prototype.Type.ToSourceCode()} {prototype.Name}{parameterSuffix}";
+            return $"{prototype.Type.ToSourceCode()} {classPrefix}{prototype.Name}{parameterSuffix}";
         }
 
         /// <summary>
@@ -238,13 +240,13 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <returns><c>this</c></returns>
         public DelphiSourceCodeWriter Append(Unit unit) => AppendDelphiCode(
 $@"unit {unit.Heading.ToSourceCode()};
+
 "
             )
             .Append(unit.Interface)
             .Append(unit.Implementation)
             .AppendDelphiCode(
-$@"
-end.
+$@"end.
 "
             );
 
@@ -256,8 +258,8 @@ end.
         public DelphiSourceCodeWriter Append(Interface @interface)
         {
             AppendDelphiCode(
-$@"
-interface
+$@"interface
+
 "
             ).AppendUsesClause(@interface.UsesClause);
             foreach (InterfaceDeclaration declaration in @interface.Declarations) Append(declaration);
@@ -274,20 +276,19 @@ interface
             // No clause required without references
             if (references.Count == 0) return this;
             AppendDelphiCode(
- $@"
-uses"
+ $@"uses
+"
             );
             bool first = true;
             foreach (UnitReference reference in references)
             {
-                if (!first) Append(",");
+                if (!first) Append(",").AppendLine();
                 first = false;
                 AppendDelphiCode(
-$@"
-{reference.Unit.ToSourceCode()}"
+$@"{reference.Unit.ToSourceCode()}"
                 , 1);
             }
-            return Append(";").AppendLine();
+            return Append(";").AppendLine().AppendLine();
         }
 
         /// <summary>
@@ -295,11 +296,16 @@ $@"
         /// </summary>
         /// <param name="interface">The implementation section</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(Implementation implementation) => AppendDelphiCode(
- $@"
-implementation
+        public DelphiSourceCodeWriter Append(Implementation implementation)
+        {
+            AppendDelphiCode(
+$@"implementation
+
 "
             ).AppendUsesClause(implementation.UsesClause);
+            foreach (ImplementationDeclaration declaration in implementation.Declarations) Append(declaration);
+            return this;
+        }
 
         /// <summary>
         /// Appends Delphi source code for a declaration that appears in an interface section.
@@ -320,8 +326,7 @@ implementation
         public DelphiSourceCodeWriter Append(ClassDeclaration @class)
         {
             AppendDelphiCode(
-$@"
-type
+$@"type
 "
             );
             Indent(1);
@@ -339,6 +344,7 @@ $@"{@class.Name} = class{ancestorSpecifier}
             }
             return AppendDelphiCode(
 $@"end;
+
 "
             ).Indent(-1);
         }
@@ -371,6 +377,30 @@ $@"{visibilityPrefix}{method.Prototype.ToSourceCode()};{bindingSuffix}
 "
 );
         }
+
+        /// <summary>
+        /// Appends Delphi source code for a declaration that appears in an implementation section.
+        /// </summary>
+        /// <param name="declaration">The declaration</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(ImplementationDeclaration declaration) => declaration.DeclarationCase switch
+        {
+            ImplementationDeclaration.DeclarationOneofCase.MethodDeclaration => Append(declaration.MethodDeclaration),
+            _ => throw new NotImplementedException()
+        };
+
+        /// <summary>
+        /// Appends Delphi source code for the defining declaration of a method of a class.
+        /// </summary>
+        /// <param name="method">The method's defining declaration</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(MethodDeclaration method) => AppendDelphiCode(
+$@"{method.Prototype.ToSourceCode(method.Class)};
+begin
+end;
+
+"
+            );
     }
 }
 

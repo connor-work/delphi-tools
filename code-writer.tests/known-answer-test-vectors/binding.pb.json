@@ -1,0 +1,41 @@
+{
+    "heading": {
+        "unit": "UnitX"
+    },
+    "interface": {
+        "usesClause": [
+            {
+                "unit": {
+                    "unit": "UnitY"
+                }
+            }
+        ],
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "ancestor": "UnitY.ClassY",
+                    "memberList": [
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureX"
+                                },
+                                "binding": "VIRTUAL"
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureY"
+                                },
+                                "binding": "OVERRIDE"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

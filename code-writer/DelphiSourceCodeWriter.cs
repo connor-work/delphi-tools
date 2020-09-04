@@ -92,6 +92,20 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <param name="parameter">The parameter declaration</param>
         /// <returns>The Delphi source code string</returns>
         internal static string ToSourceCode(this Parameter parameter) => $"{parameter.Name}: {parameter.Type}";
+
+        /// <summary>
+        /// Constructs an optional Delphi visibility specifier string for declaring the visibility attribute of a Delphi class member.
+        /// </summary>
+        /// <param name="visibility">The visibility specifier</param>
+        /// <returns>The Delphi visibility specifier string, if one is required</returns>
+        internal static string? ToSourceCode(this Visibility visibility) => visibility switch
+        {
+            Visibility.Unspecified => null,
+            Visibility.Private => "private",
+            Visibility.Protected => "protected",
+            Visibility.Public => "public",
+            _ => throw new NotImplementedException()
+        };
     }
 
     /// <summary>
@@ -336,7 +350,7 @@ $@"end;
         /// <returns><c>this</c></returns>
         public DelphiSourceCodeWriter Append(ClassMemberDeclaration classMember) => classMember.DeclarationCase switch
         {
-            ClassMemberDeclaration.DeclarationOneofCase.MethodDeclaration => Append(classMember.MethodDeclaration),
+            ClassMemberDeclaration.DeclarationOneofCase.MethodDeclaration => Append(classMember.MethodDeclaration, classMember.Visibility),
             _ => throw new NotImplementedException()
         };
 
@@ -344,13 +358,16 @@ $@"end;
         /// Appends Delphi source code for the interface declaration of a method of a class.
         /// </summary>
         /// <param name="method">The method interface declaration</param>
+        /// <param name="visibility">Visibility specifier of the method</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method)
+        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method, Visibility visibility)
         {
             string? directive = method.Binding.ToSourceCode();
             string bindingSuffix = directive == null ? "" : $" {directive};";
+            string? visibilitySpecifier = visibility.ToSourceCode();
+            string visibilityPrefix = visibilitySpecifier == null ? "" : $"{visibilitySpecifier} ";
             return AppendDelphiCode(
-$@"{method.Prototype.ToSourceCode()};{bindingSuffix}
+$@"{visibilityPrefix}{method.Prototype.ToSourceCode()};{bindingSuffix}
 "
 );
         }

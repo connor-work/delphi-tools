@@ -92,7 +92,7 @@ message Implementation {
   repeated UnitReference usesClause               = 1; /** List of unit references (*uses clause*).
                                                          * > The implementation section can include its own uses clause...
                                                          * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
-  // TODO declarations
+  repeated ImplementationDeclaration declarations = 2; /** Sequence of declarations of unit-private entities and defining declarations of procedures and functions */
 }
 
 /** Declaration within the interface section of a unit, that is available to clients.
@@ -224,4 +224,32 @@ enum Visibility {
   PUBLIC      = 3; /** Visibility specifier **public**.
                      * > A **public** member is visible wherever its class can be referenced.
                      * See [Private, Protected and Public Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Private.2C_Protected.2C_and_Public_Members).*/
+}
+
+/** Declaration with the implementation section of a unit.
+  * > The implementation section defines procedures and functions that are declared in the interface section.
+  * [//]: # (blockquote_separator) 
+  * > [...] the implementation section can declare constants, types (including classes), variables, procedures, and functions that are private to the unit.
+  * Private declarations are not supported by this schema.
+  * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section). */
+message ImplementationDeclaration {
+  oneof declaration {
+    MethodDeclaration methodDeclaration = 1; /** Defining declaration of a method */
+  } /** Specific declaration (polymorphic). Required. */
+}
+
+/** *Defining declaration* of a class method within the implementation section.
+  * > Somewhere after the class declaration, but within the same module, each method must be implemented by a defining declaration.
+  * 
+  * [//]: # (blockquote_separator)  
+  * > The [declaration] can repeat the parameter list from the class declaration; if it does, the order, type, and names of the parameters must match exactly,
+  * > and if the method is a function, the return value must match as well.
+  * See [Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)). */
+message MethodDeclaration {
+  string class               = 1; /** Name of the class to which the method belongs. Required (non-empty).
+                                    * > In the heading of a defining declaration, the method name is always qualified with the name of the class to which it belongs. */
+  Prototype prototype        = 2; /** *Prototype* of the method. Required.
+                                    * > The [declaration] can repeat the parameter list from the class declaration; if it does, the order, type, and names of the parameters must match exactly,
+                                    * > and if the method is a function, the return value must match as well. */
+  // TODO variables, statements
 }

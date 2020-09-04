@@ -43,5 +43,40 @@
             }
         ]
     },
-    "implementation": {}
+    "implementation": {
+        "declarations": [
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureX",
+                        "parameterList": [
+                            {
+                                "name": "ParamX",
+                                "type": "Integer"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureY",
+                        "parameterList": [
+                            {
+                                "name": "ParamY1",
+                                "type": "Integer"
+                            },
+                            {
+                                "name": "ParamY2",
+                                "type": "array of Integer"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
 }

@@ -247,9 +247,14 @@ message ImplementationDeclaration {
   * See [Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)). */
 message MethodDeclaration {
   string class               = 1; /** Name of the class to which the method belongs. Required (non-empty).
-                                    * > In the heading of a defining declaration, the method name is always qualified with the name of the class to which it belongs. */
+                                   * > In the heading of a defining declaration, the method name is always qualified with the name of the class to which it belongs. */
   Prototype prototype        = 2; /** *Prototype* of the method. Required.
-                                    * > The [declaration] can repeat the parameter list from the class declaration; if it does, the order, type, and names of the parameters must match exactly,
-                                    * > and if the method is a function, the return value must match as well. */
-  // TODO variables, statements
+                                   * > The [declaration] can repeat the parameter list from the class declaration; if it does, the order, type, and names of the parameters must match exactly,
+                                   * > and if the method is a function, the return value must match as well. */
+  // TODO local declarations
+  repeated string statements = 3; /** Contents of the *statement block* (*statements*) (also called *body* or *block*) of the method declaration.
+                                    * > Then you write a block of code that executes whenever the procedure or function is called; this part is sometimes called the body of the routine or block.
+                                    * This schema does not model the internal structure of the statement block.
+                                    * Each field value corresponds to one source code line of the statement block.
+                                    * See [Declaring Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Declaring_Procedures_and_Functions). */
 }

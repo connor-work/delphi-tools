@@ -34,6 +34,8 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <returns>Sequence of path components for the recommended source file</returns>
         public static IEnumerable<string> ToSourceFilePath(this Unit unit) => unit.Heading.Namespace.Append($"{unit.Heading.Unit}.pas");
 
+#pragma warning disable S4136 // Method overloads should be grouped together -> "ToSourceCode* method order reflects order in protobuf schema here
+
         /// <summary>
         /// Constructs Delphi source code defining a unit.
         /// </summary>
@@ -61,6 +63,17 @@ namespace Work.Connor.Delphi.CodeWriter
             Visibility.Public => "public",
             _ => throw new NotImplementedException()
         };
+
+        /// <summary>
+        /// Constructs a Delphi source code string that is prepended to the declaration of a Delphi class member to specify its visibility attribute.
+        /// </summary>
+        /// <param name="visibility">The visibility specifier</param>
+        /// <returns>The Delphi source code string</returns>
+        internal static string ToDeclarationPrefix(this Visibility visibility)
+        {
+            string? visibilitySpecifier = visibility.ToSourceCode();
+            return visibilitySpecifier == null ? "" : $"{visibilitySpecifier} ";
+        }
 
         /// <summary>
         /// Constructs a Delphi source code string for a Delphi prototype of a procedure.
@@ -101,6 +114,17 @@ namespace Work.Connor.Delphi.CodeWriter
             MethodInterfaceDeclaration.Types.Binding.Override => "override",
             _ => throw new NotImplementedException()
         };
+
+        /// <summary>
+        /// Constructs a Delphi source code string that is appended to the interface declaration of a Delphi method to specify its binding.
+        /// </summary>
+        ///  <param name="binding">The type of method binding</param>
+        /// <returns>The Delphi source code string</returns>
+        internal static string ToDeclarationSuffix(this MethodInterfaceDeclaration.Types.Binding binding)
+        {
+            string? directive = binding.ToSourceCode();
+            return directive == null ? "" : $" {directive};";
+        }
 
         /// <summary>
         /// Constructs a Delphi source code string for a parameter declaration in a parameter list.
@@ -374,17 +398,10 @@ $@"end;
         /// <param name="method">The method interface declaration</param>
         /// <param name="visibility">Visibility specifier of the method</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method, Visibility visibility)
-        {
-            string? directive = method.Binding.ToSourceCode();
-            string bindingSuffix = directive == null ? "" : $" {directive};";
-            string? visibilitySpecifier = visibility.ToSourceCode();
-            string visibilityPrefix = visibilitySpecifier == null ? "" : $"{visibilitySpecifier} ";
-            return AppendDelphiCode(
-$@"{visibilityPrefix}{method.Prototype.ToSourceCode()};{bindingSuffix}
+        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method, Visibility visibility) => AppendDelphiCode(
+$@"{visibility.ToDeclarationPrefix()}{method.Prototype.ToSourceCode()};{method.Binding.ToDeclarationSuffix()}
 "
-);
-        }
+            );
 
         /// <summary>
         /// Appends Delphi source code for the declaration of a field of a class.
@@ -392,15 +409,10 @@ $@"{visibilityPrefix}{method.Prototype.ToSourceCode()};{bindingSuffix}
         /// <param name="field">The field declaration</param>
         /// <param name="visibility">Visibility specifier of the field</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(FieldDeclaration field, Visibility visibility)
-        {
-            string? visibilitySpecifier = visibility.ToSourceCode();
-            string visibilityPrefix = visibilitySpecifier == null ? "" : $"{visibilitySpecifier} ";
-            return AppendDelphiCode(
-$@"{visibilityPrefix}{field.ToSourceCode()};
+        public DelphiSourceCodeWriter Append(FieldDeclaration field, Visibility visibility) => AppendDelphiCode(
+$@"{visibility.ToDeclarationPrefix()}{field.ToSourceCode()};
 "
-);
-        }
+            );
 
         /// <summary>
         /// Appends Delphi source code for a declaration that appears in an implementation section.
@@ -432,7 +444,8 @@ $@"end;
 "
             );
         }
-    }
-}
 
 #pragma warning restore S4136 // Method overloads should be grouped together
+
+    }
+}

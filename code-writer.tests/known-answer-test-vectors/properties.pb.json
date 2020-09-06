@@ -29,7 +29,7 @@
                         },
                         {
                             "propertyDeclaration": {
-                                "name": "PropertyX",
+                                "name": "PropertyY",
                                 "type": "Integer",
                                 "writeSpecifier": "FieldY"
                             }

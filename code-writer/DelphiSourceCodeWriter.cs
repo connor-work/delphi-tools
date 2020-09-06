@@ -139,6 +139,21 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <param name="field">The field declaration</param>
         /// <returns>The Delphi source code string</returns>
         internal static string ToSourceCode(this FieldDeclaration field) => $"var {field.Name}: {field.Type}";
+
+        /// <summary>
+        /// Constructs a Delphi source code string for a Delphi property declaration.
+        /// </summary>
+        /// <param name="property">The property declaration</param>
+        /// <returns>The Delphi source code string</returns>
+        internal static string ToSourceCode(this PropertyDeclaration property)
+        {
+            string readSpecifierSuffix = property.ReadSpecifier.Length == 0 ? "" : $" read {property.ReadSpecifier}";
+            string writeSpecifierSuffix = property.WriteSpecifier.Length == 0 ? "" : $" write {property.WriteSpecifier}";
+            return $"property {property.Name}: {property.Type}{readSpecifierSuffix}{writeSpecifierSuffix}";
+        }
+
+#pragma warning restore S4136 // Method overloads should be grouped together
+
     }
 
     /// <summary>
@@ -389,6 +404,7 @@ $@"end;
         {
             ClassMemberDeclaration.DeclarationOneofCase.MethodDeclaration => Append(classMember.MethodDeclaration, classMember.Visibility),
             ClassMemberDeclaration.DeclarationOneofCase.FieldDeclaration => Append(classMember.FieldDeclaration, classMember.Visibility),
+            ClassMemberDeclaration.DeclarationOneofCase.PropertyDeclaration => Append(classMember.PropertyDeclaration, classMember.Visibility),
             _ => throw new NotImplementedException()
         };
 
@@ -411,6 +427,17 @@ $@"{visibility.ToDeclarationPrefix()}{method.Prototype.ToSourceCode()};{method.B
         /// <returns><c>this</c></returns>
         public DelphiSourceCodeWriter Append(FieldDeclaration field, Visibility visibility) => AppendDelphiCode(
 $@"{visibility.ToDeclarationPrefix()}{field.ToSourceCode()};
+"
+            );
+
+        /// <summary>
+        /// Appends Delphi source code for the declaration of a property of a class.
+        /// </summary>
+        /// <param name="property">The property declaration</param>
+        /// <param name="visibility">Visibility specifier of the property</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(PropertyDeclaration property, Visibility visibility) => AppendDelphiCode(
+$@"{visibility.ToDeclarationPrefix()}{property.ToSourceCode()};
 "
             );
 

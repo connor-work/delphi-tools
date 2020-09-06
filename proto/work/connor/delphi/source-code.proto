@@ -110,14 +110,41 @@ message InterfaceDeclaration {
   * > A class, or class type, defines a structure consisting of fields, methods, and properties.
   * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)) */
 message ClassDeclaration {
-  string name                                = 1; /** Name of the class (*className*). Required (non-empty). */
-  string ancestor                            = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
-                                                    * > When you declare a class, you can specify its immediate ancestor.
-                                                    * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
+  string name                                        = 1; /** Name of the class (*className*). Required (non-empty). */
+  string ancestor                                    = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
+                                                            * > When you declare a class, you can specify its immediate ancestor.
+                                                            * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
   // TODO nested types
-  // TODO nested consts
-  repeated ClassMemberDeclaration memberList = 3; /** Declared members of the class (*memberList*).
-                                                    * > The fields, methods, and properties of a class are called its components or members. */
+  repeated ConstDeclaration nestedConstDeclarations  = 4; /** List of *nested constants* (*nestedConstDeclaration*) that are declared within the class (namespacing mechanism).
+                                                            * > Nested constants present a way to keep conceptually related types together and to avoid name collisions. */
+  repeated ClassMemberDeclaration memberList         = 5; /** Declared members of the class (*memberList*).
+                                                            * > The fields, methods, and properties of a class are called its components or members. */
+}
+
+/** Declaration of a *constant*.
+  * > Declared constants are either *true constants* or *typed constants*.
+  * Typed constants are not supported by this schema.
+  * See [Declared Constants](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Declared_Constants). */
+message ConstDeclaration {
+  oneof declaration {
+    TrueConstDeclaration trueConstDeclaration = 1; /** Declaration of a true constant */
+  } /** Specific declaration (polymorphic). Required. */
+}
+
+/** Declaration of a *true constant*, whose value can be evaluated by the compiler without executing the program.
+  * > A true constant is a declared identifier whose value cannot change.
+  * See [True Constants](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Declared_Constants#True_Constants). */
+message TrueConstDeclaration {
+  string identifier = 1; /** Name of the constant (*identifier*).
+                           * > [...] where *identifier* is any valid identifier [...]
+                           * Required (non-empty). */
+  string value      = 2; /** Constant expression defining the value (*constantExpression*).
+                           * > A constant expression is an expression that the compiler can evaluate without executing the program in which it occurs.
+                           * > Constant expressions include numerals; character strings; true constants; values of enumerated types; the special constants **True**, **False**, and **nil**;
+                           * > and expressions built exclusively from these elements with operators, typecasts, and set constructors.
+                           * This schema does not model the internal structure of the constant expression.
+                           * See [Constant Expressions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Declared_Constants#Constant_Expressions).
+                           * Required (non-empty). */
 }
 
 /** Declaration of a *member* (also called *component*) of a class.

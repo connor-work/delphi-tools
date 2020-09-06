@@ -1,0 +1,29 @@
+{
+    "heading": {
+        "unit": "UnitX"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "memberList": [
+                        {
+                            "fieldDeclaration": {
+                                "name": "FieldX",
+                                "type": "Integer"
+                            }
+                        },
+                        {
+                            "fieldDeclaration": {
+                                "name": "FieldY",
+                                "type": "string"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

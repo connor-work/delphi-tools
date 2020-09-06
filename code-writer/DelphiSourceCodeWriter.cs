@@ -394,13 +394,20 @@ $@"{visibilityPrefix}{method.Prototype.ToSourceCode()};{bindingSuffix}
         /// </summary>
         /// <param name="method">The method's defining declaration</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(MethodDeclaration method) => AppendDelphiCode(
+        public DelphiSourceCodeWriter Append(MethodDeclaration method)
+        {
+            AppendDelphiCode(
 $@"{method.Prototype.ToSourceCode(method.Class)};
 begin
-end;
+"
+            );
+            foreach (string line in method.Statements) AppendDelphiCode(line, 1).AppendLine();
+            return AppendDelphiCode(
+$@"end;
 
 "
             );
+        }
     }
 }
 

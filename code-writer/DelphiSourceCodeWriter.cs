@@ -162,17 +162,38 @@ namespace Work.Connor.Delphi.CodeWriter
     public static partial class StringExtensions
     {
         /// <summary>
-        /// Recognized separators for syllables in an identifier string.
+        /// Disjunction of recognized separator patterns for syllables in an identifier string
         /// </summary>
-        private static readonly string[] syllableSeparators = new string[] { "-", "_" };
+        private static readonly Regex syllableSeparator = new Regex(
+            "(?:_)"                              /* a dash (variations of snake case, as in "my_name") */
+            + "|" + "(?:-)"                      /* an underscore (variations of kebab case, as in "my-name") */
+            + "|" + "(?:(?<=[a-z])(?=[A-Z]))"    /* boundary after a lowercase letter and before an uppercase letter (variations of Pascal case, as in "MyName") */
+            + "|" + "(?:(?<=[0-9])(?=[a-zA-Z]))" /* boundary after a digit and before a letter (variations of Pascal case, as in "MyTop5Names") */
+            );
 
         /// <summary>
-        /// Converts an identifier string to pascal case, removing syllable separators and capitalizing the first letter of each syllable.
+        /// Splits a human-readable identifier string into "syllables", which are segments separated by any one of the patterns recognized by <see cref="syllableSeparator"/>.
+        /// </summary>
+        /// <param name="identifier">The identifier</param>
+        /// <returns>Sequence of human-readable "syllables"</returns>
+        private static IEnumerable<string> SplitSyllables(this string identifier) => syllableSeparator.Split(identifier).Where(syllable => syllable.Length != 0);
+
+        /// <summary>
+        /// Converts a human-readable identifier string to pascal case, splitting it into "syllables" and capitalizing the first letter of each syllable.
+        /// This case style is commonly used for Delphi identifiers that do not refer to constants (before addition of a prefix).
         /// </summary>
         /// <param name="identifier">The identifier</param>
         /// <returns>Pascal-case equivalent identifier</returns>
-        public static string ToPascalCase(this string identifier) => string.Concat(identifier.Split(syllableSeparators, StringSplitOptions.RemoveEmptyEntries)
+        public static string ToPascalCase(this string identifier) => string.Concat(identifier.SplitSyllables()
                                                                                              .Select(syllable => syllable.First().ToString().ToUpper() + syllable.Substring(1)));
+
+        /// <summary>
+        /// Converts a human-readable string to screaming snake case, splitting it into "syllables", capitalizing all letters and joining syllables with an underscore.
+        /// This case style is commonly used for Delphi identifiers that refer to constants.
+        /// </summary>
+        /// <param name="identifier">The identifier</param>
+        /// <returns>Pascal-case equivalent identifier</returns>
+        public static string ToScreamingSnakeCase(this string identifier) => string.Join("_", identifier.SplitSyllables().Select(syllable => syllable.ToUpper()));
 
         /// <summary>
         /// Converts all line separators in a string to the same form.

@@ -132,6 +132,7 @@ message ClassMemberDeclaration {
   oneof declaration {
     MethodInterfaceDeclaration methodDeclaration = 2; /** Interface declaration of a method */
     FieldDeclaration fieldDeclaration            = 3; /** Declaration of a field */
+    PropertyDeclaration propertyDeclaration      = 4; /** Declaration of a property */
   } /** Specific member declaration (polymorphic). Required. */
 }
 
@@ -243,6 +244,29 @@ message FieldDeclaration {
   string type = 2; /** Type of the field (*type*). Identifier for any valid type.
                      * Required (non-empty).
                      * See [Declaring Variables](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Variables_(Delphi)#Declaring_Variables). */
+}
+
+/** Declaration of a *property* of a class, within a class declaration.
+  * > A property, like a field, defines an attribute of an object.
+  * > But while a field is merely a storage location whose contents can be examined and changed, a property associates specific actions with reading or modifying its data.
+  * > Properties provide control over access to an object's attributes, and they allow attributes to be computed.
+  * Array properties, index and storage specifiers, property overrides, redeclarations and class properties are not supported by this schema.
+  * See [Properties](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Properties_(Delphi)). */
+message PropertyDeclaration {
+  string name            = 1; /** Name of the property (*propertyName*) (valid identifier). Required (non-empty). */
+  string type            = 2; /** Type identifier for the type of the property (*type*). Required (non-empty). */
+  string readSpecifier   = 3; /** *Read specifier* (*fieldOrMethod*) of the property, within the sequence of specifiers (*specifiers*).
+                                * Required (non-empty) if `writeSpecifier` is absent, optional (empty if absent) otherwise.
+                                * > [...] where *fieldOrMethod* is the name of a field or method declared in the same class as the property or in an ancestor class.
+                                * 
+                                * [//]: # (blockquote_separator)  
+                                * > When a property is referenced in an expression, its value is read using the field or method listed in the **read** specifier. */
+  string writeSpecifier = 4; /** *Write specifier* (*fieldOrMethod*) of the property, within the sequence of specifiers (*specifiers*).
+                               * Required (non-empty) if `readSpecifier` is absent, optional (empty if absent) otherwise.
+                               * > [...] where *fieldOrMethod* is the name of a field or method declared in the same class as the property or in an ancestor class.
+                               * 
+                               * [//]: # (blockquote_separator)  
+                               * > When a property is referenced in an assignment statement, its value is written using the field or method listed in the **write** specifier. */
 }
 
 /** Declaration with the implementation section of a unit.

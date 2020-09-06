@@ -49,6 +49,20 @@ namespace Work.Connor.Delphi.CodeWriter
         internal static string ToSourceCode(this UnitIdentifier identifier) => string.Join(".", identifier.Namespace.Concat(new[] { identifier.Unit }));
 
         /// <summary>
+        /// Constructs an optional Delphi visibility specifier string for declaring the visibility attribute of a Delphi class member.
+        /// </summary>
+        /// <param name="visibility">The visibility specifier</param>
+        /// <returns>The Delphi visibility specifier string, if one is required</returns>
+        internal static string? ToSourceCode(this Visibility visibility) => visibility switch
+        {
+            Visibility.Unspecified => null,
+            Visibility.Private => "private",
+            Visibility.Protected => "protected",
+            Visibility.Public => "public",
+            _ => throw new NotImplementedException()
+        };
+
+        /// <summary>
         /// Constructs a Delphi source code string for a Delphi prototype of a procedure.
         /// </summary>
         /// <param name="prototype">The prototype</param>
@@ -94,20 +108,6 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <param name="parameter">The parameter declaration</param>
         /// <returns>The Delphi source code string</returns>
         internal static string ToSourceCode(this Parameter parameter) => $"{parameter.Name}: {parameter.Type}";
-
-        /// <summary>
-        /// Constructs an optional Delphi visibility specifier string for declaring the visibility attribute of a Delphi class member.
-        /// </summary>
-        /// <param name="visibility">The visibility specifier</param>
-        /// <returns>The Delphi visibility specifier string, if one is required</returns>
-        internal static string? ToSourceCode(this Visibility visibility) => visibility switch
-        {
-            Visibility.Unspecified => null,
-            Visibility.Private => "private",
-            Visibility.Protected => "protected",
-            Visibility.Public => "public",
-            _ => throw new NotImplementedException()
-        };
     }
 
     /// <summary>

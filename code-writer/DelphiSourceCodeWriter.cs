@@ -108,6 +108,13 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <param name="parameter">The parameter declaration</param>
         /// <returns>The Delphi source code string</returns>
         internal static string ToSourceCode(this Parameter parameter) => $"{parameter.Name}: {parameter.Type}";
+
+        /// <summary>
+        /// Constructs a Delphi source code string for a Delphi field declaration.
+        /// </summary>
+        /// <param name="field">The field declaration</param>
+        /// <returns>The Delphi source code string</returns>
+        internal static string ToSourceCode(this FieldDeclaration field) => $"var {field.Name}: {field.Type}";
     }
 
     /// <summary>
@@ -357,6 +364,7 @@ $@"end;
         public DelphiSourceCodeWriter Append(ClassMemberDeclaration classMember) => classMember.DeclarationCase switch
         {
             ClassMemberDeclaration.DeclarationOneofCase.MethodDeclaration => Append(classMember.MethodDeclaration, classMember.Visibility),
+            ClassMemberDeclaration.DeclarationOneofCase.FieldDeclaration => Append(classMember.FieldDeclaration, classMember.Visibility),
             _ => throw new NotImplementedException()
         };
 
@@ -374,6 +382,22 @@ $@"end;
             string visibilityPrefix = visibilitySpecifier == null ? "" : $"{visibilitySpecifier} ";
             return AppendDelphiCode(
 $@"{visibilityPrefix}{method.Prototype.ToSourceCode()};{bindingSuffix}
+"
+);
+        }
+
+        /// <summary>
+        /// Appends Delphi source code for the declaration of a field of a class.
+        /// </summary>
+        /// <param name="field">The field declaration</param>
+        /// <param name="visibility">Visibility specifier of the field</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(FieldDeclaration field, Visibility visibility)
+        {
+            string? visibilitySpecifier = visibility.ToSourceCode();
+            string visibilityPrefix = visibilitySpecifier == null ? "" : $"{visibilitySpecifier} ";
+            return AppendDelphiCode(
+$@"{visibilityPrefix}{field.ToSourceCode()};
 "
 );
         }

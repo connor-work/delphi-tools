@@ -382,6 +382,12 @@ $@"{@class.Name} = class{ancestorSpecifier}
 "
             );
             bool firstLine = true;
+            foreach (ConstDeclaration @const in @class.NestedConstDeclarations)
+            {
+                if (!firstLine) AppendLine();
+                firstLine = false;
+                Append(@const);
+            }
             foreach (ClassMemberDeclaration member in @class.MemberList)
             {
                 if (!firstLine) AppendLine();
@@ -394,6 +400,27 @@ $@"end;
 "
             ).Indent(-1);
         }
+
+        /// <summary>
+        /// Appends Delphi source code for the declaration of a constant.
+        /// </summary>
+        /// <param name="@const">The constant declaration</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(ConstDeclaration @const) => @const.DeclarationCase switch
+        {
+            ConstDeclaration.DeclarationOneofCase.TrueConstDeclaration => Append(@const.TrueConstDeclaration),
+            _ => throw new NotImplementedException()
+        };
+
+        /// <summary>
+        /// Appends Delphi source code for the declaration of a true constant.
+        /// </summary>
+        /// <param name="trueConst">The true constant declaration</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(TrueConstDeclaration trueConst) => AppendDelphiCode(
+$@"const {trueConst.Identifier} = {trueConst.Value};
+"
+            );
 
         /// <summary>
         /// Appends Delphi source code for the declaration of a member of a class.

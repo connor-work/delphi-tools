@@ -131,6 +131,7 @@ message ClassMemberDeclaration {
 
   oneof declaration {
     MethodInterfaceDeclaration methodDeclaration = 2; /** Interface declaration of a method */
+    FieldDeclaration fieldDeclaration            = 3; /** Declaration of a field */
   } /** Specific member declaration (polymorphic). Required. */
 }
 
@@ -226,8 +227,27 @@ message Parameter {
   string type = 2; /** Type identifier for the type of the parameter. Required (non-empty). */
 }
 
+/** Declaration of a *field* of a class, within a class declaration.
+  * > A field is like a variable that belongs to an object.
+  * > Fields can be of any type, including class types. (That is, fields can hold object references.) Fields are usually private.
+  * 
+  * [//]: # (blockquote_separator)  
+  * > Class fields are data fields in a class that can be accessed without an object reference (unlike the normal "instance fields" [...]).
+  * Class fields are not supported by this schema.
+  * See [Fields](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Fields_(Delphi)). */
+message FieldDeclaration {
+  string name = 1; /** Name of the field (valid identifier), like a in a variable declaration (*identifierList*).
+                     * Only a single identifier is supported by this schema (only a single field is declared).
+                     * Required (non-empty).
+                     * See [Declaring Variables](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Variables_(Delphi)#Declaring_Variables). */
+  string type = 2; /** Type of the field (*type*). Identifier for any valid type.
+                     * Required (non-empty).
+                     * See [Declaring Variables](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Variables_(Delphi)#Declaring_Variables). */
+}
+
 /** Declaration with the implementation section of a unit.
   * > The implementation section defines procedures and functions that are declared in the interface section.
+  * 
   * [//]: # (blockquote_separator) 
   * > [...] the implementation section can declare constants, types (including classes), variables, procedures, and functions that are private to the unit.
   * Private declarations are not supported by this schema.

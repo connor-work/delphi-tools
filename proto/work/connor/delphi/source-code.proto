@@ -134,6 +134,28 @@ message ClassMemberDeclaration {
   } /** Specific member declaration (polymorphic). Required. */
 }
 
+/** *Visibility specifiers* used to define the *visibility attribute* of a class member.
+  * > Visibility determines where and how a member can be accessed, with **private** representing the least accessibility, **protected** representing an intermediate level of accessibility,
+  * > and **public**, **published**, and **automated** representing the greatest accessibility.
+  * The visibility specifiers **published**, **automated**, **strict private** and **strict protected** are not supported by this schema.
+  * See [Visibility of Class Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Visibility_of_Class_Members). */
+enum Visibility {
+  UNSPECIFIED = 0; /** Lack of a visibility specifier.
+                     * > If a member's declaration appears without its own visibility specifier, the member has the same visibility as the one that precedes it.
+                     * > Members at the beginning of a class declaration that do not have a specified visibility are by default **published**,
+                     * > provided the class is compiled in the {$M+} state or is derived from a class compiled in the {$M+} state; otherwise, such members are **public**.
+                     * See [Visibility of Class Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Visibility_of_Class_Members). */
+  PRIVATE     = 1; /** Visibility specifier **private**.
+                     * > A **private** member is invisible outside of the unit or program where its class is declared.
+                     * See [Private, Protected and Public Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Private.2C_Protected.2C_and_Public_Members).*/
+  PROTECTED   = 2; /** Visibility specifier **protected**.
+                     * > A **protected** member is visible anywhere in the module where its class is declared and from any descendent class, regardless of the module where the descendent class appears.
+                     * See [Private, Protected and Public Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Private.2C_Protected.2C_and_Public_Members).*/
+  PUBLIC      = 3; /** Visibility specifier **public**.
+                     * > A **public** member is visible wherever its class can be referenced.
+                     * See [Private, Protected and Public Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Private.2C_Protected.2C_and_Public_Members).*/
+}
+
 /** *Interface declaration* of a method of a class, within a class declaration.
   * > A method is a procedure or function associated with a class.
   * > A call to a method specifies the object (or, if it is a class method, the class) that the method should operate on.
@@ -202,28 +224,6 @@ message Prototype {
 message Parameter {
   string name = 1; /** Name of the declared parameter (*parameter name*). Required (non-empty). */
   string type = 2; /** Type identifier for the type of the parameter. Required (non-empty). */
-}
-
-/** *Visibility specifiers* used to define the *visibility attribute* of a class member.
-  * > Visibility determines where and how a member can be accessed, with **private** representing the least accessibility, **protected** representing an intermediate level of accessibility,
-  * > and **public**, **published**, and **automated** representing the greatest accessibility.
-  * The visibility specifiers **published**, **automated**, **strict private** and **strict protected** are not supported by this schema.
-  * See [Visibility of Class Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Visibility_of_Class_Members). */
-enum Visibility {
-  UNSPECIFIED = 0; /** Lack of a visibility specifier.
-                     * > If a member's declaration appears without its own visibility specifier, the member has the same visibility as the one that precedes it.
-                     * > Members at the beginning of a class declaration that do not have a specified visibility are by default **published**,
-                     * > provided the class is compiled in the {$M+} state or is derived from a class compiled in the {$M+} state; otherwise, such members are **public**.
-                     * See [Visibility of Class Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Visibility_of_Class_Members). */
-  PRIVATE     = 1; /** Visibility specifier **private**.
-                     * > A **private** member is invisible outside of the unit or program where its class is declared.
-                     * See [Private, Protected and Public Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Private.2C_Protected.2C_and_Public_Members).*/
-  PROTECTED   = 2; /** Visibility specifier **protected**.
-                     * > A **protected** member is visible anywhere in the module where its class is declared and from any descendent class, regardless of the module where the descendent class appears.
-                     * See [Private, Protected and Public Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Private.2C_Protected.2C_and_Public_Members).*/
-  PUBLIC      = 3; /** Visibility specifier **public**.
-                     * > A **public** member is visible wherever its class can be referenced.
-                     * See [Private, Protected and Public Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Private.2C_Protected.2C_and_Public_Members).*/
 }
 
 /** Declaration with the implementation section of a unit.

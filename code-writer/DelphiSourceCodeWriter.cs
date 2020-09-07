@@ -305,17 +305,20 @@ namespace Work.Connor.Delphi.CodeWriter
         /// </summary>
         /// <param name="unit">The unit to define</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(Unit unit) => AppendDelphiCode(
+        public DelphiSourceCodeWriter Append(Unit unit)
+        {
+            if (unit.Comment != null) Append(unit.Comment);
+            return AppendDelphiCode(
 $@"unit {unit.Heading.ToSourceCode()};
 
 "
-            )
-            .Append(unit.Interface)
+            ).Append(unit.Interface)
             .Append(unit.Implementation)
             .AppendDelphiCode(
 $@"end.
 "
             );
+        }
 
         /// <summary>
         /// Appends Delphi source code for an interface section of a unit.
@@ -397,6 +400,7 @@ $@"type
 "
             );
             Indent(1);
+            if (@class.Comment != null) Append(@class.Comment);
             string ancestorSpecifier = @class.Ancestor.Length != 0 ? $"({@class.Ancestor})" : "";
             AppendDelphiCode(
 $@"{@class.Name} = class{ancestorSpecifier}
@@ -438,10 +442,14 @@ $@"end;
         /// </summary>
         /// <param name="trueConst">The true constant declaration</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(TrueConstDeclaration trueConst) => AppendDelphiCode(
+        public DelphiSourceCodeWriter Append(TrueConstDeclaration trueConst)
+        {
+            if (trueConst.Comment != null) Append(trueConst.Comment);
+            return AppendDelphiCode(
 $@"const {trueConst.Identifier} = {trueConst.Value};
 "
             );
+        }
 
         /// <summary>
         /// Appends Delphi source code for the declaration of a member of a class.
@@ -462,10 +470,14 @@ $@"const {trueConst.Identifier} = {trueConst.Value};
         /// <param name="method">The method interface declaration</param>
         /// <param name="visibility">Visibility specifier of the method</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method, Visibility visibility) => AppendDelphiCode(
+        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method, Visibility visibility)
+        {
+            if (method.Comment != null) Append(method.Comment);
+            return AppendDelphiCode(
 $@"{visibility.ToDeclarationPrefix()}{method.Prototype.ToSourceCode()};{method.Binding.ToDeclarationSuffix()}
 "
             );
+        }
 
         /// <summary>
         /// Appends Delphi source code for the declaration of a field of a class.
@@ -473,10 +485,14 @@ $@"{visibility.ToDeclarationPrefix()}{method.Prototype.ToSourceCode()};{method.B
         /// <param name="field">The field declaration</param>
         /// <param name="visibility">Visibility specifier of the field</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(FieldDeclaration field, Visibility visibility) => AppendDelphiCode(
+        public DelphiSourceCodeWriter Append(FieldDeclaration field, Visibility visibility)
+        {
+            if (field.Comment != null) Append(field.Comment);
+            return AppendDelphiCode(
 $@"{visibility.ToDeclarationPrefix()}{field.ToSourceCode()};
 "
             );
+        }
 
         /// <summary>
         /// Appends Delphi source code for the declaration of a property of a class.
@@ -484,10 +500,14 @@ $@"{visibility.ToDeclarationPrefix()}{field.ToSourceCode()};
         /// <param name="property">The property declaration</param>
         /// <param name="visibility">Visibility specifier of the property</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(PropertyDeclaration property, Visibility visibility) => AppendDelphiCode(
+        public DelphiSourceCodeWriter Append(PropertyDeclaration property, Visibility visibility)
+        {
+            if (property.Comment != null) Append(property.Comment);
+            return AppendDelphiCode(
 $@"{visibility.ToDeclarationPrefix()}{property.ToSourceCode()};
 "
             );
+        }
 
         /// <summary>
         /// Appends Delphi source code for a declaration that appears in an implementation section.
@@ -519,6 +539,13 @@ $@"end;
 "
             );
         }
+
+        /// <summary>
+        /// Appends Delphi source code for an annotation comment that describes a source code element.
+        /// </summary>
+        /// <param name="comment">The annotation comment</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(AnnotationComment comment) => AppendDelphiCode(string.Join("\n", comment.CommentLines.Select(line => $"/// {line}"))).AppendLine();
 
 #pragma warning restore S4136 // Method overloads should be grouped together
 

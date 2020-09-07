@@ -201,7 +201,7 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <param name="identifier">The identifier</param>
         /// <returns>Pascal-case equivalent identifier</returns>
         public static string ToPascalCase(this string identifier) => string.Concat(identifier.SplitSyllables()
-                                                                                             .Select(syllable => syllable.First().ToString().ToUpper() + syllable.Substring(1)));
+                                                                                             .Select(syllable => syllable.First().ToString().ToUpper() + syllable.Substring(1).ToLower()));
 
         /// <summary>
         /// Converts a human-readable string to screaming snake case, splitting it into "syllables", capitalizing all letters and joining syllables with an underscore.

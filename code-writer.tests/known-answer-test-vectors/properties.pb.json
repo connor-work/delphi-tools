@@ -24,7 +24,14 @@
                             "propertyDeclaration": {
                                 "name": "PropertyX",
                                 "type": "Integer",
-                                "readSpecifier": "FieldX"
+                                "readSpecifier": "FieldX",
+                                "comment": {
+                                    "commentLines": [
+                                        "<summary>",
+                                        "This is a property used for testing.",
+                                        "</summary>"
+                                    ]
+                                }
                             }
                         },
                         {

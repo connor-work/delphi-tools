@@ -20,6 +20,13 @@
                                 "prototype": {
                                     "name": "ConstructorX",
                                     "type": "CONSTRUCTOR"
+                                },
+                                "comment": {
+                                    "commentLines": [
+                                        "<summary>",
+                                        "This is a method used for testing.",
+                                        "</summary>"
+                                    ]
                                 }
                             }
                         },

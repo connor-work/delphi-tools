@@ -7,5 +7,12 @@
         ]
     },
     "interface": {},
-    "implementation": {}
+    "implementation": {},
+    "comment": {
+        "commentLines": [
+            "<summary>",
+            "This is an empty unit used for testing.",
+            "</summary>"
+        ]
+    }
 }

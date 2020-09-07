@@ -103,7 +103,7 @@ message Implementation {
 message InterfaceDeclaration {
   oneof declaration {
     ClassDeclaration classDeclaration = 1; /** Declaration of a class */
-    // TODO enums
+    EnumDeclaration enumDeclaration   = 2; /** Declaration of an enumerated type */
   } /** Specific declaration (polymorphic). Required. */
 }
 
@@ -335,6 +335,36 @@ message MethodDeclaration {
                                     * This schema does not model the internal structure of the statement block.
                                     * Each field value corresponds to one source code line of the statement block.
                                     * See [Declaring Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Declaring_Procedures_and_Functions). */
+}
+
+/** Declaration of an *enumerated type*.
+  * > An enumerated type defines an ordered set of values by simply listing identifiers that denote these values.
+  * Scoped enumerations are not supported by this schema.
+  * See [Enumerated Types](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Simple_Types_(Delphi)#Enumerated_Types). */
+message EnumDeclaration {
+  string name                          = 1; /** Name of the enumerated type (*typeName*). Required (non-empty). */
+  repeated EnumValueDeclaration values = 2; /** Enumerated values (*val1*, ...,*valn*).
+                                              * > The values have no inherent meaning. */
+  AnnotationComment comment            = 3; /** Annotation comment describing the enumerated type. Optional. */
+}
+
+/** Declaration of a possible value of an enumerated type (*enumerated value*).
+  * > An enumerated type defines an ordered set of values by simply listing identifiers that denote these values.
+  * > The values have no inherent meaning.
+  * 
+  * [//]: # (blockquote_separator) 
+  * > By default, the ordinalities of enumerated values start from 0 and follow the sequence in which their identifiers are listed in the type declaration.
+  * > You can override this by explicitly assigning ordinalities to some or all of the values in the declaration.
+  * Assigning ordinality through a constant expression other than a plain integer literal is not supported by this schema.
+  * See [Enumerated Types](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Simple_Types_(Delphi)#Enumerated_Types). */
+message EnumValueDeclaration {
+  string name               = 1; /** Name of the value (*val*). Required (non-empty). */
+  oneof optionalOrdinality {
+    sint32 ordinality       = 2; /** Ordinality of the value (*constant expression*), defined as an integer literal.
+                                   * Optional (by absence in oneof wrapper). The default value `0` is treated as presence of that value.
+                                   * See [Enumerated Types with Explicitly Assigned Ordinality](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Simple_Types_(Delphi)#Enumerated_Types_with_Explicitly_Assigned_Ordinality). */
+  } /** Oneof wrapper for `ordinality` field. Optional (may have no member present). */
+  AnnotationComment comment = 3; /** Annotation comment describing the value. Optional. */
 }
 
 /** Comment that annotates a source code element for documentation purposes.

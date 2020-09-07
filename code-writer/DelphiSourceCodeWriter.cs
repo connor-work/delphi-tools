@@ -152,6 +152,22 @@ namespace Work.Connor.Delphi.CodeWriter
             return $"property {property.Name}: {property.Type}{readSpecifierSuffix}{writeSpecifierSuffix}";
         }
 
+        /// <summary>
+        /// Constructs a Delphi source code string for a Delphi declaration of an enumerated value.
+        /// </summary>
+        /// <param name="value">The declaration of the enumerated value</param>
+        /// <returns>The Delphi source code string</returns>
+        internal static string ToSourceCode(this EnumValueDeclaration value)
+        {
+            string ordinalitySuffix = value.OptionalOrdinalityCase switch
+            {
+                EnumValueDeclaration.OptionalOrdinalityOneofCase.Ordinality => $" = {value.Ordinality}",
+                EnumValueDeclaration.OptionalOrdinalityOneofCase.None => "",
+                _ => throw new NotImplementedException()
+            };
+            return $"{value.Name}{ordinalitySuffix}";
+        }
+
 #pragma warning restore S4136 // Method overloads should be grouped together
 
     }
@@ -385,6 +401,7 @@ $@"implementation
         public DelphiSourceCodeWriter Append(InterfaceDeclaration declaration) => declaration.DeclarationCase switch
         {
             InterfaceDeclaration.DeclarationOneofCase.ClassDeclaration => Append(declaration.ClassDeclaration),
+            InterfaceDeclaration.DeclarationOneofCase.EnumDeclaration => Append(declaration.EnumDeclaration),
             _ => throw new NotImplementedException()
         };
 
@@ -538,6 +555,42 @@ $@"end;
 
 "
             );
+        }
+
+        /// <summary>
+        /// Appends Delphi source code for the declaration of an enumerated type.
+        /// </summary>
+        /// <param name="enum">The declaration of the enumerated type</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(EnumDeclaration @enum)
+        {
+            AppendDelphiCode(
+$@"type
+"
+            );
+            Indent(1);
+            if (@enum.Comment != null) Append(@enum.Comment);
+            AppendDelphiCode(
+$@"{@enum.Name} = (
+"
+            );
+            Indent(1);
+            bool first = true;
+            foreach (EnumValueDeclaration value in @enum.Values)
+            {
+                if (!first) Append(",").AppendLine().AppendLine();
+                first = false;
+                if (value.Comment != null) Append(value.Comment);
+                AppendDelphiCode(value.ToSourceCode());
+            }
+            Indent(-1);
+            return AppendDelphiCode(
+$@"
+)
+end;
+
+"
+            ).Indent(-1);
         }
 
         /// <summary>

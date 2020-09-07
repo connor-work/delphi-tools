@@ -330,6 +330,7 @@ message MethodDeclaration {
                                    * > and if the method is a function, the return value must match as well. */
   // TODO local declarations
   repeated string statements = 3; /** Contents of the *statement block* (*statements*) (also called *body* or *block*) of the method declaration.
+                                    * Each value contains a single line of source code.
                                     * > Then you write a block of code that executes whenever the procedure or function is called; this part is sometimes called the body of the routine or block.
                                     * This schema does not model the internal structure of the statement block.
                                     * Each field value corresponds to one source code line of the statement block.

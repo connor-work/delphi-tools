@@ -17,7 +17,14 @@
                         {
                             "fieldDeclaration": {
                                 "name": "FieldY",
-                                "type": "string"
+                                "type": "string",
+                                "comment": {
+                                    "commentLines": [
+                                        "<summary>",
+                                        "This is a field used for testing.",
+                                        "</summary>"
+                                    ]
+                                }
                             }
                         }
                     ]

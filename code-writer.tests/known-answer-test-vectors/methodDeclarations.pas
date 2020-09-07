@@ -6,6 +6,9 @@ type
   ClassX = class
   procedure ProcedureX;
 
+  /// <summary>
+  /// This is a method used for testing.
+  /// </summary>
   constructor ConstructorX;
 
   destructor DestructorX;

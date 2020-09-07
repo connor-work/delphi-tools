@@ -17,7 +17,14 @@
                         {
                             "trueConstDeclaration": {
                                 "identifier": "ConstY",
-                                "value": "'2'"
+                                "value": "'2'",
+                                "comment": {
+                                    "commentLines": [
+                                        "<summary>",
+                                        "This is a true constant used for testing.",
+                                        "</summary>"
+                                    ]
+                                }
                             }
                         }
                     ]

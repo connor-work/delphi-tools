@@ -43,6 +43,7 @@ message Unit {
   Implementation implementation = 3; /** *Implementation section* of a unit that defines routines declared in the interface section.
                                        * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section).
                                        *  Required. */
+  AnnotationComment comment     = 4; /** Annotation comment describing the unit. Optional. */
 }
 
 /** Delphi identifier for a unit, used within a unit heading or a uses clause.
@@ -119,6 +120,7 @@ message ClassDeclaration {
                                                             * > Nested constants present a way to keep conceptually related types together and to avoid name collisions. */
   repeated ClassMemberDeclaration memberList         = 5; /** Declared members of the class (*memberList*).
                                                             * > The fields, methods, and properties of a class are called its components or members. */
+  AnnotationComment comment                          = 6; /** Annotation comment describing the class. Optional. */
 }
 
 /** Declaration of a *constant*.
@@ -135,16 +137,17 @@ message ConstDeclaration {
   * > A true constant is a declared identifier whose value cannot change.
   * See [True Constants](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Declared_Constants#True_Constants). */
 message TrueConstDeclaration {
-  string identifier = 1; /** Name of the constant (*identifier*).
-                           * > [...] where *identifier* is any valid identifier [...]
-                           * Required (non-empty). */
-  string value      = 2; /** Constant expression defining the value (*constantExpression*).
-                           * > A constant expression is an expression that the compiler can evaluate without executing the program in which it occurs.
-                           * > Constant expressions include numerals; character strings; true constants; values of enumerated types; the special constants **True**, **False**, and **nil**;
-                           * > and expressions built exclusively from these elements with operators, typecasts, and set constructors.
-                           * This schema does not model the internal structure of the constant expression.
-                           * See [Constant Expressions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Declared_Constants#Constant_Expressions).
-                           * Required (non-empty). */
+  string identifier         = 1; /** Name of the constant (*identifier*).
+                                   * > [...] where *identifier* is any valid identifier [...]
+                                   * Required (non-empty). */
+  string value              = 2; /** Constant expression defining the value (*constantExpression*).
+                                   * > A constant expression is an expression that the compiler can evaluate without executing the program in which it occurs.
+                                   * > Constant expressions include numerals; character strings; true constants; values of enumerated types; the special constants **True**, **False**, and **nil**;
+                                   * > and expressions built exclusively from these elements with operators, typecasts, and set constructors.
+                                   * This schema does not model the internal structure of the constant expression.
+                                   * See [Constant Expressions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Declared_Constants#Constant_Expressions).
+                                   * Required (non-empty). */
+  AnnotationComment comment = 3; /** Annotation comment describing the constant. Optional. */
 }
 
 /** Declaration of a *member* (also called *component*) of a class.
@@ -214,8 +217,9 @@ message MethodInterfaceDeclaration {
                     * See [Virtual and Dynamic Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Virtual_and_Dynamic_Methods). */
   }
 
-  Prototype prototype = 1; /** Prototype (heading) of the method. Required. */
-  Binding binding     = 2; /** Binding of the method. Required, explicit construction should avoid default initialization. */
+  Prototype prototype       = 1; /** Prototype (heading) of the method. Required. */
+  Binding binding           = 2; /** Binding of the method. Required, explicit construction should avoid default initialization. */
+  AnnotationComment comment = 3; /** Annotation comment describing the method. Optional. */
 }
 
 /** *Prototype* of a Delphi routine.
@@ -264,13 +268,14 @@ message Parameter {
   * Class fields are not supported by this schema.
   * See [Fields](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Fields_(Delphi)). */
 message FieldDeclaration {
-  string name = 1; /** Name of the field (valid identifier), like a in a variable declaration (*identifierList*).
-                     * Only a single identifier is supported by this schema (only a single field is declared).
-                     * Required (non-empty).
-                     * See [Declaring Variables](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Variables_(Delphi)#Declaring_Variables). */
-  string type = 2; /** Type of the field (*type*). Identifier for any valid type.
-                     * Required (non-empty).
-                     * See [Declaring Variables](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Variables_(Delphi)#Declaring_Variables). */
+  string name               = 1; /** Name of the field (valid identifier), like a in a variable declaration (*identifierList*).
+                                   * Only a single identifier is supported by this schema (only a single field is declared).
+                                   * Required (non-empty).
+                                   * See [Declaring Variables](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Variables_(Delphi)#Declaring_Variables). */
+  string type               = 2; /** Type of the field (*type*). Identifier for any valid type.
+                                   * Required (non-empty).
+                                   * See [Declaring Variables](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Variables_(Delphi)#Declaring_Variables). */
+  AnnotationComment comment = 3; /** Annotation comment describing the field. Optional. */
 }
 
 /** Declaration of a *property* of a class, within a class declaration.
@@ -280,20 +285,21 @@ message FieldDeclaration {
   * Array properties, index and storage specifiers, property overrides, redeclarations and class properties are not supported by this schema.
   * See [Properties](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Properties_(Delphi)). */
 message PropertyDeclaration {
-  string name            = 1; /** Name of the property (*propertyName*) (valid identifier). Required (non-empty). */
-  string type            = 2; /** Type identifier for the type of the property (*type*). Required (non-empty). */
-  string readSpecifier   = 3; /** *Read specifier* (*fieldOrMethod*) of the property, within the sequence of specifiers (*specifiers*).
-                                * Required (non-empty) if `writeSpecifier` is absent, optional (empty if absent) otherwise.
-                                * > [...] where *fieldOrMethod* is the name of a field or method declared in the same class as the property or in an ancestor class.
-                                * 
-                                * [//]: # (blockquote_separator)  
-                                * > When a property is referenced in an expression, its value is read using the field or method listed in the **read** specifier. */
-  string writeSpecifier = 4; /** *Write specifier* (*fieldOrMethod*) of the property, within the sequence of specifiers (*specifiers*).
-                               * Required (non-empty) if `readSpecifier` is absent, optional (empty if absent) otherwise.
-                               * > [...] where *fieldOrMethod* is the name of a field or method declared in the same class as the property or in an ancestor class.
-                               * 
-                               * [//]: # (blockquote_separator)  
-                               * > When a property is referenced in an assignment statement, its value is written using the field or method listed in the **write** specifier. */
+  string name                = 1; /** Name of the property (*propertyName*) (valid identifier). Required (non-empty). */
+  string type                = 2; /** Type identifier for the type of the property (*type*). Required (non-empty). */
+  string readSpecifier       = 3; /** *Read specifier* (*fieldOrMethod*) of the property, within the sequence of specifiers (*specifiers*).
+                                    * Required (non-empty) if `writeSpecifier` is absent, optional (empty if absent) otherwise.
+                                    * > [...] where *fieldOrMethod* is the name of a field or method declared in the same class as the property or in an ancestor class.
+                                    * 
+                                    * [//]: # (blockquote_separator)  
+                                    * > When a property is referenced in an expression, its value is read using the field or method listed in the **read** specifier. */
+  string writeSpecifier     = 4; /** *Write specifier* (*fieldOrMethod*) of the property, within the sequence of specifiers (*specifiers*).
+                                   * Required (non-empty) if `readSpecifier` is absent, optional (empty if absent) otherwise.
+                                   * > [...] where *fieldOrMethod* is the name of a field or method declared in the same class as the property or in an ancestor class.
+                                   * 
+                                   * [//]: # (blockquote_separator)  
+                                   * > When a property is referenced in an assignment statement, its value is written using the field or method listed in the **write** specifier. */
+  AnnotationComment comment = 5; /** Annotation comment describing the property. Optional. */
 }
 
 /** Declaration with the implementation section of a unit.
@@ -328,4 +334,13 @@ message MethodDeclaration {
                                     * This schema does not model the internal structure of the statement block.
                                     * Each field value corresponds to one source code line of the statement block.
                                     * See [Declaring Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Declaring_Procedures_and_Functions). */
+}
+
+/** Comment that annotates a source code element for documentation purposes.
+  * For example, this could be a Delphi *XML Documentation comment*, or a Doxygen *special comment block*.
+  * This schema does not model the internal structure of the annotation comment.
+  * See [XML Documentation Comments](http://docwiki.embarcadero.com/RADStudio/Sydney/en/XML_Documentation_Comments).
+  * See [Special comment blocks](https://www.doxygen.nl/manual/docblocks.html#specialblock). */
+message AnnotationComment {
+  repeated string commentLines = 1; /** Contents of the annotation comment. Each value contains a single line of comment text. */
 }

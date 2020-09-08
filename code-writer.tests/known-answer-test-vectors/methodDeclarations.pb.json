@@ -37,6 +37,15 @@
                                     "type": "DESTRUCTOR"
                                 }
                             }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "FunctionX",
+                                    "type": "FUNCTION",
+                                    "returnType": "Integer"
+                                }
+                            }
                         }
                     ]
                 }

@@ -86,7 +86,9 @@ namespace Work.Connor.Delphi.CodeWriter
             string classPrefix = @class == null ? "" : $"{@class}.";
             string parameterSuffix = "";
             if (prototype.ParameterList.Count != 0) parameterSuffix = $"({string.Join("; ", prototype.ParameterList.Select(parameter => parameter.ToSourceCode()))})";
-            return $"{prototype.Type.ToSourceCode()} {classPrefix}{prototype.Name}{parameterSuffix}";
+            string returnTypeSuffix = "";
+            if (prototype.Type == Prototype.Types.Type.Function) returnTypeSuffix = $": {prototype.ReturnType}";
+            return $"{prototype.Type.ToSourceCode()} {classPrefix}{prototype.Name}{parameterSuffix}{returnTypeSuffix}";
         }
 
         /// <summary>
@@ -99,6 +101,7 @@ namespace Work.Connor.Delphi.CodeWriter
             Prototype.Types.Type.Procedure => "procedure",
             Prototype.Types.Type.Constructor => "constructor",
             Prototype.Types.Type.Destructor => "destructor",
+            Prototype.Types.Type.Function => "function",
             _ => throw new NotImplementedException()
         };
 

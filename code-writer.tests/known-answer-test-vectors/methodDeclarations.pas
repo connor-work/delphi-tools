@@ -12,6 +12,8 @@ type
   constructor ConstructorX;
 
   destructor DestructorX;
+
+  function FunctionX: Integer;
   end;
 
 implementation

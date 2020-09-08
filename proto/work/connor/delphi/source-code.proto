@@ -225,19 +225,23 @@ message MethodInterfaceDeclaration {
 /** *Prototype* of a Delphi routine.
   * > When you declare a procedure or function, you specify its name, the number and type of parameters it takes, and, in the case of a function, the type of its return value;
   * > this part of the declaration is sometimes called the prototype, heading, or header.
-  * *Functions* and *directives* (except for the *special method directives* used to implement `MethodInterfaceDeclaration.Binding`) are not supported by this schema.
+  * *Directives* (except for the *special method directives* used to implement `MethodInterfaceDeclaration.Binding`) are not supported by this schema.
   * See [Declaring Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Declaring_Procedures_and_Functions). */
 message Prototype {
   /** Types of Delphi routines. */
   enum Type {
-    PROCEDURE   = 0; /** Normal procedure that is neither a constructor nor a destructor.
-                       * See [Procedure Declarations](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Procedure_Declarations). */
+    PROCEDURE   = 0; /** Routine that is a *procedure*, but neither a constructor nor a destructor.
+                       * > A procedure is a routine that does not return a value.
+                       * See [About Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#About_Procedures_and_Functions). */
     CONSTRUCTOR = 1; /** Method that is a *constructor*.
                        * > A constructor is a special method that creates and initializes instance objects.
                        * See [Constructors](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Constructors). */
     DESTRUCTOR  = 2; /** Method that is a *destructor*.
                        * > A destructor is a special method that destroys the object where it is called and deallocates its memory.
                        * See [Destructors](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Destructors). */
+    FUNCTION    = 3; /** Routine that is a *function*.
+                       * > A function is a routine that returns a value when it executes.
+                       * See [About Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#About_Procedures_and_Functions). */
   }
 
   string name                      = 1; /** Name of the routine (*procedure name* or *function name*). Required (non-empty). */
@@ -245,6 +249,11 @@ message Prototype {
   repeated Parameter parameterList = 3; /** List of the routine's parameter declarations (*parameter list*).
                                           * > A parameter list is a sequence of parameter declarations separated by semicolons and enclosed in parentheses.
                                           * See [Parameters](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Parameters_(Delphi)). */
+  string returnType                = 4; /** Type identifier for the type of the return value (*return type*).
+                                          * If `type` is `FUNCTION`, required (non-empty).
+                                          * If `type` is not `FUNCTION`, this field must be absent (empty).
+                                          * > A function declaration is like a procedure declaration except that it specifies a return type and a return value.
+                                          * See [Function Declarations](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Function_Declarations). */
 }
 
 /** *Parameter declaration* within a parameter list.

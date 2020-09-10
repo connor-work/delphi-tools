@@ -32,7 +32,7 @@ namespace Work.Connor.Delphi.CodeWriter
         /// </summary>
         /// <param name="unit">The unit</param>
         /// <returns>Sequence of path components for the recommended source file</returns>
-        public static IEnumerable<string> ToSourceFilePath(this Unit unit) => unit.Heading.Namespace.Append($"{unit.Heading.Unit}.pas");
+        public static IEnumerable<string> ToSourceFilePath(this Unit unit) => unit.Heading.Namespace.Append($"{unit.Heading.ToSourceCode()}.pas");
 
 #pragma warning disable S4136 // Method overloads should be grouped together -> "ToSourceCode* method order reflects order in protobuf schema here
 
@@ -48,7 +48,7 @@ namespace Work.Connor.Delphi.CodeWriter
         /// </summary>
         /// <param name="name">The unit identifier, either a generic name or fully qualified name of the unit</param>
         /// <returns>The Delphi identifier string</returns>
-        internal static string ToSourceCode(this UnitIdentifier identifier) => string.Join(".", identifier.Namespace.Concat(new[] { identifier.Unit }));
+        public static string ToSourceCode(this UnitIdentifier identifier) => string.Join(".", identifier.Namespace.Append(identifier.Unit));
 
         /// <summary>
         /// Constructs an optional Delphi visibility specifier string for declaring the visibility attribute of a Delphi class member.

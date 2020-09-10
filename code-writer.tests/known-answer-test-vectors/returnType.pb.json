@@ -1,0 +1,70 @@
+{
+    "heading": {
+        "unit": "UnitX"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "memberList": [
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "FunctionX",
+                                    "type": "FUNCTION",
+                                    "returnType": "Integer"
+                                }
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "FunctionY",
+                                    "type": "FUNCTION",
+                                    "parameterList": [
+                                        {
+                                            "name": "ParamY",
+                                            "type": "Integer"
+                                        }
+                                    ],
+                                    "returnType": "array of Integer"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {
+        "declarations": [
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "FunctionX",
+                        "type": "FUNCTION",
+                        "returnType": "Integer"
+                    }
+                }
+            },
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "FunctionY",
+                        "type": "FUNCTION",
+                        "parameterList": [
+                            {
+                                "name": "ParamY",
+                                "type": "Integer"
+                            }
+                        ],
+                        "returnType": "array of Integer"
+                    }
+                }
+            }
+        ]
+    }
+}

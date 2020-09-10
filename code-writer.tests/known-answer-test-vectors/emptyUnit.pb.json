@@ -1,0 +1,18 @@
+{
+    "heading": {
+        "unit": "UnitX",
+        "namespace": [
+            "Space1",
+            "Space2"
+        ]
+    },
+    "interface": {},
+    "implementation": {},
+    "comment": {
+        "commentLines": [
+            "<summary>",
+            "This is an empty unit used for testing.",
+            "</summary>"
+        ]
+    }
+}

@@ -27,7 +27,7 @@ option csharp_namespace = "Work.Connor.Delphi";
 /** Delphi program *unit* containing application source code.
   * > Delphi programs are usually divided into source-code modules called units.
   *
-  * <!-- blockquote_separator -->
+  * [//]: # (blockquote_separator)
   * > A unit consists of types (including classes), constants, variables, and routines (functions and procedures).
   * > Each unit is defined in its own source (`.pas`) file.
   * The optional *initialization section* and *finalization section* are not supported by this schema.
@@ -40,9 +40,10 @@ message Unit {
   Interface interface           = 2; /** *Interface section* of a unit that declares entities that are available to clients.
                                        * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section).
                                        * Required. */
-  Implementation implementation = 3; /** *Implementation section* of a unit that defines procedures and functions declared in the interface section.
+  Implementation implementation = 3; /** *Implementation section* of a unit that defines routines declared in the interface section.
                                        * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section).
                                        *  Required. */
+  AnnotationComment comment     = 4; /** Annotation comment describing the unit. Optional. */
 }
 
 /** Delphi identifier for a unit, used within a unit heading or a uses clause.
@@ -59,7 +60,7 @@ message UnitIdentifier {
 /** *Interface section* of a unit.
   * > The interface section declares constants, types, variables, procedures, and functions that are available to clients.
   * 
-  * <!-- blockquote_separator -->
+  * [//]: # (blockquote_separator)
   * > That is, to other units or programs that wish to use elements from this unit.
   * > These entities are called public because code in other units can access them as if they were declared in the unit itself.
   * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section). */
@@ -73,18 +74,18 @@ message Interface {
 /** Reference to a unit (element of a *uses clause*).
   * > A uses clause lists units used by the program, library, or unit in which the clause appears.
   * > Use the keyword in after a unit name when you need to specify the unit's source file.
-  * Use of the keyword `in` for source file specification is not supported by this schema.
+  * Use of the keyword **in** for source file specification is not supported by this schema.
   * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
 message UnitReference {
   UnitIdentifier unit = 1; /** Identifier of the referenced unit.
-                             * > A uses clause consists of the reserved word `uses`, followed by one or more comma delimited unit names...
+                             * > A uses clause consists of the reserved word **uses**, followed by one or more comma delimited unit names...
                              * Required. */
 }
 
 /** *Implementation section* of a unit.
   * > The implementation section defines procedures and functions that are declared in the interface section.
   * 
-  * <!-- blockquote_separator -->
+  * [//]: # (blockquote_separator)
   * > ... the implementation section can declare constants, types (including classes), variables, procedures, and functions that are private to the unit.
   * Private declarations are not supported by this schema.
   * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section). */
@@ -92,17 +93,17 @@ message Implementation {
   repeated UnitReference usesClause               = 1; /** List of unit references (*uses clause*).
                                                          * > The implementation section can include its own uses clause...
                                                          * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
-  // TODO declarations
+  repeated ImplementationDeclaration declarations = 2; /** Sequence of declarations of unit-private entities and defining declarations of routines */
 }
 
 /** Declaration within the interface section of a unit, that is available to clients.
   * > The interface section declares constants, types, variables, procedures, and functions ...
-  * Declarations of constants, variables, procedures, functions and types other than classes and enumerated types are not supported by this schema.
+  * Declarations of constants, variables, routines and types other than classes and enumerated types are not supported by this schema.
   * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section) */
 message InterfaceDeclaration {
   oneof declaration {
     ClassDeclaration classDeclaration = 1; /** Declaration of a class */
-    // TODO enums
+    EnumDeclaration enumDeclaration   = 2; /** Declaration of an enumerated type */
   } /** Specific declaration (polymorphic). Required. */
 }
 
@@ -110,9 +111,276 @@ message InterfaceDeclaration {
   * > A class, or class type, defines a structure consisting of fields, methods, and properties.
   * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)) */
 message ClassDeclaration {
-  string name  = 1; /** Name of the class (*className*). Required (non-empty). */
-  // TODO ancestor  
+  string name                                        = 1; /** Name of the class (*className*). Required (non-empty). */
+  string ancestor                                    = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
+                                                            * > When you declare a class, you can specify its immediate ancestor.
+                                                            * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
   // TODO nested types
-  // TODO nested consts
-  // TODO members
+  repeated ConstDeclaration nestedConstDeclarations  = 4; /** List of *nested constants* (*nestedConstDeclaration*) that are declared within the class (namespacing mechanism).
+                                                            * > Nested constants present a way to keep conceptually related types together and to avoid name collisions. */
+  repeated ClassMemberDeclaration memberList         = 5; /** Declared members of the class (*memberList*).
+                                                            * > The fields, methods, and properties of a class are called its components or members. */
+  AnnotationComment comment                          = 6; /** Annotation comment describing the class. Optional. */
+}
+
+/** Declaration of a *constant*.
+  * > Declared constants are either *true constants* or *typed constants*.
+  * Typed constants are not supported by this schema.
+  * See [Declared Constants](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Declared_Constants). */
+message ConstDeclaration {
+  oneof declaration {
+    TrueConstDeclaration trueConstDeclaration = 1; /** Declaration of a true constant */
+  } /** Specific declaration (polymorphic). Required. */
+}
+
+/** Declaration of a *true constant*, whose value can be evaluated by the compiler without executing the program.
+  * > A true constant is a declared identifier whose value cannot change.
+  * See [True Constants](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Declared_Constants#True_Constants). */
+message TrueConstDeclaration {
+  string identifier         = 1; /** Name of the constant (*identifier*).
+                                   * > [...] where *identifier* is any valid identifier [...]
+                                   * Required (non-empty). */
+  string value              = 2; /** Constant expression defining the value (*constantExpression*).
+                                   * > A constant expression is an expression that the compiler can evaluate without executing the program in which it occurs.
+                                   * > Constant expressions include numerals; character strings; true constants; values of enumerated types; the special constants **True**, **False**, and **nil**;
+                                   * > and expressions built exclusively from these elements with operators, typecasts, and set constructors.
+                                   * This schema does not model the internal structure of the constant expression.
+                                   * See [Constant Expressions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Declared_Constants#Constant_Expressions).
+                                   * Required (non-empty). */
+  AnnotationComment comment = 3; /** Annotation comment describing the constant. Optional. */
+}
+
+/** Declaration of a *member* (also called *component*) of a class.
+  * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)). */
+message ClassMemberDeclaration {
+  Visibility visibility                          = 1; /** *Visibility attribute* of the class member.
+                                                        * > Every member of a class has an attribute called visibility [...]
+                                                        * > Visibility determines where and how a member can be accessed [...]
+                                                        * Required, explicit construction should avoid default initialization.
+                                                        * See [Visibility of Class Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Visibility_of_Class_Members). */
+
+  oneof declaration {
+    MethodInterfaceDeclaration methodDeclaration = 2; /** Interface declaration of a method */
+    FieldDeclaration fieldDeclaration            = 3; /** Declaration of a field */
+    PropertyDeclaration propertyDeclaration      = 4; /** Declaration of a property */
+  } /** Specific member declaration (polymorphic). Required. */
+}
+
+/** *Visibility specifiers* used to define the *visibility attribute* of a class member.
+  * > Visibility determines where and how a member can be accessed, with **private** representing the least accessibility, **protected** representing an intermediate level of accessibility,
+  * > and **public**, **published**, and **automated** representing the greatest accessibility.
+  * The visibility specifiers **published**, **automated**, **strict private** and **strict protected** are not supported by this schema.
+  * See [Visibility of Class Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Visibility_of_Class_Members). */
+enum Visibility {
+  UNSPECIFIED = 0; /** Lack of a visibility specifier.
+                     * > If a member's declaration appears without its own visibility specifier, the member has the same visibility as the one that precedes it.
+                     * > Members at the beginning of a class declaration that do not have a specified visibility are by default **published**,
+                     * > provided the class is compiled in the {$M+} state or is derived from a class compiled in the {$M+} state; otherwise, such members are **public**.
+                     * See [Visibility of Class Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Visibility_of_Class_Members). */
+  PRIVATE     = 1; /** Visibility specifier **private**.
+                     * > A **private** member is invisible outside of the unit or program where its class is declared.
+                     * See [Private, Protected and Public Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Private.2C_Protected.2C_and_Public_Members).*/
+  PROTECTED   = 2; /** Visibility specifier **protected**.
+                     * > A **protected** member is visible anywhere in the module where its class is declared and from any descendent class, regardless of the module where the descendent class appears.
+                     * See [Private, Protected and Public Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Private.2C_Protected.2C_and_Public_Members).*/
+  PUBLIC      = 3; /** Visibility specifier **public**.
+                     * > A **public** member is visible wherever its class can be referenced.
+                     * See [Private, Protected and Public Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Private.2C_Protected.2C_and_Public_Members).*/
+}
+
+/** *Interface declaration* of a method of a class, within a class declaration.
+  * > A method is a procedure or function associated with a class.
+  * > A call to a method specifies the object (or, if it is a class method, the class) that the method should operate on.
+  *
+  * [//]: # (blockquote_separator)
+  * > Within a class declaration, methods appear as procedure and function headings, which work like forward declarations.
+  * See [Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)).
+  * See [Forward and Interface Declarations](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Forward_and_Interface_Declarations). */
+message MethodInterfaceDeclaration {
+  /** *Binding* of an instance method.
+    * > Method bindings can be **static** (the default), **virtual**, or **dynamic**. Virtual and dynamic methods can be overridden, and they can be abstract.
+    * > These designations come into play when a variable of one class type holds a value of a descendent class type.
+    * > They determine which implementation is activated when a method is called.
+    * 
+    * [//]: # (blockquote_separator)    
+    * > To override a method, redeclare it with the **override** directive.
+    * Note that *override* is also considered a binding specification in this schema (it implies *virtual* or *dynamic*, depending on the ancestor declaration).
+    * Dynamic methods are not supported by this schema.
+    * See [Method Binding](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Method_Binding).
+    * See [Virtual and Dynamic Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Virtual_and_Dynamic_Methods). */
+  enum Binding {
+    STATIC   = 0; /** *Static* method binding.
+                    * See [Static Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Static_Methods). */
+    VIRTUAL  = 1; /** *Virtual* method binding.
+                    * See [Virtual and Dynamic Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Virtual_and_Dynamic_Methods). */
+    OVERRIDE = 2; /** Method with an *override declaration* that inherits its binding from the ancestor declaration.
+                    * See [Virtual and Dynamic Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Virtual_and_Dynamic_Methods). */
+  }
+
+  Prototype prototype       = 1; /** Prototype (heading) of the method. Required. */
+  Binding binding           = 2; /** Binding of the method. Required, explicit construction should avoid default initialization. */
+  AnnotationComment comment = 3; /** Annotation comment describing the method. Optional. */
+}
+
+/** *Prototype* of a Delphi routine.
+  * > When you declare a procedure or function, you specify its name, the number and type of parameters it takes, and, in the case of a function, the type of its return value;
+  * > this part of the declaration is sometimes called the prototype, heading, or header.
+  * *Directives* (except for the *special method directives* used to implement `MethodInterfaceDeclaration.Binding`) are not supported by this schema.
+  * See [Declaring Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Declaring_Procedures_and_Functions). */
+message Prototype {
+  /** Types of Delphi routines. */
+  enum Type {
+    PROCEDURE   = 0; /** Routine that is a *procedure*, but neither a constructor nor a destructor.
+                       * > A procedure is a routine that does not return a value.
+                       * See [About Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#About_Procedures_and_Functions). */
+    CONSTRUCTOR = 1; /** Method that is a *constructor*.
+                       * > A constructor is a special method that creates and initializes instance objects.
+                       * See [Constructors](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Constructors). */
+    DESTRUCTOR  = 2; /** Method that is a *destructor*.
+                       * > A destructor is a special method that destroys the object where it is called and deallocates its memory.
+                       * See [Destructors](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)#Destructors). */
+    FUNCTION    = 3; /** Routine that is a *function*.
+                       * > A function is a routine that returns a value when it executes.
+                       * See [About Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#About_Procedures_and_Functions). */
+  }
+
+  string name                      = 1; /** Name of the routine (*procedure name* or *function name*). Required (non-empty). */
+  Type type                        = 2; /** Type of routine. Required, explicit construction should avoid default initialization. */
+  repeated Parameter parameterList = 3; /** List of the routine's parameter declarations (*parameter list*).
+                                          * > A parameter list is a sequence of parameter declarations separated by semicolons and enclosed in parentheses.
+                                          * See [Parameters](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Parameters_(Delphi)). */
+  string returnType                = 4; /** Type identifier for the type of the return value (*return type*).
+                                          * If `type` is `FUNCTION`, required (non-empty).
+                                          * If `type` is not `FUNCTION`, this field must be absent (empty).
+                                          * > A function declaration is like a procedure declaration except that it specifies a return type and a return value.
+                                          * See [Function Declarations](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Function_Declarations). */
+}
+
+/** *Parameter declaration* within a parameter list.
+  * > Each declaration is a comma-delimited series of parameter names, followed in most cases by a colon and a type identifier, and in some cases by the = symbol and a default value.
+  * > Parameter names must be valid identifiers.
+  * The declaration of multiple parameter names in the same parameter declaration is not supported by this schema.
+  * *Variable* (**var**), constant (**const**) and **out** parameters are not supported by this schema (i.e., only *value parameters* are supported).
+  * Default parameter values are not supported by this schema.
+  * See [Parameters](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Parameters_(Delphi)). */
+message Parameter {
+  string name = 1; /** Name of the declared parameter (*parameter name*). Required (non-empty). */
+  string type = 2; /** Type identifier for the type of the parameter. Required (non-empty). */
+}
+
+/** Declaration of a *field* of a class, within a class declaration.
+  * > A field is like a variable that belongs to an object.
+  * > Fields can be of any type, including class types. (That is, fields can hold object references.) Fields are usually private.
+  * 
+  * [//]: # (blockquote_separator)  
+  * > Class fields are data fields in a class that can be accessed without an object reference (unlike the normal "instance fields" [...]).
+  * Class fields are not supported by this schema.
+  * See [Fields](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Fields_(Delphi)). */
+message FieldDeclaration {
+  string name               = 1; /** Name of the field (valid identifier), like a in a variable declaration (*identifierList*).
+                                   * Only a single identifier is supported by this schema (only a single field is declared).
+                                   * Required (non-empty).
+                                   * See [Declaring Variables](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Variables_(Delphi)#Declaring_Variables). */
+  string type               = 2; /** Type of the field (*type*). Identifier for any valid type.
+                                   * Required (non-empty).
+                                   * See [Declaring Variables](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Variables_(Delphi)#Declaring_Variables). */
+  AnnotationComment comment = 3; /** Annotation comment describing the field. Optional. */
+}
+
+/** Declaration of a *property* of a class, within a class declaration.
+  * > A property, like a field, defines an attribute of an object.
+  * > But while a field is merely a storage location whose contents can be examined and changed, a property associates specific actions with reading or modifying its data.
+  * > Properties provide control over access to an object's attributes, and they allow attributes to be computed.
+  * Array properties, index and storage specifiers, property overrides, redeclarations and class properties are not supported by this schema.
+  * See [Properties](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Properties_(Delphi)). */
+message PropertyDeclaration {
+  string name                = 1; /** Name of the property (*propertyName*) (valid identifier). Required (non-empty). */
+  string type                = 2; /** Type identifier for the type of the property (*type*). Required (non-empty). */
+  string readSpecifier       = 3; /** *Read specifier* (*fieldOrMethod*) of the property, within the sequence of specifiers (*specifiers*).
+                                    * Required (non-empty) if `writeSpecifier` is absent, optional (empty if absent) otherwise.
+                                    * > [...] where *fieldOrMethod* is the name of a field or method declared in the same class as the property or in an ancestor class.
+                                    * 
+                                    * [//]: # (blockquote_separator)  
+                                    * > When a property is referenced in an expression, its value is read using the field or method listed in the **read** specifier. */
+  string writeSpecifier     = 4; /** *Write specifier* (*fieldOrMethod*) of the property, within the sequence of specifiers (*specifiers*).
+                                   * Required (non-empty) if `readSpecifier` is absent, optional (empty if absent) otherwise.
+                                   * > [...] where *fieldOrMethod* is the name of a field or method declared in the same class as the property or in an ancestor class.
+                                   * 
+                                   * [//]: # (blockquote_separator)  
+                                   * > When a property is referenced in an assignment statement, its value is written using the field or method listed in the **write** specifier. */
+  AnnotationComment comment = 5; /** Annotation comment describing the property. Optional. */
+}
+
+/** Declaration with the implementation section of a unit.
+  * > The implementation section defines procedures and functions that are declared in the interface section.
+  * 
+  * [//]: # (blockquote_separator) 
+  * > [...] the implementation section can declare constants, types (including classes), variables, procedures, and functions that are private to the unit.
+  * Private declarations are not supported by this schema.
+  * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section). */
+message ImplementationDeclaration {
+  oneof declaration {
+    MethodDeclaration methodDeclaration = 1; /** Defining declaration of a method */
+  } /** Specific declaration (polymorphic). Required. */
+}
+
+/** *Defining declaration* of a class method within the implementation section.
+  * > Somewhere after the class declaration, but within the same module, each method must be implemented by a defining declaration.
+  * 
+  * [//]: # (blockquote_separator)  
+  * > The [declaration] can repeat the parameter list from the class declaration; if it does, the order, type, and names of the parameters must match exactly,
+  * > and if the method is a function, the return value must match as well.
+  * See [Methods](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Methods_(Delphi)). */
+message MethodDeclaration {
+  string class               = 1; /** Name of the class to which the method belongs. Required (non-empty).
+                                   * > In the heading of a defining declaration, the method name is always qualified with the name of the class to which it belongs. */
+  Prototype prototype        = 2; /** *Prototype* of the method. Required.
+                                   * > The [declaration] can repeat the parameter list from the class declaration; if it does, the order, type, and names of the parameters must match exactly,
+                                   * > and if the method is a function, the return value must match as well. */
+  // TODO local declarations
+  repeated string statements = 3; /** Contents of the *statement block* (*statements*) (also called *body* or *block*) of the method declaration.
+                                    * Each value contains a single line of source code.
+                                    * > Then you write a block of code that executes whenever the procedure or function is called; this part is sometimes called the body of the routine or block.
+                                    * This schema does not model the internal structure of the statement block.
+                                    * Each field value corresponds to one source code line of the statement block.
+                                    * See [Declaring Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Declaring_Procedures_and_Functions). */
+}
+
+/** Declaration of an *enumerated type*.
+  * > An enumerated type defines an ordered set of values by simply listing identifiers that denote these values.
+  * Scoped enumerations are not supported by this schema.
+  * See [Enumerated Types](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Simple_Types_(Delphi)#Enumerated_Types). */
+message EnumDeclaration {
+  string name                          = 1; /** Name of the enumerated type (*typeName*). Required (non-empty). */
+  repeated EnumValueDeclaration values = 2; /** Enumerated values (*val1*, ...,*valn*).
+                                              * > The values have no inherent meaning. */
+  AnnotationComment comment            = 3; /** Annotation comment describing the enumerated type. Optional. */
+}
+
+/** Declaration of a possible value of an enumerated type (*enumerated value*).
+  * > An enumerated type defines an ordered set of values by simply listing identifiers that denote these values.
+  * > The values have no inherent meaning.
+  * 
+  * [//]: # (blockquote_separator) 
+  * > By default, the ordinalities of enumerated values start from 0 and follow the sequence in which their identifiers are listed in the type declaration.
+  * > You can override this by explicitly assigning ordinalities to some or all of the values in the declaration.
+  * Assigning ordinality through a constant expression other than a plain integer literal is not supported by this schema.
+  * See [Enumerated Types](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Simple_Types_(Delphi)#Enumerated_Types). */
+message EnumValueDeclaration {
+  string name               = 1; /** Name of the value (*val*). Required (non-empty). */
+  oneof optionalOrdinality {
+    sint32 ordinality       = 2; /** Ordinality of the value (*constant expression*), defined as an integer literal.
+                                   * Optional (by absence in oneof wrapper). The default value `0` is treated as presence of that value.
+                                   * See [Enumerated Types with Explicitly Assigned Ordinality](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Simple_Types_(Delphi)#Enumerated_Types_with_Explicitly_Assigned_Ordinality). */
+  } /** Oneof wrapper for `ordinality` field. Optional (may have no member present). */
+  AnnotationComment comment = 3; /** Annotation comment describing the value. Optional. */
+}
+
+/** Comment that annotates a source code element for documentation purposes.
+  * For example, this could be a Delphi *XML Documentation comment*, or a Doxygen *special comment block*.
+  * This schema does not model the internal structure of the annotation comment.
+  * See [XML Documentation Comments](http://docwiki.embarcadero.com/RADStudio/Sydney/en/XML_Documentation_Comments).
+  * See [Special comment blocks](https://www.doxygen.nl/manual/docblocks.html#specialblock). */
+message AnnotationComment {
+  repeated string commentLines = 1; /** Contents of the annotation comment. Each value contains a single line of comment text. */
 }

@@ -2,6 +2,13 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Work.Connor.Delphi.CodeWriter</RootNamespace>
+    <Title>Delphi Source Code Writer</Title>
+    <PackageId>Work.Connor.Delphi.CodeWriter</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Copyright>Copyright 2020 Connor Roehricht (connor.work) and other contributors (see repository)</Copyright>
+    <Authors>connor.work</Authors>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.13.0" />

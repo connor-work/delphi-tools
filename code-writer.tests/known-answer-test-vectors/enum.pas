@@ -20,8 +20,7 @@ type
     /// This is an enumerated value used for testing, with explicitly assigned ordinality.
     /// </summary>
     exValueY = 3
-  )
-  end;
+  );
 
 implementation
 

@@ -330,6 +330,10 @@ namespace Work.Connor.Delphi.CodeWriter
             return AppendDelphiCode(
 $@"unit {unit.Heading.ToSourceCode()};
 
+{{$IFDEF FPC}}
+  {{$MODE DELPHI}}
+{{$ENDIF}}
+
 "
             ).Append(unit.Interface)
             .Append(unit.Implementation)

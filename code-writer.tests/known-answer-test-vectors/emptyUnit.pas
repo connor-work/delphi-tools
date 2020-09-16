@@ -3,6 +3,10 @@
 /// </summary>
 unit Space1.Space2.UnitX;
 
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
+
 interface
 
 implementation

@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <Version>0.0.1-00-inject-develop</Version>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Work.Connor.Delphi.CodeWriter</RootNamespace>
     <Title>Delphi Source Code Writer</Title>
     <PackageId>Work.Connor.Delphi.CodeWriter</PackageId>
-    <PackageVersion>0.0.1</PackageVersion>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Copyright>Copyright 2020 Connor Roehricht (connor.work) and other contributors (see repository)</Copyright>
     <Authors>connor.work</Authors>

@@ -593,8 +593,7 @@ $@"{@enum.Name} = (
             Indent(-1);
             return AppendDelphiCode(
 $@"
-)
-end;
+);
 
 "
             ).Indent(-1);

@@ -374,7 +374,7 @@ $@"interface
         /// <summary>
         /// Appends Delphi source code for a uses clause.
         /// </summary>
-        /// <param name="interface">List of unit references in the uses clause</param>
+        /// <param name="references">List of unit references in the uses clause</param>
         /// <returns><c>this</c></returns>
         public DelphiSourceCodeWriter AppendUsesClause(IList<UnitReference> references)
         {
@@ -399,7 +399,7 @@ $@"{reference.Unit.ToSourceCode()}"
         /// <summary>
         /// Appends Delphi source code for an implementation section of a unit.
         /// </summary>
-        /// <param name="interface">The implementation section</param>
+        /// <param name="implementation">The implementation section</param>
         /// <returns><c>this</c></returns>
         public DelphiSourceCodeWriter Append(Implementation implementation)
         {

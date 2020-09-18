@@ -68,10 +68,7 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         /// <summary>
         /// Names of all known Delphi unit-related test vectors
         /// </summary>
-        private static IEnumerable<string> DelphiUnitTestVectorNames { get {
-               // Debugger.Launch();
-                return allExpectedUnitSourceResources.GetIDs().WhereSuffixed(new Regex(Regex.Escape($".{DelphiSourceCodeWriter.unitSourceFileExtension}")));
-            } }
+        private static IEnumerable<string> DelphiUnitTestVectorNames => allExpectedUnitSourceResources.GetIDs().WhereSuffixed(new Regex(Regex.Escape($".{DelphiSourceCodeWriter.unitSourceFileExtension}")));
 
         /// <summary>
         /// Names of all known Delphi program-related test vectors

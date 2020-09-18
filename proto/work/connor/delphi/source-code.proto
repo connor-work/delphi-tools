@@ -66,7 +66,7 @@ message UnitIdentifier {
   * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section). */
 message Interface {
   repeated UnitReference usesClause          = 1; /** List of unit references (*uses clause*).
-                                                    * > The interface section can include its own uses clause...
+                                                    * > The interface section can include its own uses clause [...]
                                                     * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
   repeated InterfaceDeclaration declarations = 2; /** Declarations that are available to clients */
 }
@@ -78,7 +78,7 @@ message Interface {
   * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
 message UnitReference {
   UnitIdentifier unit = 1; /** Identifier of the referenced unit.
-                             * > A uses clause consists of the reserved word **uses**, followed by one or more comma delimited unit names...
+                             * > A uses clause consists of the reserved word **uses**, followed by one or more comma delimited unit names [...]
                              * Required. */
 }
 
@@ -86,18 +86,18 @@ message UnitReference {
   * > The implementation section defines procedures and functions that are declared in the interface section.
   * 
   * [//]: # (blockquote_separator)
-  * > ... the implementation section can declare constants, types (including classes), variables, procedures, and functions that are private to the unit.
+  * > [...] the implementation section can declare constants, types (including classes), variables, procedures, and functions that are private to the unit.
   * Private declarations are not supported by this schema.
   * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section). */
 message Implementation {
   repeated UnitReference usesClause               = 1; /** List of unit references (*uses clause*).
-                                                         * > The implementation section can include its own uses clause...
+                                                         * > The implementation section can include its own uses clause [...]
                                                          * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
   repeated ImplementationDeclaration declarations = 2; /** Sequence of declarations of unit-private entities and defining declarations of routines */
 }
 
 /** Declaration within the interface section of a unit, that is available to clients.
-  * > The interface section declares constants, types, variables, procedures, and functions ...
+  * > The interface section declares constants, types, variables, procedures, and functions [...]
   * Declarations of constants, variables, routines and types other than classes and enumerated types are not supported by this schema.
   * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section) */
 message InterfaceDeclaration {

@@ -5,6 +5,8 @@
     <RootNamespace>Work.Connor.Delphi.CodeWriter.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
+
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,8 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="known-answer-test-vectors\*.pb.json" />
-    <EmbeddedResource Include="known-answer-test-vectors\*.pas" />
+    <!-- Expected output Delphi source code files -->
+    <EmbeddedResource Include="test-vectors/known-delphi-units/*.pas" LogicalName="[known delphi unit][expected source]%(Filename)%(Extension)" />
+    <!-- For each Delphi source code file, there is a protobuf message stored in a JSON-encoded file with matching name -->
+    <EmbeddedResource Include="test-vectors/known-delphi-units/*.pb.json" LogicalName="[known delphi unit][message]%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

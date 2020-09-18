@@ -183,7 +183,7 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
             /// <summary>
             /// Expected Delphi source code for <see cref="Program"/>
             /// </summary>
-            public string ExpectedSourceCode => allExpectedUnitSourceResources.ReadResource($"{name}.{DelphiSourceCodeWriter.programSourceFileExtension}")!;
+            public string ExpectedSourceCode => allExpectedProgramSourceResources.ReadResource($"{name}.{DelphiSourceCodeWriter.programSourceFileExtension}")!;
 
             public void Deserialize(IXunitSerializationInfo info) => name = info.GetValue<string>(nameof(name));
 

@@ -406,4 +406,5 @@ message Program {
                                            * This schema does not model the internal structure of the block.
                                            * Each field value corresponds to one source code line of the block.
                                            * See [The Block](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Block). */
+  AnnotationComment comment         = 4; /** Annotation comment describing the program. Optional. */
 }

@@ -176,7 +176,7 @@ namespace Work.Connor.Delphi.CodeWriter
         /// </summary>
         /// <param name="program">The program to define</param>
         /// <returns>The Delphi source code</returns>
-        public static string ToSourceCode(this Program program) => throw new NotImplementedException();
+        public static string ToSourceCode(this Program program) => new DelphiSourceCodeWriter().Append(program).ToString();
 
 #pragma warning restore S4136 // Method overloads should be grouped together
 
@@ -617,6 +617,34 @@ $@"
         /// <param name="comment">The annotation comment</param>
         /// <returns><c>this</c></returns>
         public DelphiSourceCodeWriter Append(AnnotationComment comment) => AppendDelphiCode(string.Join("\n", comment.CommentLines.Select(line => $"/// {line}"))).AppendLine();
+
+        /// <summary>
+        /// Appends Delphi source code defining a program.
+        /// </summary>
+        /// <param name="program">The program to define</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(Program program)
+        {
+            if (program.Comment != null) Append(program.Comment);
+            AppendDelphiCode(
+$@"program {program.Heading};
+
+{{$IFDEF FPC}}
+  {{$MODE DELPHI}}
+{{$ENDIF}}
+
+"
+            ).AppendUsesClause(program.UsesClause)
+            .AppendDelphiCode(
+$@"begin
+"
+            );
+            foreach (string line in program.Block) AppendDelphiCode(line, 1).AppendLine();
+            return AppendDelphiCode(
+$@"end.
+"
+            );
+        }
 
 #pragma warning restore S4136 // Method overloads should be grouped together
 

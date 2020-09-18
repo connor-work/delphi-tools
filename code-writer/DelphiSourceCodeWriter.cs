@@ -171,6 +171,13 @@ namespace Work.Connor.Delphi.CodeWriter
             return $"{value.Name}{ordinalitySuffix}";
         }
 
+        /// <summary>
+        /// Constructs Delphi source code defining a program.
+        /// </summary>
+        /// <param name="program">The program to define</param>
+        /// <returns>The Delphi source code</returns>
+        public static string ToSourceCode(this Program program) => throw new NotImplementedException();
+
 #pragma warning restore S4136 // Method overloads should be grouped together
 
     }

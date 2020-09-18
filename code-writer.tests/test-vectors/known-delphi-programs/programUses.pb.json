@@ -1,0 +1,19 @@
+{
+    "heading": "ProgramX",
+    "usesClause": [
+        {
+            "unit": {
+                "unit": "UnitY"
+            }
+        },
+        {
+            "unit": {
+                "unit": "UnitZ",
+                "namespace": [
+                    "Space1",
+                    "Space2"
+                ]
+            }
+        }
+    ]
+}

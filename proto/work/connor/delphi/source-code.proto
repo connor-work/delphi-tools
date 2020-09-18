@@ -384,3 +384,26 @@ message EnumValueDeclaration {
 message AnnotationComment {
   repeated string commentLines = 1; /** Contents of the annotation comment. Each value contains a single line of comment text. */
 }
+
+/** Source code file for an executable Delphi application (*program* or *project file*).
+  * > A complete, executable Delphi application consists of multiple unit modules, all tied together by a single source code module called a project file.
+  * See [Program Structure and Syntax](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Program_Structure_and_Syntax). */
+message Program {
+  string heading                    = 1; /** *Program heading* that specifies the program's name (valid Delphi identifier).
+                                           * > The **program** heading specifies a name for the executable program.
+                                           * See [The Program Heading](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Program_Heading).
+                                           * Required. */
+  repeated UnitReference usesClause = 2; /** List of unit references (*uses clause*).
+                                           * > The **uses** clause lists those units that are incorporated into the program.
+                                           * See [The Program Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Program_Uses_Clause). */
+  repeated string block             = 3; /** Contents of the *block* of the program.
+                                           * Each value contains a single line of source code.
+                                           * > The source code file for an executable Delphi application contains: [...] a block of declarations and executable statements.
+                                           *
+                                           * [//]: # (blockquote_separator)
+                                           * > The block contains a simple or structured statement that is executed when the program runs. [...]
+                                           * > [...] The block can also contain declarations of constants, types, variables, procedures, and functions; these declarations must precede the statement part of the block.
+                                           * This schema does not model the internal structure of the block.
+                                           * Each field value corresponds to one source code line of the block.
+                                           * See [The Block](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Block). */
+}

@@ -23,8 +23,10 @@
   <ItemGroup>
     <!-- Expected output Delphi source code files -->
     <EmbeddedResource Include="test-vectors/known-delphi-units/*.pas" LogicalName="[known delphi unit][expected source]%(Filename)%(Extension)" />
+    <EmbeddedResource Include="test-vectors/known-delphi-programs/*.pas" LogicalName="[known delphi program][expected source]%(Filename)%(Extension)" />
     <!-- For each Delphi source code file, there is a protobuf message stored in a JSON-encoded file with matching name -->
     <EmbeddedResource Include="test-vectors/known-delphi-units/*.pb.json" LogicalName="[known delphi unit][message]%(Filename)%(Extension)" />
+    <EmbeddedResource Include="test-vectors/known-delphi-programs/*.pb.json" LogicalName="[known delphi program][message]%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

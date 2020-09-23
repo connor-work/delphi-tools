@@ -1,5 +1,9 @@
 unit UnitX;
 
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
+
 interface
 
 type
@@ -16,8 +20,7 @@ type
     /// This is an enumerated value used for testing, with explicitly assigned ordinality.
     /// </summary>
     exValueY = 3
-  )
-  end;
+  );
 
 implementation
 

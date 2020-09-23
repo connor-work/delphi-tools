@@ -5,6 +5,8 @@
     <RootNamespace>Work.Connor.Delphi.CodeWriter.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
+
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +14,10 @@
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.12.0.21095">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -19,8 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="known-answer-test-vectors\*.pb.json" />
-    <EmbeddedResource Include="known-answer-test-vectors\*.pas" />
+    <!-- Expected output Delphi source code files -->
+    <EmbeddedResource Include="test-vectors/known-delphi-units/*.pas" LogicalName="[known delphi unit][expected source]%(Filename)%(Extension)" />
+    <EmbeddedResource Include="test-vectors/known-delphi-programs/*.pas" LogicalName="[known delphi program][expected source]%(Filename)%(Extension)" />
+    <!-- For each Delphi source code file, there is a protobuf message stored in a JSON-encoded file with matching name -->
+    <EmbeddedResource Include="test-vectors/known-delphi-units/*.pb.json" LogicalName="[known delphi unit][message]%(Filename)%(Extension)" />
+    <EmbeddedResource Include="test-vectors/known-delphi-programs/*.pb.json" LogicalName="[known delphi program][message]%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

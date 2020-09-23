@@ -171,6 +171,13 @@ namespace Work.Connor.Delphi.CodeWriter
             return $"{value.Name}{ordinalitySuffix}";
         }
 
+        /// <summary>
+        /// Constructs Delphi source code defining a program.
+        /// </summary>
+        /// <param name="program">The program to define</param>
+        /// <returns>The Delphi source code</returns>
+        public static string ToSourceCode(this Program program) => new DelphiSourceCodeWriter().Append(program).ToString();
+
 #pragma warning restore S4136 // Method overloads should be grouped together
 
     }
@@ -233,6 +240,11 @@ namespace Work.Connor.Delphi.CodeWriter
         /// Default file name extension (without leading dot) for Delphi unit source files
         /// </summary>
         public static readonly string unitSourceFileExtension = "pas";
+
+        /// <summary>
+        /// Default file name extension (without leading dot) for Delphi program source files
+        /// </summary>
+        public static readonly string programSourceFileExtension = "pas";
 
         /// <summary>
         /// Line separator for Delphi source code
@@ -330,6 +342,10 @@ namespace Work.Connor.Delphi.CodeWriter
             return AppendDelphiCode(
 $@"unit {unit.Heading.ToSourceCode()};
 
+{{$IFDEF FPC}}
+  {{$MODE DELPHI}}
+{{$ENDIF}}
+
 "
             ).Append(unit.Interface)
             .Append(unit.Implementation)
@@ -358,7 +374,7 @@ $@"interface
         /// <summary>
         /// Appends Delphi source code for a uses clause.
         /// </summary>
-        /// <param name="interface">List of unit references in the uses clause</param>
+        /// <param name="references">List of unit references in the uses clause</param>
         /// <returns><c>this</c></returns>
         public DelphiSourceCodeWriter AppendUsesClause(IList<UnitReference> references)
         {
@@ -383,7 +399,7 @@ $@"{reference.Unit.ToSourceCode()}"
         /// <summary>
         /// Appends Delphi source code for an implementation section of a unit.
         /// </summary>
-        /// <param name="interface">The implementation section</param>
+        /// <param name="implementation">The implementation section</param>
         /// <returns><c>this</c></returns>
         public DelphiSourceCodeWriter Append(Implementation implementation)
         {
@@ -589,8 +605,7 @@ $@"{@enum.Name} = (
             Indent(-1);
             return AppendDelphiCode(
 $@"
-)
-end;
+);
 
 "
             ).Indent(-1);
@@ -602,6 +617,34 @@ end;
         /// <param name="comment">The annotation comment</param>
         /// <returns><c>this</c></returns>
         public DelphiSourceCodeWriter Append(AnnotationComment comment) => AppendDelphiCode(string.Join("\n", comment.CommentLines.Select(line => $"/// {line}"))).AppendLine();
+
+        /// <summary>
+        /// Appends Delphi source code defining a program.
+        /// </summary>
+        /// <param name="program">The program to define</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(Program program)
+        {
+            if (program.Comment != null) Append(program.Comment);
+            AppendDelphiCode(
+$@"program {program.Heading};
+
+{{$IFDEF FPC}}
+  {{$MODE DELPHI}}
+{{$ENDIF}}
+
+"
+            ).AppendUsesClause(program.UsesClause)
+            .AppendDelphiCode(
+$@"begin
+"
+            );
+            foreach (string line in program.Block) AppendDelphiCode(line, 1).AppendLine();
+            return AppendDelphiCode(
+$@"end.
+"
+            );
+        }
 
 #pragma warning restore S4136 // Method overloads should be grouped together
 

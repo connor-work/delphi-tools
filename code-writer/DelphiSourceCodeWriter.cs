@@ -478,18 +478,6 @@ $@"end;
         }
 
         /// <summary>
-        /// Appends Delphi source code for a nested type declaration.
-        /// </summary>
-        /// <param name="declaration">The declaration</param>
-        /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(NestedTypeDeclaration declaration) => declaration.DeclarationCase switch
-        {
-            NestedTypeDeclaration.DeclarationOneofCase.ClassDeclaration => Append(declaration.ClassDeclaration),
-            NestedTypeDeclaration.DeclarationOneofCase.EnumDeclaration => Append(declaration.EnumDeclaration),
-            _ => throw new NotImplementedException()
-        };
-
-        /// <summary>
         /// Appends Delphi source code for the declaration of a constant.
         /// </summary>
         /// <param name="@const">The constant declaration</param>

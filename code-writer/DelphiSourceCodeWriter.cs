@@ -469,9 +469,9 @@ $@"type
             return AppendDelphiCode(
 $@"{@class.Name} = class{ancestorSpecifier}
 "
-            ).AppendMultiplePadded(@class.NestedTypeDeclarations.PartiallyApply(nestedType => Append(nestedType))
-                           .Concat(@class.NestedConstDeclarations.PartiallyApply(@const => Append(@const)))
-                           .Concat(@class.MemberList.PartiallyApply(member => Append(member))))
+            ).AppendMultiplePadded(@class.NestedConstDeclarations.PartiallyApply(@const => Append(@const))
+                           .Concat(@class.MemberList.PartiallyApply(member => Append(member)))
+                           .Concat(@class.NestedTypeDeclarations.PartiallyApply(nestedType => Append(nestedType))))
             .AppendDelphiCode(
 $@"end;
 "

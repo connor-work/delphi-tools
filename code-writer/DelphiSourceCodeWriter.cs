@@ -23,6 +23,21 @@ using System.Text.RegularExpressions;
 namespace Work.Connor.Delphi.CodeWriter
 {
     /// <summary>
+    /// Extensions similar to <see cref="System.Linq"/>, used for functional operations
+    /// </summary>
+    public static partial class LinqExtensions
+    {
+        /// <summary>
+        /// Performs a partial application of a function for each element of a sequence.
+        /// </summary>
+        /// <typeparam name="T">Type of the sequence elements (function parameters)</typeparam>
+        /// <param name="parameters">Sequence of function parameters</param>
+        /// <param name="action">Function whose first parameter accepts a sequence element</param>
+        /// <returns>Sequence of partially applied functions</returns>
+        public static IEnumerable<Action> PartiallyApply<T>(this IEnumerable<T> parameters, Action<T> action) => parameters.Select(parameter => (Action)(() => action.Invoke(parameter)));
+    }
+
+    /// <summary>
     /// Extensions to Delphi source code types for source code production.
     /// </summary>
     public static partial class SourceCodeExtensions
@@ -313,6 +328,25 @@ namespace Work.Connor.Delphi.CodeWriter
         }
 
         /// <summary>
+        /// Performs multiple append operations, inserting a blank line as padding using <see cref="AppendLine"/> between consecutive operations.
+        /// </summary>
+        /// <param name="appends">Sequence of append operations to be performed</param>
+        /// <param name="padEnd">If <see langword="true"/>, a non-empty sequence is also padded after the last element</param>
+        /// <returns><c>this</c></returns>
+        private DelphiSourceCodeWriter AppendMultiplePadded(IEnumerable<Action> appends, bool padEnd = false)
+        {
+            bool firstLine = true;
+            foreach (Action append in appends)
+            {
+                if (!firstLine) AppendLine();
+                firstLine = false;
+                append.Invoke();
+            }
+            if (!firstLine && padEnd) AppendLine();
+            return this;
+        }
+
+        /// <summary>
         /// Appends arbitrary Delphi source code and applies indentation.
         /// </summary>
         /// <param name="lines">Delphi source code string, potentially multi-line</param>
@@ -360,16 +394,13 @@ $@"end.
         /// </summary>
         /// <param name="interface">The interface section</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(Interface @interface)
-        {
-            AppendDelphiCode(
+        public DelphiSourceCodeWriter Append(Interface @interface) => AppendDelphiCode(
 $@"interface
 
 "
-            ).AppendUsesClause(@interface.UsesClause);
-            foreach (InterfaceDeclaration declaration in @interface.Declarations) Append(declaration);
-            return this;
-        }
+            ).AppendUsesClause(@interface.UsesClause)
+            .AppendMultiplePadded(@interface.Declarations.PartiallyApply(declaration => Append(declaration)),
+                                   true);
 
         /// <summary>
         /// Appends Delphi source code for a uses clause.
@@ -401,16 +432,13 @@ $@"{reference.Unit.ToSourceCode()}"
         /// </summary>
         /// <param name="implementation">The implementation section</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(Implementation implementation)
-        {
-            AppendDelphiCode(
+        public DelphiSourceCodeWriter Append(Implementation implementation) => AppendDelphiCode(
 $@"implementation
 
 "
-            ).AppendUsesClause(implementation.UsesClause);
-            foreach (ImplementationDeclaration declaration in implementation.Declarations) Append(declaration);
-            return this;
-        }
+            ).AppendUsesClause(implementation.UsesClause)
+            .AppendMultiplePadded(implementation.Declarations.PartiallyApply(declaration => Append(declaration)),
+                                  true);
 
         /// <summary>
         /// Appends Delphi source code for a declaration that appears in an interface section.
@@ -438,29 +466,29 @@ $@"type
             Indent(1);
             if (@class.Comment != null) Append(@class.Comment);
             string ancestorSpecifier = @class.Ancestor.Length != 0 ? $"({@class.Ancestor})" : "";
-            AppendDelphiCode(
+            return AppendDelphiCode(
 $@"{@class.Name} = class{ancestorSpecifier}
 "
-            );
-            bool firstLine = true;
-            foreach (ConstDeclaration @const in @class.NestedConstDeclarations)
-            {
-                if (!firstLine) AppendLine();
-                firstLine = false;
-                Append(@const);
-            }
-            foreach (ClassMemberDeclaration member in @class.MemberList)
-            {
-                if (!firstLine) AppendLine();
-                firstLine = false;
-                Append(member);
-            }
-            return AppendDelphiCode(
+            ).AppendMultiplePadded(@class.NestedConstDeclarations.PartiallyApply(@const => Append(@const))
+                           .Concat(@class.MemberList.PartiallyApply(member => Append(member)))
+                           .Concat(@class.NestedTypeDeclarations.PartiallyApply(nestedType => Append(nestedType))))
+            .AppendDelphiCode(
 $@"end;
-
 "
             ).Indent(-1);
         }
+
+        /// <summary>
+        /// Appends Delphi source code for a nested type declaration.
+        /// </summary>
+        /// <param name="declaration">The declaration</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(NestedTypeDeclaration declaration) => declaration.DeclarationCase switch
+        {
+            NestedTypeDeclaration.DeclarationOneofCase.ClassDeclaration => Append(declaration.ClassDeclaration),
+            NestedTypeDeclaration.DeclarationOneofCase.EnumDeclaration => Append(declaration.EnumDeclaration),
+            _ => throw new NotImplementedException()
+        };        
 
         /// <summary>
         /// Appends Delphi source code for the declaration of a constant.
@@ -571,7 +599,6 @@ begin
             foreach (string line in method.Statements) AppendDelphiCode(line, 1).AppendLine();
             return AppendDelphiCode(
 $@"end;
-
 "
             );
         }
@@ -606,7 +633,6 @@ $@"{@enum.Name} = (
             return AppendDelphiCode(
 $@"
 );
-
 "
             ).Indent(-1);
         }

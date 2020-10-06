@@ -111,16 +111,28 @@ message InterfaceDeclaration {
   * > A class, or class type, defines a structure consisting of fields, methods, and properties.
   * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)) */
 message ClassDeclaration {
-  string name                                        = 1; /** Name of the class (*className*). Required (non-empty). */
-  string ancestor                                    = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
-                                                            * > When you declare a class, you can specify its immediate ancestor.
-                                                            * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
-  // TODO nested types
-  repeated ConstDeclaration nestedConstDeclarations  = 4; /** List of *nested constants* (*nestedConstDeclaration*) that are declared within the class (namespacing mechanism).
-                                                            * > Nested constants present a way to keep conceptually related types together and to avoid name collisions. */
-  repeated ClassMemberDeclaration memberList         = 5; /** Declared members of the class (*memberList*).
-                                                            * > The fields, methods, and properties of a class are called its components or members. */
-  AnnotationComment comment                          = 6; /** Annotation comment describing the class. Optional. */
+  string name                                           = 1; /** Name of the class (*className*). Required (non-empty). */
+  string ancestor                                       = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
+                                                               * > When you declare a class, you can specify its immediate ancestor.
+                                                               * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
+  repeated NestedTypeDeclaration nestedTypeDeclarations = 3; /** List of *nested types* (*nestedTypeDeclaration*) that are declared within the class (namespacing mechanism).
+                                                               * > Nested types present a way to keep conceptually related types together and to avoid name collisions. */
+  repeated ConstDeclaration nestedConstDeclarations     = 4; /** List of *nested constants* (*nestedConstDeclaration*) that are declared within the class (namespacing mechanism).
+                                                               * > Nested constants present a way to keep conceptually related types together and to avoid name collisions. */
+  repeated ClassMemberDeclaration memberList            = 5; /** Declared members of the class (*memberList*).
+                                                               * > The fields, methods, and properties of a class are called its components or members. */
+  AnnotationComment comment                             = 6; /** Annotation comment describing the class. Optional. */
+}
+
+/** Type declarations that is nested within a class declarations (*nested type*).
+  * > [Nested types] present a way to keep conceptually related types together, and to avoid name collisions.
+  * Nesting of types other than class types and enumerated types is not supported by this schema.
+  * See [Nested Type Declarations](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Nested_Type_Declarations). */
+message NestedTypeDeclaration {
+  oneof declaration {
+    ClassDeclaration classDeclaration = 1; /** Nested declaration of a class */
+    EnumDeclaration enumDeclaration   = 2; /** Nested declaration of an enumerated type */
+  } /** Specific declaration (polymorphic). Required. */
 }
 
 /** Declaration of a *constant*.

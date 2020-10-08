@@ -1,11 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Work.Connor.Delphi.CodeWriter.Tests</RootNamespace>
-
     <IsPackable>false</IsPackable>
-
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -32,5 +29,4 @@
     <EmbeddedResource Include="test-vectors/known-delphi-units/*.pb.json" LogicalName="[known delphi unit][message]%(Filename)%(Extension)" />
     <EmbeddedResource Include="test-vectors/known-delphi-programs/*.pb.json" LogicalName="[known delphi program][message]%(Filename)%(Extension)" />
   </ItemGroup>
-
 </Project>

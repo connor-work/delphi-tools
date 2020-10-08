@@ -66,7 +66,7 @@ message UnitIdentifier {
   * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section). */
 message Interface {
   repeated UnitReference usesClause          = 1; /** List of unit references (*uses clause*).
-                                                    * > The interface section can include its own uses clause...
+                                                    * > The interface section can include its own uses clause [...]
                                                     * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
   repeated InterfaceDeclaration declarations = 2; /** Declarations that are available to clients */
 }
@@ -78,7 +78,7 @@ message Interface {
   * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
 message UnitReference {
   UnitIdentifier unit = 1; /** Identifier of the referenced unit.
-                             * > A uses clause consists of the reserved word **uses**, followed by one or more comma delimited unit names...
+                             * > A uses clause consists of the reserved word **uses**, followed by one or more comma delimited unit names [...]
                              * Required. */
 }
 
@@ -86,18 +86,18 @@ message UnitReference {
   * > The implementation section defines procedures and functions that are declared in the interface section.
   * 
   * [//]: # (blockquote_separator)
-  * > ... the implementation section can declare constants, types (including classes), variables, procedures, and functions that are private to the unit.
+  * > [...] the implementation section can declare constants, types (including classes), variables, procedures, and functions that are private to the unit.
   * Private declarations are not supported by this schema.
   * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section). */
 message Implementation {
   repeated UnitReference usesClause               = 1; /** List of unit references (*uses clause*).
-                                                         * > The implementation section can include its own uses clause...
+                                                         * > The implementation section can include its own uses clause [...]
                                                          * See [Unit References and the Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Unit_References_and_the_Uses_Clause). */
   repeated ImplementationDeclaration declarations = 2; /** Sequence of declarations of unit-private entities and defining declarations of routines */
 }
 
 /** Declaration within the interface section of a unit, that is available to clients.
-  * > The interface section declares constants, types, variables, procedures, and functions ...
+  * > The interface section declares constants, types, variables, procedures, and functions [...]
   * Declarations of constants, variables, routines and types other than classes and enumerated types are not supported by this schema.
   * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section) */
 message InterfaceDeclaration {
@@ -111,16 +111,28 @@ message InterfaceDeclaration {
   * > A class, or class type, defines a structure consisting of fields, methods, and properties.
   * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)) */
 message ClassDeclaration {
-  string name                                        = 1; /** Name of the class (*className*). Required (non-empty). */
-  string ancestor                                    = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
-                                                            * > When you declare a class, you can specify its immediate ancestor.
-                                                            * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
-  // TODO nested types
-  repeated ConstDeclaration nestedConstDeclarations  = 4; /** List of *nested constants* (*nestedConstDeclaration*) that are declared within the class (namespacing mechanism).
-                                                            * > Nested constants present a way to keep conceptually related types together and to avoid name collisions. */
-  repeated ClassMemberDeclaration memberList         = 5; /** Declared members of the class (*memberList*).
-                                                            * > The fields, methods, and properties of a class are called its components or members. */
-  AnnotationComment comment                          = 6; /** Annotation comment describing the class. Optional. */
+  string name                                           = 1; /** Name of the class (*className*). Required (non-empty). */
+  string ancestor                                       = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
+                                                               * > When you declare a class, you can specify its immediate ancestor.
+                                                               * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
+  repeated NestedTypeDeclaration nestedTypeDeclarations = 3; /** List of *nested types* (*nestedTypeDeclaration*) that are declared within the class (namespacing mechanism).
+                                                               * > Nested types present a way to keep conceptually related types together and to avoid name collisions. */
+  repeated ConstDeclaration nestedConstDeclarations     = 4; /** List of *nested constants* (*nestedConstDeclaration*) that are declared within the class (namespacing mechanism).
+                                                               * > Nested constants present a way to keep conceptually related types together and to avoid name collisions. */
+  repeated ClassMemberDeclaration memberList            = 5; /** Declared members of the class (*memberList*).
+                                                               * > The fields, methods, and properties of a class are called its components or members. */
+  AnnotationComment comment                             = 6; /** Annotation comment describing the class. Optional. */
+}
+
+/** Type declarations that is nested within a class declarations (*nested type*).
+  * > [Nested types] present a way to keep conceptually related types together, and to avoid name collisions.
+  * Nesting of types other than class types and enumerated types is not supported by this schema.
+  * See [Nested Type Declarations](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Nested_Type_Declarations). */
+message NestedTypeDeclaration {
+  oneof declaration {
+    ClassDeclaration classDeclaration = 1; /** Nested declaration of a class */
+    EnumDeclaration enumDeclaration   = 2; /** Nested declaration of an enumerated type */
+  } /** Specific declaration (polymorphic). Required. */
 }
 
 /** Declaration of a *constant*.
@@ -383,4 +395,28 @@ message EnumValueDeclaration {
   * See [Special comment blocks](https://www.doxygen.nl/manual/docblocks.html#specialblock). */
 message AnnotationComment {
   repeated string commentLines = 1; /** Contents of the annotation comment. Each value contains a single line of comment text. */
+}
+
+/** Source code file for an executable Delphi application (*program* or *project file*).
+  * > A complete, executable Delphi application consists of multiple unit modules, all tied together by a single source code module called a project file.
+  * See [Program Structure and Syntax](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#Program_Structure_and_Syntax). */
+message Program {
+  string heading                    = 1; /** *Program heading* that specifies the program's name (valid Delphi identifier).
+                                           * > The **program** heading specifies a name for the executable program.
+                                           * See [The Program Heading](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Program_Heading).
+                                           * Required. */
+  repeated UnitReference usesClause = 2; /** List of unit references (*uses clause*).
+                                           * > The **uses** clause lists those units that are incorporated into the program.
+                                           * See [The Program Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Program_Uses_Clause). */
+  repeated string block             = 3; /** Contents of the *block* of the program.
+                                           * Each value contains a single line of source code.
+                                           * > The source code file for an executable Delphi application contains: [...] a block of declarations and executable statements.
+                                           *
+                                           * [//]: # (blockquote_separator)
+                                           * > The block contains a simple or structured statement that is executed when the program runs. [...]
+                                           * > [...] The block can also contain declarations of constants, types, variables, procedures, and functions; these declarations must precede the statement part of the block.
+                                           * This schema does not model the internal structure of the block.
+                                           * Each field value corresponds to one source code line of the block.
+                                           * See [The Block](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Block). */
+  AnnotationComment comment         = 4; /** Annotation comment describing the program. Optional. */
 }

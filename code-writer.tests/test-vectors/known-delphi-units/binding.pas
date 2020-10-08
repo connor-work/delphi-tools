@@ -1,5 +1,9 @@
 unit UnitX;
 
+{$IFDEF FPC}
+  {$MODE DELPHI}
+{$ENDIF}
+
 interface
 
 uses

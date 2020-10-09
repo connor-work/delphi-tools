@@ -11,6 +11,8 @@
     <Copyright>Copyright 2020 Connor Roehricht (connor.work) and other contributors (see repository)</Copyright>
     <Authors>connor.work</Authors>
     <Nullable>enable</Nullable>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <!-- Pass StableVersion=true to mark this version as stable -->

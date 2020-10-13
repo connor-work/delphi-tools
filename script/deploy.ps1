@@ -14,7 +14,8 @@
 
 # Packs packages and pushes them to a NuGet source.
 # The package contents must already have been built and locatable by running "dotnet pack" in the working directory.
-# Requires Powershell 7+, the .NET Core CLI and the NuGet CLI
+# Requires Powershell 7+, the .NET Core CLI
+# Requires the NuGet CLI if deploying locally
 
 [CmdletBinding(DefaultParameterSetName='Developer')]
 param (

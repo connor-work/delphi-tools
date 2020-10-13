@@ -14,6 +14,7 @@
 
 # Builds and tests all packages in this repository, and optionally deploys generated artifacts
 # Requires Powershell 7+, the .NET Core CLI and Git
+# Requires the NuGet CLI if deploying locally
 
 [CmdletBinding(DefaultParameterSetName='Developer')]
 param (

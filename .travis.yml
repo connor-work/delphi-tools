@@ -23,7 +23,7 @@ before_install:
 
 before_script:
     - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew cask install powershell; fi
-    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew cask install fpc; fi
+    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install fpc; fi
     - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install pwsh; fi
     - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install freepascal; fi
     # Path refresh command based on https://travis-ci.community/t/windows-builds-refreshenv-command-not-found/5803/5

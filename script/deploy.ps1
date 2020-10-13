@@ -66,6 +66,14 @@ $packOptions += $PackageFolder
 $packages = Get-ChildItem $PackageFolder -Filter *.nupkg
 foreach ($package in $packages)
 {
-    if ($Production) { dotnet nuget push --force-english-output --source $Source --api-key $(ConvertFrom-SecureString -SecureString $ApiKey -AsPlainText) $package }
-    else { nuget add -ForceEnglishOutput -Source $LocalFeed $package }
+    if ($Production)
+    {
+        dotnet nuget push --force-english-output --source $Source --api-key $(ConvertFrom-SecureString -SecureString $ApiKey -AsPlainText) $package
+        if ($LastExitCode -ne 0) { throw "dotnet nuget push failed" }
+    }
+    else
+    {
+        nuget add -ForceEnglishOutput -Source $LocalFeed $package
+        if ($LastExitCode -ne 0) { throw "nuget add failed" }
+    }
 }

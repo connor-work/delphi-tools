@@ -16,6 +16,7 @@ addons:
     apt:
         packages:
             - powershell
+            - nuget
             - fpc
 
 before_install:
@@ -23,8 +24,10 @@ before_install:
 
 before_script:
     - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew cask install powershell; fi
+    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install nuget; fi
     - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install fpc; fi
     - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install pwsh; fi
+    - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install Nuget.CommandLine; fi
     - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install freepascal; fi
     # Path refresh command based on https://travis-ci.community/t/windows-builds-refreshenv-command-not-found/5803/5
     - if [ "$TRAVIS_OS_NAME" = "windows" ]; then eval $(powershell -NonInteractive -Command 'write("export PATH=`"" + ([Environment]::GetEnvironmentVariable("PATH","Machine") + ";" + [Environment]::GetEnvironmentVariable("PATH","User")).replace("\","/").replace("C:","/c").replace(";",":") + ":`$PATH`"")'); fi

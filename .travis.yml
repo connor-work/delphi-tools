@@ -30,5 +30,4 @@ before_script:
     - if [ "$TRAVIS_OS_NAME" = "windows" ]; then eval $(powershell -NonInteractive -Command 'write("export PATH=`"" + ([Environment]::GetEnvironmentVariable("PATH","Machine") + ";" + [Environment]::GetEnvironmentVariable("PATH","User")).replace("\","/").replace("C:","/c").replace(";",":") + ":`$PATH`"")'); fi
 
 script:
-    - dotnet test
-    - pwsh script/check-eol.ps1
+    - pwsh -Command "./script/integrate.ps1 -LocalFeed local-output"

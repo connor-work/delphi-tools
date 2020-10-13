@@ -1,0 +1,23 @@
+{
+    "heading": {
+        "unit": "uAncestor"
+    },
+    "interface": {
+        "usesClause": [
+            {
+                "unit": {
+                    "unit": "uBaseClass"
+                }
+            }
+        ],
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "ancestor": "uBaseClass.TBaseClass"
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

@@ -1,0 +1,60 @@
+{
+    "heading": {
+        "unit": "uBinding"
+    },
+    "interface": {
+        "usesClause": [
+            {
+                "unit": {
+                    "unit": "uAbstractBaseClass"
+                }
+            }
+        ],
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "ancestor": "TAbstractBaseClass",
+                    "memberList": [
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureX"
+                                },
+                                "binding": "VIRTUAL"
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "VirtualProcedure"
+                                },
+                                "binding": "OVERRIDE"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {
+        "declarations": [
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureX"
+                    }
+                }
+            },
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "VirtualProcedure"
+                    }
+                }
+            }
+        ]
+    }
+}

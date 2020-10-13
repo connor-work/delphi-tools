@@ -1,0 +1,83 @@
+{
+    "heading": {
+        "unit": "uVisibility"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "memberList": [
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureX"
+                                }
+                            }
+                        },
+                        {
+                            "visibility": "PRIVATE",
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureY"
+                                }
+                            }
+                        },
+                        {
+                            "visibility": "PROTECTED",
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureZ"
+                                }
+                            }
+                        },
+                        {
+                            "visibility": "PUBLIC",
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureA"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {
+        "declarations": [
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureX"
+                    }
+                }
+            },
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureY"
+                    }
+                }
+            },
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureZ"
+                    }
+                }
+            },
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureA"
+                    }
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,69 @@
+{
+    "heading": {
+        "unit": "uMethodImplementations"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "memberList": [
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureX"
+                                }
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ConstructorX",
+                                    "type": "CONSTRUCTOR"
+                                }
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "DestructorX",
+                                    "type": "DESTRUCTOR"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {
+        "declarations": [
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureX"
+                    }
+                }
+            },
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ConstructorX",
+                        "type": "CONSTRUCTOR"
+                    }
+                }
+            },
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "DestructorX",
+                        "type": "DESTRUCTOR"
+                    }
+                }
+            }
+        ]
+    }
+}

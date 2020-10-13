@@ -1,14 +1,14 @@
 {
-    "heading": "ProgramX",
+    "heading": "ProgramUses",
     "usesClause": [
         {
             "unit": {
-                "unit": "UnitY"
+                "unit": "uReferenced"
             }
         },
         {
             "unit": {
-                "unit": "UnitZ",
+                "unit": "uReferencedInNameSpace",
                 "namespace": [
                     "Space1",
                     "Space2"

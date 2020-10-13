@@ -1,0 +1,22 @@
+{
+    "heading": {
+        "unit": "uSimpleClass"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "comment": {
+                        "commentLines": [
+                            "<summary>",
+                            "This is an empty class used for testing.",
+                            "</summary>"
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

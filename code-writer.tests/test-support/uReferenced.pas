@@ -1,8 +1,11 @@
-program EmptyProgram;
+unit uReferenced;
 
 {$IFDEF FPC}
   {$MODE DELPHI}
 {$ENDIF}
 
-begin
+interface
+
+implementation
+
 end.

@@ -1,0 +1,58 @@
+{
+    "heading": {
+        "unit": "uProperties"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "memberList": [
+                        {
+                            "fieldDeclaration": {
+                                "name": "FieldX",
+                                "type": "Integer"
+                            }
+                        },
+                        {
+                            "fieldDeclaration": {
+                                "name": "FieldY",
+                                "type": "Integer"
+                            }
+                        },
+                        {
+                            "propertyDeclaration": {
+                                "name": "PropertyX",
+                                "type": "Integer",
+                                "readSpecifier": "FieldX",
+                                "comment": {
+                                    "commentLines": [
+                                        "<summary>",
+                                        "This is a property used for testing.",
+                                        "</summary>"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "propertyDeclaration": {
+                                "name": "PropertyY",
+                                "type": "Integer",
+                                "writeSpecifier": "FieldY"
+                            }
+                        },
+                        {
+                            "propertyDeclaration": {
+                                "name": "PropertyXY",
+                                "type": "Integer",
+                                "readSpecifier": "FieldY",
+                                "writeSpecifier": "FieldX"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

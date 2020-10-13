@@ -1,5 +1,5 @@
 {
-    "heading": "ProgramX",
+    "heading": "ProgramBlock",
     "block": [
         "writeln('Hello world 1');",
         "writeln('Hello world 2');"

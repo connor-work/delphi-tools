@@ -1,0 +1,11 @@
+{
+    "heading": {
+        "unit": "uNameSpaced",
+        "namespace": [
+            "Space1",
+            "Space2"
+        ]
+    },
+    "interface": {},
+    "implementation": {}
+}

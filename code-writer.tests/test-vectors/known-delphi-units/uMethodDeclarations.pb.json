@@ -1,0 +1,95 @@
+{
+    "heading": {
+        "unit": "uMethodDeclarations"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "memberList": [
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureX"
+                                }
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ConstructorX",
+                                    "type": "CONSTRUCTOR"
+                                },
+                                "comment": {
+                                    "commentLines": [
+                                        "<summary>",
+                                        "This is a method used for testing.",
+                                        "</summary>"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "DestructorX",
+                                    "type": "DESTRUCTOR"
+                                }
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "FunctionX",
+                                    "type": "FUNCTION",
+                                    "returnType": "Integer"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {
+        "declarations": [
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureX"
+                    }
+                }
+            },
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ConstructorX",
+                        "type": "CONSTRUCTOR"
+                    }
+                }
+            },
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "DestructorX",
+                        "type": "DESTRUCTOR"
+                    }
+                }
+            },
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "FunctionX",
+                        "type": "FUNCTION",
+                        "returnType": "Integer"
+                    }
+                }
+            }
+        ]
+    }
+}

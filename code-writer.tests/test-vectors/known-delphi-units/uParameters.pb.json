@@ -1,0 +1,82 @@
+{
+    "heading": {
+        "unit": "uParameters"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "memberList": [
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureX",
+                                    "parameterList": [
+                                        {
+                                            "name": "ParamX",
+                                            "type": "Integer"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureY",
+                                    "parameterList": [
+                                        {
+                                            "name": "ParamY1",
+                                            "type": "Integer"
+                                        },
+                                        {
+                                            "name": "ParamY2",
+                                            "type": "array of Integer"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {
+        "declarations": [
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureX",
+                        "parameterList": [
+                            {
+                                "name": "ParamX",
+                                "type": "Integer"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureY",
+                        "parameterList": [
+                            {
+                                "name": "ParamY1",
+                                "type": "Integer"
+                            },
+                            {
+                                "name": "ParamY2",
+                                "type": "array of Integer"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

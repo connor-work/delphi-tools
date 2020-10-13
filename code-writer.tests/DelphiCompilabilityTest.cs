@@ -1,4 +1,4 @@
-﻿/// Copyright 2020 Connor Roehricht (connor.work)
+/// Copyright 2020 Connor Roehricht (connor.work)
 /// Copyright 2020 Sotax AG
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,26 +18,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Work.Connor.Delphi.Tools;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Work.Connor.Delphi.CodeWriter.Tests
 {
     /// <summary>
-    /// Tests <see cref="CodeWriter"/> with known protobuf input messages and expected Delphi source code.
+    /// Tests if Delphi code produced by <see cref="DelphiSourceCodeWriter"/> can be compiled.
     /// </summary>
-    public class KnownSourceCodeTest
+    public class DelphiCompilabilityTest
     {
-        /// <summary>
-        /// Resource set of all test resource files that define expected Delphi unit source code
-        /// </summary>
-        private static readonly IResourceSet allExpectedUnitSourceResources = IResourceSet.Root.Nest("[known delphi unit source]");
-
-        /// <summary>
-        /// Resource set of all test resource files that define expected Delphi program source code
-        /// </summary>
-        private static readonly IResourceSet allExpectedProgramSourceResources = IResourceSet.Root.Nest("[known delphi program source]");
-
         /// <summary>
         /// Resource set of all test resource files that encode protobuf messages representing Delphi unit source code
         /// </summary>
@@ -49,14 +40,19 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         private static readonly IResourceSet allProgramMessageResources = IResourceSet.Root.Nest("[known delphi program message]");
 
         /// <summary>
+        /// Resource set of all Delphi units that contain support source code for testing
+        /// </summary>
+        private static readonly IResourceSet testSupportCodeUnitResources = IResourceSet.Root.Nest("[Delphi test support code unit]");
+
+        /// <summary>
         /// Names of all known test vectors for Delphi units
         /// </summary>
-        private static IEnumerable<string> UnitTestVectorNames => allExpectedUnitSourceResources.GetIDs().WhereSuffixed(new Regex(Regex.Escape($".{DelphiSourceCodeWriter.unitSourceFileExtension}")));
+        private static IEnumerable<string> UnitTestVectorNames => allUnitMessageResources.GetIDs().WhereSuffixed(new Regex(Regex.Escape($".{protobufJsonFileExtension}")));
 
         /// <summary>
         /// Names of all known test vectors for Delphi programs
         /// </summary>
-        private static IEnumerable<string> ProgramTestVectorNames => allExpectedProgramSourceResources.GetIDs().WhereSuffixed(new Regex(Regex.Escape($".{DelphiSourceCodeWriter.programSourceFileExtension}")));
+        private static IEnumerable<string> ProgramTestVectorNames => allProgramMessageResources.GetIDs().WhereSuffixed(new Regex(Regex.Escape($".{protobufJsonFileExtension}")));
 
         /// <summary>
         /// File name extension (without leading dot) for JSON-encoded protobuf messages in test data
@@ -73,8 +69,21 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         /// </summary>
         public static readonly JsonParser.Settings protobufJsonParseSettings = JsonParser.Settings.Default.WithIgnoreUnknownFields(false);
 
+
         /// <summary>
-        /// Represents a Delphi unit-related test vector for this kind of test
+        /// Utility function to create a temporary scratch folder for testing.
+        /// </summary>
+        /// <returns>Path of the new folder</returns>
+        private static string CreateScratchFolder()
+        {
+            string path = Path.GetTempFileName();
+            File.Delete(path);
+            Directory.CreateDirectory(path);
+            return path;
+        }
+
+        /// <summary>
+        /// Represents a test vector for a Delphi unit for this kind of test
         /// </summary>
         public class UnitTestVector : IXunitSerializable
         {
@@ -114,11 +123,6 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
                 }
             }
 
-            /// <summary>
-            /// Expected Delphi source code for <see cref="Unit"/>
-            /// </summary>
-            public string ExpectedSourceCode => allExpectedUnitSourceResources.ReadResource($"{name}.{DelphiSourceCodeWriter.unitSourceFileExtension}")!;
-
             public void Deserialize(IXunitSerializationInfo info) => name = info.GetValue<string>(nameof(name));
 
             public void Serialize(IXunitSerializationInfo info) => info.AddValue(nameof(name), name);
@@ -127,7 +131,7 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         }
 
         /// <summary>
-        /// Represents a Delphi program-related test vector for this kind of test
+        /// Represents a test vector for a Delphi program for this kind of test
         /// </summary>
         public class ProgramTestVector : IXunitSerializable
         {
@@ -167,11 +171,6 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
                 }
             }
 
-            /// <summary>
-            /// Expected Delphi source code for <see cref="Program"/>
-            /// </summary>
-            public string ExpectedSourceCode => allExpectedProgramSourceResources.ReadResource($"{name}.{DelphiSourceCodeWriter.programSourceFileExtension}")!;
-
             public void Deserialize(IXunitSerializationInfo info) => name = info.GetValue<string>(nameof(name));
 
             public void Serialize(IXunitSerializationInfo info) => info.AddValue(nameof(name), name);
@@ -190,19 +189,79 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         public static IEnumerable<object[]> ProgramTestVectors => ProgramTestVectorNames.Select(name => new object[] { new ProgramTestVector(name) });
 
         /// <summary>
-        /// <see cref="DelphiSourceCodeWriter"/> produces the expected Delphi source code for a protobuf message representing a Delphi unit
+        /// <see cref="DelphiSourceCodeWriter"/> produces Delphi unit source code that can be compiled using FPC
         /// </summary>
         /// <param name="vector">Test vector</param>
         [Theory]
         [MemberData(nameof(UnitTestVectors))]
-        public void ProducesExpectedUnitSourceCode(UnitTestVector vector) => Assert.Equal(vector.ExpectedSourceCode, vector.Unit.ToSourceCode());
+        public void ProducesUnitSourceThatCanBeCompiled(UnitTestVector vector)
+        {
+            // Write the unit source code
+            Unit unit = vector.Unit;
+            string sourceCode = unit.ToSourceCode();
+
+            // Create a test runner program as input for FPC
+            string programFile = Path.Join(CreateScratchFolder(), "DelphiCompilationTestProgram.pas");
+            Program program = new Program()
+            {
+                Heading = "DelphiCompilationTestProgram",
+                UsesClause = { new UnitReference() { Unit = unit.Heading.Clone() } }
+            };
+            File.WriteAllText(programFile, program.ToSourceCode());
+
+            // Run FPC
+            FpcOperation fpc = new FpcOperation(programFile) { OutputPath = CreateScratchFolder() };
+            // Adds units from a resource set to FPC
+            void addUnits(IEnumerable<(string name, string content)> resources, string rootFolder)
+            {
+                foreach ((string name, string content) in resources)
+                {
+                    string path = Path.Join(rootFolder, name);
+                    string folder = Directory.GetParent(path).FullName;
+                    Directory.CreateDirectory(folder);
+                    File.WriteAllText(path, content);
+                    if (!fpc.UnitPath.Contains(folder)) fpc.UnitPath.Add(folder);
+                }
+            }
+            // Add written source code
+            addUnits(new (string, string)[] { (Path.Join(unit.ToSourceFilePath().ToArray()), sourceCode) }, CreateScratchFolder());
+            // Add support files (may contain required source code)
+            addUnits(testSupportCodeUnitResources.ReadAllResources(), CreateScratchFolder());
+            (bool fpcSuccess, _, string? fpcError) = fpc.Perform();
+            Assert.True(fpcSuccess, fpcError!);
+        }
 
         /// <summary>
-        /// <see cref="DelphiSourceCodeWriter"/> produces the expected Delphi source code for a protobuf message representing a Delphi program
+        /// <see cref="DelphiSourceCodeWriter"/> produces Delphi program source code that can be compiled using FPC
         /// </summary>
         /// <param name="vector">Test vector</param>
         [Theory]
         [MemberData(nameof(ProgramTestVectors))]
-        public void ProducesExpectedProgramSourceCode(ProgramTestVector vector) => Assert.Equal(vector.ExpectedSourceCode, vector.Program.ToSourceCode());
+        public void ProducesProgramSourceThatCanBeCompiled(ProgramTestVector vector)
+        {
+            // Write the program source code
+            Program program = vector.Program;
+            string programFile = Path.Join(CreateScratchFolder(), Path.Join(program.ToSourceFilePath().ToArray()));
+            File.WriteAllText(programFile, program.ToSourceCode());
+
+            // Run FPC
+            FpcOperation fpc = new FpcOperation(programFile) { OutputPath = CreateScratchFolder() };
+            // Adds units from a resource set to FPC
+            void addUnits(IEnumerable<(string name, string content)> resources, string rootFolder)
+            {
+                foreach ((string name, string content) in resources)
+                {
+                    string path = Path.Join(rootFolder, name);
+                    string folder = Directory.GetParent(path).FullName;
+                    Directory.CreateDirectory(folder);
+                    File.WriteAllText(path, content);
+                    if (!fpc.UnitPath.Contains(folder)) fpc.UnitPath.Add(folder);
+                }
+            }
+            // Add support files (may contain required source code)
+            addUnits(testSupportCodeUnitResources.ReadAllResources(), CreateScratchFolder());
+            (bool fpcSuccess, _, string? fpcError) = fpc.Perform();
+            Assert.True(fpcSuccess, fpcError!);
+        }
     }
 }

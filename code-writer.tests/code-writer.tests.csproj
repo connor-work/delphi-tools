@@ -19,14 +19,26 @@
 
   <ItemGroup>
     <ProjectReference Include="..\code-writer\code-writer.csproj" />
+    <ProjectReference Include="..\delphi-tools\delphi-tools.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Expected output Delphi source code files -->
-    <EmbeddedResource Include="test-vectors/known-delphi-units/*.pas" LogicalName="[known delphi unit][expected source]%(Filename)%(Extension)" />
-    <EmbeddedResource Include="test-vectors/known-delphi-programs/*.pas" LogicalName="[known delphi program][expected source]%(Filename)%(Extension)" />
-    <!-- For each Delphi source code file, there is a protobuf message stored in a JSON-encoded file with matching name -->
-    <EmbeddedResource Include="test-vectors/known-delphi-units/*.pb.json" LogicalName="[known delphi unit][message]%(Filename)%(Extension)" />
-    <EmbeddedResource Include="test-vectors/known-delphi-programs/*.pb.json" LogicalName="[known delphi program][message]%(Filename)%(Extension)" />
+    <!-- Support source code for Delphi tests -->
+    <EmbeddedResource Include="test-support/**/*.pas"
+                      LogicalName="[Delphi test support code unit]%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Expected output Delphi unit source code files, each has a corresponding known protobuf message -->
+    <EmbeddedResource Include="test-vectors/known-delphi-units/*.pas" LogicalName="[known delphi unit source]%(Filename)%(Extension)" />
+    <!-- Expected output Delphi unit source code files, each has a corresponding known protobuf message -->
+    <EmbeddedResource Include="test-vectors/known-delphi-programs/*.pas" LogicalName="[known delphi program source]%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Known protobuf messages in JSON-encoded files that represent Delphi unit source code -->
+    <EmbeddedResource Include="test-vectors/known-delphi-units/*.pb.json" LogicalName="[known delphi unit message]%(Filename)%(Extension)" />
+    <!-- Known protobuf messages in JSON-encoded files that represent Delphi program source code -->
+    <EmbeddedResource Include="test-vectors/known-delphi-programs/*.pb.json" LogicalName="[known delphi program message]%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

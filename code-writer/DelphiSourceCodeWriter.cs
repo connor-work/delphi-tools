@@ -49,6 +49,14 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <returns>Sequence of path components for the recommended source file</returns>
         public static IEnumerable<string> ToSourceFilePath(this Unit unit) => unit.Heading.Namespace.Append($"{unit.Heading.ToSourceCode()}.pas");
 
+        /// <summary>
+        /// Constructs the recommended source file path for a program.
+        /// </summary>
+        /// <param name="program">The program</param>
+        /// <returns>Sequence of path components for the recommended source file</returns>
+        public static IEnumerable<string> ToSourceFilePath(this Program program) => new string[] { ($"{program.Heading}.pas") };
+
+
 #pragma warning disable S4136 // Method overloads should be grouped together -> "ToSourceCode* method order reflects order in protobuf schema here
 
         /// <summary>

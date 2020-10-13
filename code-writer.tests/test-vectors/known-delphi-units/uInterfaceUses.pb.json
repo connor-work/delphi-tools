@@ -1,0 +1,24 @@
+{
+    "heading": {
+        "unit": "uInterfaceUses"
+    },
+    "interface": {
+        "usesClause": [
+            {
+                "unit": {
+                    "unit": "uReferenced"
+                }
+            },
+            {
+                "unit": {
+                    "unit": "uReferencedInNameSpace",
+                    "namespace": [
+                        "Space1",
+                        "Space2"
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

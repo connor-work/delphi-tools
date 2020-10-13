@@ -1,4 +1,4 @@
-program ProgramX;
+program ProgramBlock;
 
 {$IFDEF FPC}
   {$MODE DELPHI}

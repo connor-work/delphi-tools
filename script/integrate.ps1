@@ -20,6 +20,10 @@
 param (
     [Parameter(HelpMessage='Prevents deployment of unstable package versions')]
     [switch] $OnlyDeployStable,
+    [Parameter(HelpMessage='Instead of throwing an error on unstable package versions, output a boolean indicating stability')]
+    [switch] $CheckStable,
+    [Parameter(HelpMessage='Instead of testing, consider the package versions as stable if this array is empty, or unstable with the specified causes otherwise')]
+    [string[]] $KnownUnstableCauses,
 
     [Parameter(ParameterSetName="NoDeploy",
                HelpMessage='Prevents any deployment (e.g., for a pull request)')]
@@ -73,32 +77,37 @@ function Write-SuccessEvent([string] $message) {
 }
 
 Write-HostSection "Restoring .NET dependencies and tools:"
-dotnet restore
+dotnet restore | Out-Host
 if ($LastExitCode -ne 0) { throw "dotnet restore failed" }
 else { Write-SuccessEvent "Restore successful" }
 
 Write-HostSection "Building .NET projects:"
-dotnet build --no-restore
+dotnet build --no-restore | Out-Host
 if ($LastExitCode -ne 0) { throw "dotnet build failed" }
 else { Write-SuccessEvent "Build successful" }
 
-Write-HostSection "Testing .NET projects:"
-dotnet test --no-build --no-restore
-if ($LastExitCode -ne 0) { New-UnstableCause "dotnet test failed" }
-else { Write-SuccessEvent "Tests successful" }
-
-Write-HostSection "Checking line endings:"
-try
+if ($null -eq $KnownUnstableCauses)
 {
-    & $PSScriptRoot/check-eol.ps1
-    Write-SuccessEvent "Line endings OK"
+    Write-HostSection "Testing .NET projects:"
+    dotnet test --no-build --no-restore | Out-Host
+    if ($LastExitCode -ne 0) { New-UnstableCause "dotnet test failed" }
+    else { Write-SuccessEvent "Tests successful" }
+
+    Write-HostSection "Checking line endings:"
+    try
+    {
+        & $PSScriptRoot/check-eol.ps1
+        Write-SuccessEvent "Line endings OK"
+    }
+    catch { New-UnstableCause "Unexpected line endings" }
 }
-catch { New-UnstableCause "Unexpected line endings" }
+else { $unstableCauses += $KnownUnstableCauses}
+
+$stable = $unstableCauses.count -eq 0
 
 if (!$NoDeploy)
 {
     Write-HostSection "Deploying artifacts:"
-    $stable = $unstableCauses.count -eq 0
     if ($OnlyDeployStable -And !$stable)
     {
         Write-Host "No artifacts to deploy (unstable versions)"
@@ -120,5 +129,11 @@ if (!$NoDeploy)
 }
 
 Write-HostSection "Summarizing operation:"
-if (!$stable) { throw "Package versions considered unstable, causes: " + ($unstableCauses -join ', ') }
+if ($CheckStable)
+{
+    if (!$stable) { Write-Host ("Package versions considered unstable, causes: " + ($unstableCauses -join ', ')) }
+    Write-Host "Writing stability to output:"
+    Write-Output $stable
+}
+elseif (!$stable) { throw "Package versions considered unstable, causes: " + ($unstableCauses -join ', ') }
 Write-SuccessEvent "Operation OK"

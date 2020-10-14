@@ -62,19 +62,19 @@ if ($PackageFolder -eq '') { $PackageFolder = (New-TemporaryDirectory).FullName 
 # Pack everything specified by a project or solution in the current folder
 $packOptions += '--output'
 $packOptions += $PackageFolder
-& dotnet $packOptions
+& dotnet $packOptions | Out-Host
 # Push all packages
 $packages = Get-ChildItem $PackageFolder -Filter *.nupkg
 foreach ($package in $packages)
 {
     if ($Production)
     {
-        dotnet nuget push --force-english-output --source $Source --api-key $(ConvertFrom-SecureString -SecureString $ApiKey -AsPlainText) $package
+        dotnet nuget push --force-english-output --source $Source --api-key $(ConvertFrom-SecureString -SecureString $ApiKey -AsPlainText) $package | Out-Host
         if ($LastExitCode -ne 0) { throw "dotnet nuget push failed" }
     }
     else
     {
-        nuget add -ForceEnglishOutput -Source $LocalFeed $package
+        nuget add -ForceEnglishOutput -Source $LocalFeed $package | Out-Host
         if ($LastExitCode -ne 0) { throw "nuget add failed" }
     }
 }

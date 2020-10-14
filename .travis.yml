@@ -1,17 +1,6 @@
 language: csharp
-
 mono: none
 dotnet: 3.1.401
-
-os:
-    - linux
-    - osx
-
-jobs:
-    include:
-        - os: windows
-          dotnet: none
-
 addons:
     apt:
         packages:
@@ -29,5 +18,26 @@ before_script:
     # Path refresh command based on https://travis-ci.community/t/windows-builds-refreshenv-command-not-found/5803/5
     - if [ "$TRAVIS_OS_NAME" = "windows" ]; then eval $(powershell -NonInteractive -Command 'write("export PATH=`"" + ([Environment]::GetEnvironmentVariable("PATH","Machine") + ";" + [Environment]::GetEnvironmentVariable("PATH","User")).replace("\","/").replace("C:","/c").replace(";",":") + ":`$PATH`"")'); fi
 
-script:
-    - pwsh -Command "./script/integrate.ps1 -Production -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String $NUGET_ORG_API_KEY)"
+stages:
+    - analyze
+    - publish
+jobs:
+    include:
+        -   stage: analyze
+            os:
+                - linux
+                - osx
+            script:
+                - pwsh -Command "./script/travis-ci-test.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"
+        -   stage: analyze
+            os: windows
+            dotnet: none
+            script:
+                - pwsh -Command "./script/travis-ci-test.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"
+        -   stage: publish
+            os:
+                - linux
+                - osx
+                - windows
+            script:
+                - pwsh -Command "./script/travis-ci-check-stable.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"

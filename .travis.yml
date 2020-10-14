@@ -6,6 +6,10 @@ addons:
         packages:
             - powershell
             - fpc
+os:
+    - linux
+    - osx
+dist: xenial
 
 before_install:
     - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install dotnetcore-sdk; fi
@@ -21,23 +25,12 @@ before_script:
 stages:
     - analyze
     - publish
+
 jobs:
     include:
         -   stage: analyze
-            os:
-                - linux
-                - osx
-            script:
-                - pwsh -Command "./script/travis-ci-test.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"
-        -   stage: analyze
-            os: windows
-            dotnet: none
             script:
                 - pwsh -Command "./script/travis-ci-test.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"
         -   stage: publish
-            os:
-                - linux
-                - osx
-                - windows
             script:
                 - pwsh -Command "./script/travis-ci-check-stable.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"

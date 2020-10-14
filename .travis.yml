@@ -6,9 +6,6 @@ addons:
         packages:
             - powershell
             - fpc
-os:
-    - linux
-    - osx
 dist: xenial
 
 before_install:
@@ -29,8 +26,16 @@ stages:
 jobs:
     include:
         -   stage: analyze
+            os: linux
+            script:
+                - pwsh -Command "./script/travis-ci-test.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"
+        -   os: osx
             script:
                 - pwsh -Command "./script/travis-ci-test.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"
         -   stage: publish
+            os: linux
+            script:
+                - pwsh -Command "./script/travis-ci-check-stable.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"
+        -   os: osx
             script:
                 - pwsh -Command "./script/travis-ci-check-stable.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"

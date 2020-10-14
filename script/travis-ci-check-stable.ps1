@@ -26,11 +26,11 @@ param (
     [Security.SecureString] $Bucket,
     [Parameter(Mandatory=$true,
                HelpMessage='thisDB API key for reading results')]
-    [Security.SecureString] $ThisDbApiKey
+    [Security.SecureString] $ApiKey
 )
 
 # Fetch version stability information
-$headers = @{ 'X-Api-Key' = ConvertFrom-SecureString -SecureString $ThisDbApiKey -AsPlainText }
+$headers = @{ 'X-Api-Key' = ConvertFrom-SecureString -SecureString $ApiKey -AsPlainText }
 # Throws if key is missing
 $result = Invoke-RestMethod -Uri "https://api.thisdb.com/v1/$(ConvertFrom-SecureString -SecureString $Bucket -AsPlainText)/$StableKey" -Method Get -Headers $headers
 $stable = [System.Convert]::ToBoolean($result)

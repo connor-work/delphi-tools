@@ -21,8 +21,12 @@ before_script:
     - if [ "$TRAVIS_OS_NAME" = "windows" ]; then eval $(powershell -NonInteractive -Command 'write("export PATH=`"" + ([Environment]::GetEnvironmentVariable("PATH","Machine") + ";" + [Environment]::GetEnvironmentVariable("PATH","User")).replace("\","/").replace("C:","/c").replace(";",":") + ":`$PATH`"")'); fi
 
 stages:
-    - analyze
-    - publish
+    - name: analyze
+      if: type != pull_request
+    - name: publish
+      if: type != pull_request
+    - name: test pull request
+      if: type = pull_request
 
 jobs:
     include:
@@ -47,3 +51,12 @@ jobs:
         -   name: Deploy
             script:
                 - pwsh -Command "./script/travis-ci-deploy.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ThisDbApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY}) -NuGetOrgApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${NUGET_ORG_API_KEY})"
+        -   stage: test pull request
+            name: Test pull request on Linux
+            os: linux
+            script:
+                - pwsh -Command "./script/travis-ci-test-pull-request.ps1"
+        -   name: Test pull request os macOS
+            os: osx
+            script:
+                - pwsh -Command "./script/travis-ci-test-pull-request.ps1"

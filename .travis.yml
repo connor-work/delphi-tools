@@ -46,4 +46,4 @@ jobs:
                 - pwsh -Command "./script/travis-ci-check-stable.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"
         -   name: Deploy
             script:
-                - pwsh -Command "./script/travis-ci-check-stable.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ThisDbApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY}) -NuGetOrgApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${NUGET_ORG_API_KEY})"
+                - pwsh -Command "./script/travis-ci-deploy.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ThisDbApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY}) -NuGetOrgApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${NUGET_ORG_API_KEY})"

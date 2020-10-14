@@ -6,6 +6,7 @@ addons:
         packages:
             - powershell
             - fpc
+os: linux
 dist: xenial
 
 before_install:
@@ -26,16 +27,23 @@ stages:
 jobs:
     include:
         -   stage: analyze
+            name: Test on Linux
             os: linux
             script:
                 - pwsh -Command "./script/travis-ci-test.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"
         -   os: osx
+            name: Test on macOS
             script:
                 - pwsh -Command "./script/travis-ci-test.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"
         -   stage: publish
+            name: Check test results on Linux
             os: linux
             script:
                 - pwsh -Command "./script/travis-ci-check-stable.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"
-        -   os: osx
+        -   name: Check test results on macOS
+            os: osx
             script:
                 - pwsh -Command "./script/travis-ci-check-stable.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY})"
+        -   name: Deploy
+            script:
+                - pwsh -Command "./script/travis-ci-check-stable.ps1 -StableKey build-${TRAVIS_BUILD_NUMBER}-${TRAVIS_OS_NAME}-stable -Bucket (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_BUCKET}) -ThisDbApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${THISDB_API_KEY}) -NuGetOrgApiKey (ConvertTo-SecureString -AsPlainText -Force -String ${NUGET_ORG_API_KEY})

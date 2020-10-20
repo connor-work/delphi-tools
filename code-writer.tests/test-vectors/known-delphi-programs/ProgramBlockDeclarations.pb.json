@@ -1,0 +1,7 @@
+{
+    "heading": "ProgramBlockDeclarations",
+    "blockDeclarations": [
+        "lX: Integer;",
+        "lY: string;"
+    ]
+}

@@ -668,8 +668,16 @@ $@"program {program.Heading};
 {{$ENDIF}}
 
 "
-            ).AppendUsesClause(program.UsesClause)
-            .AppendDelphiCode(
+            ).AppendUsesClause(program.UsesClause);
+            if (program.BlockDeclarations.Count > 0)
+            {
+                AppendDelphiCode(
+$@"var
+"
+                );
+                foreach (string line in program.BlockDeclarations) AppendDelphiCode(line, 1).AppendLine();
+            }
+            AppendDelphiCode(
 $@"begin
 "
             );

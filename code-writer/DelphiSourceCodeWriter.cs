@@ -601,7 +601,18 @@ $@"{visibility.ToDeclarationPrefix()}{property.ToSourceCode()};
         {
             AppendDelphiCode(
 $@"{method.Prototype.ToSourceCode(method.Class)};
-begin
+"
+            );
+            if (method.LocalDeclarations.Count > 0)
+            {
+                AppendDelphiCode(
+$@"var
+"
+                );
+                foreach (string line in method.LocalDeclarations) AppendDelphiCode(line, 1).AppendLine();
+            }
+            AppendDelphiCode(
+$@"begin
 "
             );
             foreach (string line in method.Statements) AppendDelphiCode(line, 1).AppendLine();

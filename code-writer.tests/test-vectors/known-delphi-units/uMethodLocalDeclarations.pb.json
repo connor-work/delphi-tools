@@ -1,0 +1,39 @@
+{
+    "heading": {
+        "unit": "uMethodLocalDeclarations"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "memberList": [
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureX"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {
+        "declarations": [
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureX"
+                    },
+                    "localDeclarations": [
+                        "lX: Integer;",
+                        "lY: string;"
+                    ]
+                }
+            }
+        ]
+    }
+}

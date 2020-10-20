@@ -408,7 +408,13 @@ message Program {
   repeated UnitReference usesClause = 2; /** List of unit references (*uses clause*).
                                            * > The **uses** clause lists those units that are incorporated into the program.
                                            * See [The Program Uses Clause](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Program_Uses_Clause). */
-  repeated string block             = 3; /** Contents of the *block* of the program.
+  repeated string blockDeclarations = 3; /** Declarations for the program block.
+                                           * Each value contains a single line of source code.
+                                           * > The block can also contain declarations of constants, types, variables, procedures, and functions; these declarations must precede the statement part of the block.
+                                           * This schema does not model the internal structure of the declarations.
+                                           * Each field value corresponds to one source code line of the declarations section.
+                                           * See [The Block](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Block). */
+  repeated string block             = 4; /** Contents of the *block* of the program.
                                            * Each value contains a single line of source code.
                                            * > The source code file for an executable Delphi application contains: [...] a block of declarations and executable statements.
                                            *
@@ -418,5 +424,5 @@ message Program {
                                            * This schema does not model the internal structure of the block.
                                            * Each field value corresponds to one source code line of the block.
                                            * See [The Block](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Block). */
-  AnnotationComment comment         = 4; /** Annotation comment describing the program. Optional. */
+  AnnotationComment comment         = 5; /** Annotation comment describing the program. Optional. */
 }

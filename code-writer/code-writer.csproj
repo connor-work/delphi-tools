@@ -2,7 +2,6 @@
   <PropertyGroup>
     <CoreVersion>0.5.0</CoreVersion>
     <PrereleaseVersionSuffix></PrereleaseVersionSuffix>
-    <SnapshotVersion>true</SnapshotVersion>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Work.Connor.Delphi.CodeWriter</RootNamespace>
     <Title>Delphi Source Code Writer</Title>

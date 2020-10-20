@@ -32,7 +32,7 @@
     <!-- Expected output Delphi unit source code files, each has a corresponding known protobuf message -->
     <EmbeddedResource Include="test-vectors/known-delphi-units/*.pas" LogicalName="[known delphi unit source]%(Filename)%(Extension)" />
     <!-- Expected output Delphi unit source code files, each has a corresponding known protobuf message -->
-    <EmbeddedResource Include="test-vectors/known-delphi-programs/*.pas" LogicalName="[known delphi program source]%(Filename)%(Extension)" />
+    <EmbeddedResource Include="test-vectors/known-delphi-programs/*.dpr" LogicalName="[known delphi program source]%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

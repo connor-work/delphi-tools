@@ -267,7 +267,7 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <summary>
         /// Default file name extension (without leading dot) for Delphi program source files
         /// </summary>
-        public static readonly string programSourceFileExtension = "pas";
+        public static readonly string programSourceFileExtension = "dpr";
 
         /// <summary>
         /// Line separator for Delphi source code

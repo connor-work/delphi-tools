@@ -14,7 +14,6 @@
 /// limitations under the License.
 
 using Google.Protobuf;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -163,7 +162,6 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
                 get
                 {
                     string resourceName = $"{name}.{protobufJsonFileExtension}";
-                    throw new Exception(string.Join(", ", allProgramMessageResources.GetIDs()));
                     using StreamReader reader = new StreamReader(allProgramMessageResources.GetResourceStream(resourceName) ?? throw new FileNotFoundException(resourceName));
                     return jsonParser.Parse<Program>(reader);
                 }

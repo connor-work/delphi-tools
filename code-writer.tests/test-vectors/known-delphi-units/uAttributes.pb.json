@@ -1,0 +1,45 @@
+{
+    "heading": {
+        "unit": "uAttributes"
+    },
+    "interface": {
+        "usesClause": [
+            {
+                "unit": {
+                    "unit": "uExampleAttribute"
+                }
+            }
+        ],
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "nestedDeclarations": [
+                        {
+                            "member": {
+                                "fieldDeclaration": {
+                                    "name": "FieldX",
+                                    "type": "Integer"
+                                },
+                                "attributeAnnotations": [
+                                    {
+                                        "attribute": "volatile"
+                                    },
+                                    {
+                                        "attribute": "Example"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "attributeAnnotations": [
+                        {
+                            "attribute": "Example()"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

@@ -179,6 +179,13 @@ namespace Work.Connor.Delphi.CodeWriter
         }
 
         /// <summary>
+        /// Constructs a Delphi source code string for a Delphi RTTI attribute annotation.
+        /// </summary>
+        /// <param name="annotation">The attribute annotation</param>
+        /// <returns>The Delphi source code string</returns>
+        internal static string ToSourceCode(this AttributeAnnotation annotation) => $"[{annotation.Attribute}]";
+
+        /// <summary>
         /// Constructs a Delphi source code string for a Delphi declaration of an enumerated value.
         /// </summary>
         /// <param name="value">The declaration of the enumerated value</param>
@@ -474,6 +481,10 @@ $@"{visibility.ToDeclarationPrefix()}type
             );
             Indent(1);
             if (@class.Comment != null) Append(@class.Comment);
+            foreach (AttributeAnnotation annotation in @class.AttributeAnnotations) AppendDelphiCode(
+$@"{annotation.ToSourceCode()}
+"
+            );
             string ancestorSpecifier = @class.Ancestor.Length != 0 ? $"({@class.Ancestor})" : "";
             return AppendDelphiCode(
 $@"{@class.Name} = class{ancestorSpecifier}
@@ -544,13 +555,20 @@ $@"{visibility.ToDeclarationPrefix()}const {trueConst.Identifier} = {trueConst.V
         /// <param name="classMember">The class member's declaration</param>
         /// <param name="visibility">Visibility specifier of the member</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(ClassMemberDeclaration classMember, Visibility visibility) => classMember.DeclarationCase switch
+        public DelphiSourceCodeWriter Append(ClassMemberDeclaration classMember, Visibility visibility)
         {
-            ClassMemberDeclaration.DeclarationOneofCase.MethodDeclaration => Append(classMember.MethodDeclaration, visibility),
-            ClassMemberDeclaration.DeclarationOneofCase.FieldDeclaration => Append(classMember.FieldDeclaration, visibility),
-            ClassMemberDeclaration.DeclarationOneofCase.PropertyDeclaration => Append(classMember.PropertyDeclaration, visibility),
-            _ => throw new NotImplementedException()
-        };
+            foreach (AttributeAnnotation annotation in classMember.AttributeAnnotations) AppendDelphiCode(
+$@"{annotation.ToSourceCode()}
+"
+            );
+            return classMember.DeclarationCase switch
+            {
+                ClassMemberDeclaration.DeclarationOneofCase.MethodDeclaration => Append(classMember.MethodDeclaration, visibility),
+                ClassMemberDeclaration.DeclarationOneofCase.FieldDeclaration => Append(classMember.FieldDeclaration, visibility),
+                ClassMemberDeclaration.DeclarationOneofCase.PropertyDeclaration => Append(classMember.PropertyDeclaration, visibility),
+                _ => throw new NotImplementedException()
+            };
+        }
 
         /// <summary>
         /// Appends Delphi source code for the interface declaration of a method of a class.
@@ -652,6 +670,10 @@ $@"{visibility.ToDeclarationPrefix()}type
             );
             Indent(1);
             if (@enum.Comment != null) Append(@enum.Comment);
+            foreach (AttributeAnnotation annotation in @enum.AttributeAnnotations) AppendDelphiCode(
+$@"{annotation.ToSourceCode()}
+"
+            );
             AppendDelphiCode(
 $@"{@enum.Name} = (
 "

@@ -7,35 +7,43 @@
             {
                 "classDeclaration": {
                     "name": "ClassX",
-                    "memberList": [
+                    "nestedDeclarations": [
                         {
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "ProcedureX"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "ProcedureX"
+                                    }
                                 }
                             }
                         },
                         {
                             "visibility": "PRIVATE",
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "ProcedureY"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "ProcedureY"
+                                    }
                                 }
                             }
                         },
                         {
                             "visibility": "PROTECTED",
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "ProcedureZ"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "ProcedureZ"
+                                    }
                                 }
                             }
                         },
                         {
                             "visibility": "PUBLIC",
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "ProcedureA"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "ProcedureA"
+                                    }
                                 }
                             }
                         }

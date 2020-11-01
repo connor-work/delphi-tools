@@ -464,11 +464,12 @@ $@"implementation
         /// Appends Delphi source code for a class declaration.
         /// </summary>
         /// <param name="class">The class declaration</param>
+        /// <param name="visibility">Visibility specifier of the declaration, if nested in a class declaration</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(ClassDeclaration @class)
+        public DelphiSourceCodeWriter Append(ClassDeclaration @class, Visibility visibility = Visibility.Unspecified)
         {
             AppendDelphiCode(
-$@"type
+$@"{visibility.ToDeclarationPrefix()}type
 "
             );
             Indent(1);
@@ -477,9 +478,7 @@ $@"type
             return AppendDelphiCode(
 $@"{@class.Name} = class{ancestorSpecifier}
 "
-            ).AppendMultiplePadded(@class.NestedConstDeclarations.PartiallyApply(@const => Append(@const))
-                           .Concat(@class.MemberList.PartiallyApply(member => Append(member)))
-                           .Concat(@class.NestedTypeDeclarations.PartiallyApply(nestedType => Append(nestedType))))
+            ).AppendMultiplePadded(@class.NestedDeclarations.PartiallyApply(declaration => Append(declaration)))
             .AppendDelphiCode(
 $@"end;
 "
@@ -487,25 +486,40 @@ $@"end;
         }
 
         /// <summary>
-        /// Appends Delphi source code for a nested type declaration.
+        /// Appends Delphi source code for a declaration nested within a class declaration.
         /// </summary>
         /// <param name="declaration">The declaration</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(NestedTypeDeclaration declaration) => declaration.DeclarationCase switch
+        public DelphiSourceCodeWriter Append(ClassDeclarationNestedDeclaration declaration) => declaration.DeclarationCase switch
         {
-            NestedTypeDeclaration.DeclarationOneofCase.ClassDeclaration => Append(declaration.ClassDeclaration),
-            NestedTypeDeclaration.DeclarationOneofCase.EnumDeclaration => Append(declaration.EnumDeclaration),
+            ClassDeclarationNestedDeclaration.DeclarationOneofCase.NestedTypeDeclaration => Append(declaration.NestedTypeDeclaration, declaration.Visibility),
+            ClassDeclarationNestedDeclaration.DeclarationOneofCase.NestedConstDeclaration => Append(declaration.NestedConstDeclaration, declaration.Visibility),
+            ClassDeclarationNestedDeclaration.DeclarationOneofCase.Member => Append(declaration.Member, declaration.Visibility),
             _ => throw new NotImplementedException()
-        };        
+        };
+
+        /// <summary>
+        /// Appends Delphi source code for a nested type declaration.
+        /// </summary>
+        /// <param name="declaration">The declaration</param>
+        /// <param name="visibility">Visibility specifier of the declaration</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(NestedTypeDeclaration declaration, Visibility visibility) => declaration.DeclarationCase switch
+        {
+            NestedTypeDeclaration.DeclarationOneofCase.ClassDeclaration => Append(declaration.ClassDeclaration, visibility),
+            NestedTypeDeclaration.DeclarationOneofCase.EnumDeclaration => Append(declaration.EnumDeclaration, visibility),
+            _ => throw new NotImplementedException()
+        };
 
         /// <summary>
         /// Appends Delphi source code for the declaration of a constant.
         /// </summary>
         /// <param name="@const">The constant declaration</param>
+        /// <param name="visibility">Visibility specifier of the declaration, if nested in a class declaration</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(ConstDeclaration @const) => @const.DeclarationCase switch
+        public DelphiSourceCodeWriter Append(ConstDeclaration @const, Visibility visibility = Visibility.Unspecified) => @const.DeclarationCase switch
         {
-            ConstDeclaration.DeclarationOneofCase.TrueConstDeclaration => Append(@const.TrueConstDeclaration),
+            ConstDeclaration.DeclarationOneofCase.TrueConstDeclaration => Append(@const.TrueConstDeclaration, visibility),
             _ => throw new NotImplementedException()
         };
 
@@ -513,12 +527,13 @@ $@"end;
         /// Appends Delphi source code for the declaration of a true constant.
         /// </summary>
         /// <param name="trueConst">The true constant declaration</param>
+        /// <param name="visibility">Visibility specifier of the declaration, if nested in a class declaration</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(TrueConstDeclaration trueConst)
+        public DelphiSourceCodeWriter Append(TrueConstDeclaration trueConst, Visibility visibility = Visibility.Unspecified)
         {
             if (trueConst.Comment != null) Append(trueConst.Comment);
             return AppendDelphiCode(
-$@"const {trueConst.Identifier} = {trueConst.Value};
+$@"{visibility.ToDeclarationPrefix()}const {trueConst.Identifier} = {trueConst.Value};
 "
             );
         }
@@ -527,12 +542,13 @@ $@"const {trueConst.Identifier} = {trueConst.Value};
         /// Appends Delphi source code for the declaration of a member of a class.
         /// </summary>
         /// <param name="classMember">The class member's declaration</param>
+        /// <param name="visibility">Visibility specifier of the member</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(ClassMemberDeclaration classMember) => classMember.DeclarationCase switch
+        public DelphiSourceCodeWriter Append(ClassMemberDeclaration classMember, Visibility visibility) => classMember.DeclarationCase switch
         {
-            ClassMemberDeclaration.DeclarationOneofCase.MethodDeclaration => Append(classMember.MethodDeclaration, classMember.Visibility),
-            ClassMemberDeclaration.DeclarationOneofCase.FieldDeclaration => Append(classMember.FieldDeclaration, classMember.Visibility),
-            ClassMemberDeclaration.DeclarationOneofCase.PropertyDeclaration => Append(classMember.PropertyDeclaration, classMember.Visibility),
+            ClassMemberDeclaration.DeclarationOneofCase.MethodDeclaration => Append(classMember.MethodDeclaration, visibility),
+            ClassMemberDeclaration.DeclarationOneofCase.FieldDeclaration => Append(classMember.FieldDeclaration, visibility),
+            ClassMemberDeclaration.DeclarationOneofCase.PropertyDeclaration => Append(classMember.PropertyDeclaration, visibility),
             _ => throw new NotImplementedException()
         };
 
@@ -626,11 +642,12 @@ $@"end;
         /// Appends Delphi source code for the declaration of an enumerated type.
         /// </summary>
         /// <param name="enum">The declaration of the enumerated type</param>
+        /// <param name="visibility">Visibility specifier of the declaration, if nested in a class declaration</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(EnumDeclaration @enum)
+        public DelphiSourceCodeWriter Append(EnumDeclaration @enum, Visibility visibility = Visibility.Unspecified)
         {
             AppendDelphiCode(
-$@"type
+$@"{visibility.ToDeclarationPrefix()}type
 "
             );
             Indent(1);

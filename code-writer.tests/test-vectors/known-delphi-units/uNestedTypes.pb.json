@@ -7,33 +7,38 @@
             {
                 "classDeclaration": {
                     "name": "ClassX",
-                    "nestedTypeDeclarations": [
+                    "nestedDeclarations": [
                         {
-                            "classDeclaration": {
-                                "name": "ClassY",
-                                "comment": {
-                                    "commentLines": [
-                                        "<summary>",
-                                        "This is an empty nested class used for testing.",
-                                        "</summary>"
-                                    ]
+                            "nestedTypeDeclaration": {
+                                "classDeclaration": {
+                                    "name": "ClassY",
+                                    "comment": {
+                                        "commentLines": [
+                                            "<summary>",
+                                            "This is an empty nested class used for testing.",
+                                            "</summary>"
+                                        ]
+                                    }
                                 }
                             }
                         },
                         {
-                            "enumDeclaration": {
-                                "name": "EnumX",
-                                "values": [
-                                    {
-                                        "name": "exValueX"
+                            "visibility": "PRIVATE",
+                            "nestedTypeDeclaration": {
+                                "enumDeclaration": {
+                                    "name": "EnumX",
+                                    "values": [
+                                        {
+                                            "name": "exValueX"
+                                        }
+                                    ],
+                                    "comment": {
+                                        "commentLines": [
+                                            "<summary>",
+                                            "This is a nested enumerated type used for testing.",
+                                            "</summary>"
+                                        ]
                                     }
-                                ],
-                                "comment": {
-                                    "commentLines": [
-                                        "<summary>",
-                                        "This is a nested enumerated type used for testing.",
-                                        "</summary>"
-                                    ]
                                 }
                             }
                         }

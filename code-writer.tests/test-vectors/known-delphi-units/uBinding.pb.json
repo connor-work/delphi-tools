@@ -15,21 +15,25 @@
                 "classDeclaration": {
                     "name": "ClassX",
                     "ancestor": "TAbstractBaseClass",
-                    "memberList": [
+                    "nestedDeclarations": [
                         {
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "ProcedureX"
-                                },
-                                "binding": "VIRTUAL"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "ProcedureX"
+                                    },
+                                    "binding": "VIRTUAL"
+                                }
                             }
                         },
                         {
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "VirtualProcedure"
-                                },
-                                "binding": "OVERRIDE"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "VirtualProcedure"
+                                    },
+                                    "binding": "OVERRIDE"
+                                }
                             }
                         }
                     ]

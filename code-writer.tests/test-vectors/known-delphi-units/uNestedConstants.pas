@@ -13,7 +13,7 @@ type
   /// <summary>
   /// This is a true constant used for testing.
   /// </summary>
-  const ConstY = '2';
+  private const ConstY = '2';
   end;
 
 implementation

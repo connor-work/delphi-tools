@@ -7,23 +7,28 @@
             {
                 "classDeclaration": {
                     "name": "ClassX",
-                    "nestedConstDeclarations": [
+                    "nestedDeclarations": [
                         {
-                            "trueConstDeclaration": {
-                                "identifier": "ConstX",
-                                "value": "1"
+                            "nestedConstDeclaration": {
+                                "trueConstDeclaration": {
+                                    "identifier": "ConstX",
+                                    "value": "1"
+                                }
                             }
                         },
                         {
-                            "trueConstDeclaration": {
-                                "identifier": "ConstY",
-                                "value": "'2'",
-                                "comment": {
-                                    "commentLines": [
-                                        "<summary>",
-                                        "This is a true constant used for testing.",
-                                        "</summary>"
-                                    ]
+                            "visibility": "PRIVATE",
+                            "nestedConstDeclaration": {
+                                "trueConstDeclaration": {
+                                    "identifier": "ConstY",
+                                    "value": "'2'",
+                                    "comment": {
+                                        "commentLines": [
+                                            "<summary>",
+                                            "This is a true constant used for testing.",
+                                            "</summary>"
+                                        ]
+                                    }
                                 }
                             }
                         }

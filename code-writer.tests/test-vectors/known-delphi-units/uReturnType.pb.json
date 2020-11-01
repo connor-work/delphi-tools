@@ -7,28 +7,32 @@
             {
                 "classDeclaration": {
                     "name": "ClassX",
-                    "memberList": [
+                    "nestedDeclarations": [
                         {
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "FunctionX",
-                                    "type": "FUNCTION",
-                                    "returnType": "Integer"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "FunctionX",
+                                        "type": "FUNCTION",
+                                        "returnType": "Integer"
+                                    }
                                 }
                             }
                         },
                         {
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "FunctionY",
-                                    "type": "FUNCTION",
-                                    "parameterList": [
-                                        {
-                                            "name": "ParamY",
-                                            "type": "Integer"
-                                        }
-                                    ],
-                                    "returnType": "Integer"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "FunctionY",
+                                        "type": "FUNCTION",
+                                        "parameterList": [
+                                            {
+                                                "name": "ParamY",
+                                                "type": "Integer"
+                                            }
+                                        ],
+                                        "returnType": "Integer"
+                                    }
                                 }
                             }
                         }

@@ -7,46 +7,56 @@
             {
                 "classDeclaration": {
                     "name": "ClassX",
-                    "memberList": [
+                    "nestedDeclarations": [
                         {
-                            "fieldDeclaration": {
-                                "name": "FieldX",
-                                "type": "Integer"
-                            }
-                        },
-                        {
-                            "fieldDeclaration": {
-                                "name": "FieldY",
-                                "type": "Integer"
-                            }
-                        },
-                        {
-                            "propertyDeclaration": {
-                                "name": "PropertyX",
-                                "type": "Integer",
-                                "readSpecifier": "FieldX",
-                                "comment": {
-                                    "commentLines": [
-                                        "<summary>",
-                                        "This is a property used for testing.",
-                                        "</summary>"
-                                    ]
+                            "member": {
+                                "fieldDeclaration": {
+                                    "name": "FieldX",
+                                    "type": "Integer"
                                 }
                             }
                         },
                         {
-                            "propertyDeclaration": {
-                                "name": "PropertyY",
-                                "type": "Integer",
-                                "writeSpecifier": "FieldY"
+                            "member": {
+                                "fieldDeclaration": {
+                                    "name": "FieldY",
+                                    "type": "Integer"
+                                }
                             }
                         },
                         {
-                            "propertyDeclaration": {
-                                "name": "PropertyXY",
-                                "type": "Integer",
-                                "readSpecifier": "FieldY",
-                                "writeSpecifier": "FieldX"
+                            "member": {
+                                "propertyDeclaration": {
+                                    "name": "PropertyX",
+                                    "type": "Integer",
+                                    "readSpecifier": "FieldX",
+                                    "comment": {
+                                        "commentLines": [
+                                            "<summary>",
+                                            "This is a property used for testing.",
+                                            "</summary>"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "member": {
+                                "propertyDeclaration": {
+                                    "name": "PropertyY",
+                                    "type": "Integer",
+                                    "writeSpecifier": "FieldY"
+                                }
+                            }
+                        },
+                        {
+                            "member": {
+                                "propertyDeclaration": {
+                                    "name": "PropertyXY",
+                                    "type": "Integer",
+                                    "readSpecifier": "FieldY",
+                                    "writeSpecifier": "FieldX"
+                                }
                             }
                         }
                     ]

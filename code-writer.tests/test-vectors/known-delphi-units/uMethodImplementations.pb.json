@@ -7,27 +7,33 @@
             {
                 "classDeclaration": {
                     "name": "ClassX",
-                    "memberList": [
+                    "nestedDeclarations": [
                         {
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "ProcedureX"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "ProcedureX"
+                                    }
                                 }
                             }
                         },
                         {
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "ConstructorX",
-                                    "type": "CONSTRUCTOR"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "ConstructorX",
+                                        "type": "CONSTRUCTOR"
+                                    }
                                 }
                             }
                         },
                         {
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "DestructorX",
-                                    "type": "DESTRUCTOR"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "DestructorX",
+                                        "type": "DESTRUCTOR"
+                                    }
                                 }
                             }
                         }

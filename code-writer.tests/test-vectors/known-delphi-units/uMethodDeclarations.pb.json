@@ -7,43 +7,51 @@
             {
                 "classDeclaration": {
                     "name": "ClassX",
-                    "memberList": [
+                    "nestedDeclarations": [
                         {
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "ProcedureX"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "ProcedureX"
+                                    }
                                 }
                             }
                         },
                         {
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "ConstructorX",
-                                    "type": "CONSTRUCTOR"
-                                },
-                                "comment": {
-                                    "commentLines": [
-                                        "<summary>",
-                                        "This is a method used for testing.",
-                                        "</summary>"
-                                    ]
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "ConstructorX",
+                                        "type": "CONSTRUCTOR"
+                                    },
+                                    "comment": {
+                                        "commentLines": [
+                                            "<summary>",
+                                            "This is a method used for testing.",
+                                            "</summary>"
+                                        ]
+                                    }
                                 }
                             }
                         },
                         {
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "DestructorX",
-                                    "type": "DESTRUCTOR"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "DestructorX",
+                                        "type": "DESTRUCTOR"
+                                    }
                                 }
                             }
                         },
                         {
-                            "methodDeclaration": {
-                                "prototype": {
-                                    "name": "FunctionX",
-                                    "type": "FUNCTION",
-                                    "returnType": "Integer"
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "FunctionX",
+                                        "type": "FUNCTION",
+                                        "returnType": "Integer"
+                                    }
                                 }
                             }
                         }

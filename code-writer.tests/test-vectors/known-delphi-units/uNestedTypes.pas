@@ -15,7 +15,7 @@ type
     ClassY = class
     end;
 
-  type
+  private type
     /// <summary>
     /// This is a nested enumerated type used for testing.
     /// </summary>

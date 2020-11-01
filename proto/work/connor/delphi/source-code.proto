@@ -111,17 +111,35 @@ message InterfaceDeclaration {
   * > A class, or class type, defines a structure consisting of fields, methods, and properties.
   * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)) */
 message ClassDeclaration {
-  string name                                           = 1; /** Name of the class (*className*). Required (non-empty). */
-  string ancestor                                       = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
-                                                               * > When you declare a class, you can specify its immediate ancestor.
-                                                               * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
-  repeated NestedTypeDeclaration nestedTypeDeclarations = 3; /** List of *nested types* (*nestedTypeDeclaration*) that are declared within the class (namespacing mechanism).
-                                                               * > Nested types present a way to keep conceptually related types together and to avoid name collisions. */
-  repeated ConstDeclaration nestedConstDeclarations     = 4; /** List of *nested constants* (*nestedConstDeclaration*) that are declared within the class (namespacing mechanism).
-                                                               * > Nested constants present a way to keep conceptually related types together and to avoid name collisions. */
-  repeated ClassMemberDeclaration memberList            = 5; /** Declared members of the class (*memberList*).
-                                                               * > The fields, methods, and properties of a class are called its components or members. */
-  AnnotationComment comment                             = 6; /** Annotation comment describing the class. Optional. */
+  string name                                                   = 1; /** Name of the class (*className*). Required (non-empty). */
+  string ancestor                                               = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
+                                                                       * > When you declare a class, you can specify its immediate ancestor.
+                                                                       * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
+  repeated ClassDeclarationNestedDeclaration nestedDeclarations = 3; /** List of declarations that are nested within the class declarations (elements of *nestedTypeDeclaration*, *nestedConstDeclaration* and *memberList*). */
+  AnnotationComment comment                                     = 4; /** Annotation comment describing the class. Optional. */
+}
+
+/** Declarations that is nested within a class declarations (elements of *nestedTypeDeclaration*, *nestedConstDeclaration* and *memberList*).
+  * See [Class Types](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Class_Types). */
+message ClassDeclarationNestedDeclaration {
+  Visibility visibility = 1; /** *Visibility attribute* of the declaration.
+                               * > Every member of a class has an attribute called visibility [...]
+                               * > Visibility determines where and how a member can be accessed [...]
+                               * Besides class members, nested types and nested constants can also be attributed with a visibility specifier,
+                               * although we did not find any documentation of this for Delphi 10.4.
+                               * Required, explicit construction should avoid default initialization.
+                               * See [Visibility of Class Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Visibility_of_Class_Members). */
+  oneof declaration {
+    NestedTypeDeclaration nestedTypeDeclaration = 2; /** *Nested type* (element of *nestedTypeDeclaration*) that is declared within the class (namespacing mechanism).
+                                                       * > [Nested types] present a way to keep conceptually related types together, and to avoid name collisions.
+                                                       * See [Nested Type Declarations](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Nested_Type_Declarations). */
+    ConstDeclaration nestedConstDeclaration     = 3; /** *Nested constants* (element of *nestedConstDeclaration*) that is declared within the class (namespacing mechanism).
+                                                       * > Constants can be declared in class types in the same manner as nested type sections.
+                                                       * See [Nested Constants](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Nested_Type_Declarations#Nested_Constants). */
+    ClassMemberDeclaration member               = 4; /** Declared member of the class (element of *memberList*).
+                                                       * > The fields, methods, and properties of a class are called its components or members.
+                                                       * See [Class Types](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Class_Types). */
+  } /** Specific declaration (polymorphic). Required. */
 }
 
 /** Type declarations that is nested within a class declarations (*nested type*).
@@ -165,22 +183,18 @@ message TrueConstDeclaration {
 /** Declaration of a *member* (also called *component*) of a class.
   * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)). */
 message ClassMemberDeclaration {
-  Visibility visibility                          = 1; /** *Visibility attribute* of the class member.
-                                                        * > Every member of a class has an attribute called visibility [...]
-                                                        * > Visibility determines where and how a member can be accessed [...]
-                                                        * Required, explicit construction should avoid default initialization.
-                                                        * See [Visibility of Class Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Visibility_of_Class_Members). */
-
   oneof declaration {
-    MethodInterfaceDeclaration methodDeclaration = 2; /** Interface declaration of a method */
-    FieldDeclaration fieldDeclaration            = 3; /** Declaration of a field */
-    PropertyDeclaration propertyDeclaration      = 4; /** Declaration of a property */
+    MethodInterfaceDeclaration methodDeclaration = 1; /** Interface declaration of a method */
+    FieldDeclaration fieldDeclaration            = 2; /** Declaration of a field */
+    PropertyDeclaration propertyDeclaration      = 3; /** Declaration of a property */
   } /** Specific member declaration (polymorphic). Required. */
 }
 
-/** *Visibility specifiers* used to define the *visibility attribute* of a class member.
+/** *Visibility specifiers* used to define the *visibility attribute* of a class declaration element.
   * > Visibility determines where and how a member can be accessed, with **private** representing the least accessibility, **protected** representing an intermediate level of accessibility,
   * > and **public**, **published**, and **automated** representing the greatest accessibility.
+  * Besides class members, nested types and nested constants can also be attributed with a visibility specifier,
+  * although we did not find any documentation of this for Delphi 10.4.
   * The visibility specifiers **published**, **automated**, **strict private** and **strict protected** are not supported by this schema.
   * See [Visibility of Class Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Visibility_of_Class_Members). */
 enum Visibility {

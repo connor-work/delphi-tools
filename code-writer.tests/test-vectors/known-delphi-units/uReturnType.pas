@@ -8,9 +8,9 @@ interface
 
 type
   ClassX = class
-  function FunctionX: Integer;
+    function FunctionX: Integer;
 
-  function FunctionY(ParamY: Integer): Integer;
+    function FunctionY(ParamY: Integer): Integer;
   end;
 
 implementation

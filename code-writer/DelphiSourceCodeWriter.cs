@@ -489,7 +489,9 @@ $@"{annotation.ToSourceCode()}
             return AppendDelphiCode(
 $@"{@class.Name} = class{ancestorSpecifier}
 "
-            ).AppendMultiplePadded(@class.NestedDeclarations.PartiallyApply(declaration => Append(declaration)))
+            ).Indent(1)
+            .AppendMultiplePadded(@class.NestedDeclarations.PartiallyApply(declaration => Append(declaration)))
+            .Indent(-1)
             .AppendDelphiCode(
 $@"end;
 "

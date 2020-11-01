@@ -12,9 +12,9 @@ uses
 type
   [Example()]
   ClassX = class
-  [volatile]
-  [Example]
-  var FieldX: Integer;
+    [volatile]
+    [Example]
+    var FieldX: Integer;
   end;
 
 implementation

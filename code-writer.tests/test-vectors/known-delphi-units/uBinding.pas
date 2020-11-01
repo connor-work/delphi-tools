@@ -11,9 +11,9 @@ uses
 
 type
   ClassX = class(TAbstractBaseClass)
-  procedure ProcedureX; virtual;
+    procedure ProcedureX; virtual;
 
-  procedure VirtualProcedure; override;
+    procedure VirtualProcedure; override;
   end;
 
 implementation

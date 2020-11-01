@@ -8,16 +8,16 @@ interface
 
 type
   ClassX = class
-  procedure ProcedureX;
+    procedure ProcedureX;
 
-  /// <summary>
-  /// This is a method used for testing.
-  /// </summary>
-  constructor ConstructorX;
+    /// <summary>
+    /// This is a method used for testing.
+    /// </summary>
+    constructor ConstructorX;
 
-  destructor DestructorX;
+    destructor DestructorX;
 
-  function FunctionX: Integer;
+    function FunctionX: Integer;
   end;
 
 implementation

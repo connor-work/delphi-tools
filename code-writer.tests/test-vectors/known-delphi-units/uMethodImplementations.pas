@@ -8,11 +8,11 @@ interface
 
 type
   ClassX = class
-  procedure ProcedureX;
+    procedure ProcedureX;
 
-  constructor ConstructorX;
+    constructor ConstructorX;
 
-  destructor DestructorX;
+    destructor DestructorX;
   end;
 
 implementation

@@ -8,7 +8,7 @@ interface
 
 type
   ClassX = class
-  procedure ProcedureX;
+    procedure ProcedureX;
   end;
 
 implementation

@@ -8,13 +8,13 @@ interface
 
 type
   ClassX = class
-  procedure ProcedureX;
+    procedure ProcedureX;
 
-  private procedure ProcedureY;
+    private procedure ProcedureY;
 
-  protected procedure ProcedureZ;
+    protected procedure ProcedureZ;
 
-  public procedure ProcedureA;
+    public procedure ProcedureA;
   end;
 
 implementation

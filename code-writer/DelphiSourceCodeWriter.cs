@@ -559,15 +559,11 @@ $@"{visibility.ToDeclarationPrefix()}const {trueConst.Identifier} = {trueConst.V
         /// <returns><c>this</c></returns>
         public DelphiSourceCodeWriter Append(ClassMemberDeclaration classMember, Visibility visibility)
         {
-            foreach (AttributeAnnotation annotation in classMember.AttributeAnnotations) AppendDelphiCode(
-$@"{annotation.ToSourceCode()}
-"
-            );
             return classMember.DeclarationCase switch
             {
-                ClassMemberDeclaration.DeclarationOneofCase.MethodDeclaration => Append(classMember.MethodDeclaration, visibility),
-                ClassMemberDeclaration.DeclarationOneofCase.FieldDeclaration => Append(classMember.FieldDeclaration, visibility),
-                ClassMemberDeclaration.DeclarationOneofCase.PropertyDeclaration => Append(classMember.PropertyDeclaration, visibility),
+                ClassMemberDeclaration.DeclarationOneofCase.MethodDeclaration => Append(classMember.MethodDeclaration, visibility, classMember.AttributeAnnotations),
+                ClassMemberDeclaration.DeclarationOneofCase.FieldDeclaration => Append(classMember.FieldDeclaration, visibility, classMember.AttributeAnnotations),
+                ClassMemberDeclaration.DeclarationOneofCase.PropertyDeclaration => Append(classMember.PropertyDeclaration, visibility, classMember.AttributeAnnotations),
                 _ => throw new NotImplementedException()
             };
         }
@@ -577,10 +573,15 @@ $@"{annotation.ToSourceCode()}
         /// </summary>
         /// <param name="method">The method interface declaration</param>
         /// <param name="visibility">Visibility specifier of the method</param>
+        /// <param name="annotations">Attribute annotations of the method</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method, Visibility visibility)
+        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method, Visibility visibility, IEnumerable<AttributeAnnotation> annotations)
         {
             if (method.Comment != null) Append(method.Comment);
+            foreach (AttributeAnnotation annotation in annotations) AppendDelphiCode(
+$@"{annotation.ToSourceCode()}
+"
+            );
             return AppendDelphiCode(
 $@"{visibility.ToDeclarationPrefix()}{method.Prototype.ToSourceCode()};{method.Binding.ToDeclarationSuffix()}
 "
@@ -592,10 +593,15 @@ $@"{visibility.ToDeclarationPrefix()}{method.Prototype.ToSourceCode()};{method.B
         /// </summary>
         /// <param name="field">The field declaration</param>
         /// <param name="visibility">Visibility specifier of the field</param>
+        /// <param name="annotations">Attribute annotations of the field</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(FieldDeclaration field, Visibility visibility)
+        public DelphiSourceCodeWriter Append(FieldDeclaration field, Visibility visibility, IEnumerable<AttributeAnnotation> annotations)
         {
             if (field.Comment != null) Append(field.Comment);
+            foreach (AttributeAnnotation annotation in annotations) AppendDelphiCode(
+$@"{annotation.ToSourceCode()}
+"
+            );
             return AppendDelphiCode(
 $@"{visibility.ToDeclarationPrefix()}{field.ToSourceCode()};
 "
@@ -607,10 +613,15 @@ $@"{visibility.ToDeclarationPrefix()}{field.ToSourceCode()};
         /// </summary>
         /// <param name="property">The property declaration</param>
         /// <param name="visibility">Visibility specifier of the property</param>
+        /// <param name="annotations">Attribute annotations of the property</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(PropertyDeclaration property, Visibility visibility)
+        public DelphiSourceCodeWriter Append(PropertyDeclaration property, Visibility visibility, IEnumerable<AttributeAnnotation> annotations)
         {
             if (property.Comment != null) Append(property.Comment);
+            foreach (AttributeAnnotation annotation in annotations) AppendDelphiCode(
+$@"{annotation.ToSourceCode()}
+"
+            );
             return AppendDelphiCode(
 $@"{visibility.ToDeclarationPrefix()}{property.ToSourceCode()};
 "

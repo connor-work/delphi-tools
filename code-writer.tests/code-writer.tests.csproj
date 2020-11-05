@@ -26,6 +26,8 @@
     <!-- Support source code for Delphi tests -->
     <EmbeddedResource Include="test-support/**/*.pas"
                       LogicalName="[Delphi test support code unit]%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="test-support/**/*.inc"
+                      LogicalName="[Delphi test support code include file]%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

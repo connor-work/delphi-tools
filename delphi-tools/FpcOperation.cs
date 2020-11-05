@@ -38,6 +38,11 @@ namespace Work.Connor.Delphi.Tools
         public List<string> UnitPath { get; } = new List<string>();
 
         /// <summary>
+        /// <i>Include path</i> for FPC.
+        /// </summary>
+        public List<string> IncludePath { get; } = new List<string>();
+
+        /// <summary>
         /// <i>Output path</i> for FPC.
         /// </summary>
         public string? OutputPath { get; set; }
@@ -82,6 +87,7 @@ namespace Work.Connor.Delphi.Tools
             fpc.StartInfo.FileName = FpcExecutablePath ?? GetExecutableName("fpc");
             if (GenerateDebugInfo) fpc.StartInfo.ArgumentList.Add("-g");
             foreach (string unitPathFolder in UnitPath) fpc.StartInfo.ArgumentList.Add($"-Fu{unitPathFolder}");
+            foreach (string includePathFolder in IncludePath) fpc.StartInfo.ArgumentList.Add($"-Fi{includePathFolder}");
             if (OutputPath != null) fpc.StartInfo.ArgumentList.Add($"-FE{OutputPath}");
             fpc.StartInfo.ArgumentList.Add(InputFile);
             fpc.StartInfo.CreateNoWindow = true;

@@ -343,17 +343,18 @@ namespace Work.Connor.Delphi.CodeWriter
         }
 
         /// <summary>
-        /// Performs multiple append operations, inserting a blank line as padding using <see cref="AppendLine"/> between consecutive operations.
+        /// Performs multiple append operations, optionally inserting a blank line as padding using <see cref="AppendLine"/> between consecutive operations.
         /// </summary>
         /// <param name="appends">Sequence of append operations to be performed</param>
         /// <param name="padEnd">If <see langword="true"/>, a non-empty sequence is also padded after the last element</param>
+        /// <param name="padBetween">If <see langword="true"/>, a blank line is inserted between consecutive operations</param>
         /// <returns><c>this</c></returns>
-        private DelphiSourceCodeWriter AppendMultiplePadded(IEnumerable<Action> appends, bool padEnd = false)
+        private DelphiSourceCodeWriter AppendMultiplePadded(IEnumerable<Action> appends, bool padEnd = false, bool padBetween = true)
         {
             bool firstLine = true;
             foreach (Action append in appends)
             {
-                if (!firstLine) AppendLine();
+                if (!firstLine && padBetween) AppendLine();
                 firstLine = false;
                 append.Invoke();
             }
@@ -391,7 +392,12 @@ namespace Work.Connor.Delphi.CodeWriter
             return AppendDelphiCode(
 $@"unit {unit.Heading.ToSourceCode()};
 
-{{$IFDEF FPC}}
+"
+            ).AppendMultiplePadded(unit.IncludeFiles.PartiallyApply(includeFile => AppendDelphiCode(
+$@"{{$INCLUDE {EscapeIncludeFileName(includeFile)}}}
+"
+             )), true, false).AppendDelphiCode(
+$@"{{$IFDEF FPC}}
   {{$MODE DELPHI}}
 {{$ENDIF}}
 
@@ -403,6 +409,13 @@ $@"end.
 "
             );
         }
+
+        /// <summary>
+        /// Escapes an include file name for embedding in a compiler directive.
+        /// </summary>
+        /// <param name="fileName">Name of the include file</param>
+        /// <returns>The escaped name</returns>
+        private string EscapeIncludeFileName(string fileName) => fileName.Contains(' ') ? $"'{fileName}'" : fileName;
 
         /// <summary>
         /// Appends Delphi source code for an interface section of a unit.

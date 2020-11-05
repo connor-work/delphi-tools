@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <CoreVersion>0.8.1</CoreVersion>
+    <CoreVersion>0.9.0</CoreVersion>
     <PrereleaseVersionSuffix></PrereleaseVersionSuffix>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Work.Connor.Delphi.CodeWriter</RootNamespace>

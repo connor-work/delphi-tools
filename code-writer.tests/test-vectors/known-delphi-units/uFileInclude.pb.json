@@ -1,0 +1,10 @@
+{
+    "heading": {
+        "unit": "uFileInclude"
+    },
+    "includeFiles": [
+        "testIncludeFile.inc"
+    ],
+    "interface": {},
+    "implementation": {}
+}

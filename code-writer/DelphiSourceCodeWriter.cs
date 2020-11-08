@@ -367,13 +367,15 @@ namespace Work.Connor.Delphi.CodeWriter
         /// </summary>
         /// <param name="lines">Delphi source code string, potentially multi-line</param>
         /// <param name="shift">Optional change to the indentation level applied only to this source code string</param>
+        /// <param name="absoluteIndent">If <see langword="true"/>, the indentation level is changed from 0 instead of the current level</param>
         /// <returns><c>this</c></returns>
-        private DelphiSourceCodeWriter AppendDelphiCode(string lines, int shift = 0)
+        private DelphiSourceCodeWriter AppendDelphiCode(string lines, int shift = 0, bool absoluteIndent = false)
         {
             Indent(shift);
             codeBuilder.Append(Regex.Replace(lines.ConvertLineSeparators(lineSeparator),
                                              "^.+$" /* any non-empty line */,
-                                             IndentPrefix(indentLevel) + "$&" /* is prefixed with indentation */,
+                                             IndentPrefix(absoluteIndent ? shift
+                                                                         : indentLevel) + "$&" /* is prefixed with indentation */,
                                              RegexOptions.Multiline));
             Indent(-shift);
             return this;
@@ -435,7 +437,7 @@ $@"interface
         /// </summary>
         /// <param name="references">List of unit references in the uses clause</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter AppendUsesClause(IList<UnitReference> references)
+        public DelphiSourceCodeWriter AppendUsesClause(IList<ConditionalUnitReference> references)
         {
             // No clause required without references
             if (references.Count == 0) return this;
@@ -443,16 +445,66 @@ $@"interface
  $@"uses
 "
             );
-            bool first = true;
-            foreach (UnitReference reference in references)
+            Action? appendReferenceAction(UnitReference? reference, bool last)
             {
-                if (!first) Append(",").AppendLine();
-                first = false;
-                AppendDelphiCode(
-$@"{reference.Unit.ToSourceCode()}"
+                if (reference is null) return null;
+                return () => AppendDelphiCode(
+$@"{reference.Unit.ToSourceCode()}{(last ? ";" : ",")}
+"
                 , 1);
             }
-            return Append(";").AppendLine().AppendLine();
+            for (int i = 0; i < references.Count; i++)
+            {
+                bool last = i == references.Count - 1;
+                ConditionalUnitReference conditionalReference = references[i];
+                AppendConditionallyCompiled(conditionalReference.Condition, appendReferenceAction(conditionalReference.Element, last),
+                                                                            appendReferenceAction(conditionalReference.AlternativeElement, last));
+            }
+            return AppendLine();
+        }
+
+        /// <summary>
+        /// Appends conditionally compiled Delphi source code.
+        /// </summary>
+        /// <param name="condition">Optional compilation condition for the source code</param>
+        /// <param name="append">Optional action appending source code that is compiled when the condition is met or absent, and suppressed otherwise</param>
+        /// <param name="alternativeAppend">Optional action appending source code that is suppressed when the condition is met or absent, and compiled otherwise</param>
+        /// <returns></returns>
+        public DelphiSourceCodeWriter AppendConditionallyCompiled(CompilationCondition? condition, Action? append, Action? alternativeAppend)
+        {
+            if (condition == null) append!.Invoke();
+            else
+            {
+                if (append != null)
+                {
+                    AppendDelphiCode(
+$@"{{$IFDEF {condition.Symbol}}}
+"
+                    , 0, true);
+                    append.Invoke();
+                    if (alternativeAppend != null)
+                    {
+                        AppendDelphiCode(
+$@"{{$ELSE}}
+"
+                        , 0, true);
+                        alternativeAppend.Invoke();
+                    }
+                }
+                else
+                {
+                    AppendDelphiCode(
+$@"{{$IFNDEF {condition.Symbol}}}
+"
+                    , 0, true);
+                    alternativeAppend!.Invoke();
+                }
+                return AppendDelphiCode(
+$@"{{$ENDIF}}
+"
+                , 0, true);
+            }
+            return this;
         }
 
         /// <summary>
@@ -494,10 +546,7 @@ $@"{visibility.ToDeclarationPrefix()}type
             );
             Indent(1);
             if (@class.Comment != null) Append(@class.Comment);
-            foreach (AttributeAnnotation annotation in @class.AttributeAnnotations) AppendDelphiCode(
-$@"{annotation.ToSourceCode()}
-"
-            );
+            foreach (ConditionalAttributeAnnotation annotation in @class.AttributeAnnotations) Append(annotation);
             string ancestorSpecifier = @class.Ancestor.Length != 0 ? $"({@class.Ancestor})" : "";
             return AppendDelphiCode(
 $@"{@class.Name} = class{ancestorSpecifier}
@@ -510,6 +559,32 @@ $@"end;
 "
             ).Indent(-1);
         }
+
+        /// <summary>
+        /// Appends Delphi source code for the conditionally compiled annotation of a type or type member with an attribute.
+        /// </summary>
+        /// <param name="conditionalAnnotation">The annotation</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(ConditionalAttributeAnnotation conditionalAnnotation)
+        {
+            Action? appendAnnotationAction(AttributeAnnotation? annotation)
+            {
+                if (annotation is null) return null;
+                return () => Append(annotation);
+            }
+            return AppendConditionallyCompiled(conditionalAnnotation.Condition, appendAnnotationAction(conditionalAnnotation.Element),
+                                                                                appendAnnotationAction(conditionalAnnotation.AlternativeElement));
+        }
+
+        /// <summary>
+        /// Appends Delphi source code for the annotation of a type or type member with an attribute.
+        /// </summary>
+        /// <param name="annotation">The annotation</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(AttributeAnnotation annotation) => AppendDelphiCode(
+$@"{annotation.ToSourceCode()}
+"
+            );
 
         /// <summary>
         /// Appends Delphi source code for a declaration nested within a class declaration.
@@ -588,13 +663,10 @@ $@"{visibility.ToDeclarationPrefix()}const {trueConst.Identifier} = {trueConst.V
         /// <param name="visibility">Visibility specifier of the method</param>
         /// <param name="annotations">Attribute annotations of the method</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method, Visibility visibility, IEnumerable<AttributeAnnotation> annotations)
+        public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method, Visibility visibility, IEnumerable<ConditionalAttributeAnnotation> annotations)
         {
             if (method.Comment != null) Append(method.Comment);
-            foreach (AttributeAnnotation annotation in annotations) AppendDelphiCode(
-$@"{annotation.ToSourceCode()}
-"
-            );
+            foreach (ConditionalAttributeAnnotation annotation in annotations) Append(annotation);
             return AppendDelphiCode(
 $@"{visibility.ToDeclarationPrefix()}{method.Prototype.ToSourceCode()};{method.Binding.ToDeclarationSuffix()}
 "
@@ -608,13 +680,10 @@ $@"{visibility.ToDeclarationPrefix()}{method.Prototype.ToSourceCode()};{method.B
         /// <param name="visibility">Visibility specifier of the field</param>
         /// <param name="annotations">Attribute annotations of the field</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(FieldDeclaration field, Visibility visibility, IEnumerable<AttributeAnnotation> annotations)
+        public DelphiSourceCodeWriter Append(FieldDeclaration field, Visibility visibility, IEnumerable<ConditionalAttributeAnnotation> annotations)
         {
             if (field.Comment != null) Append(field.Comment);
-            foreach (AttributeAnnotation annotation in annotations) AppendDelphiCode(
-$@"{annotation.ToSourceCode()}
-"
-            );
+            foreach (ConditionalAttributeAnnotation annotation in annotations) Append(annotation);
             return AppendDelphiCode(
 $@"{visibility.ToDeclarationPrefix()}{field.ToSourceCode()};
 "
@@ -628,13 +697,10 @@ $@"{visibility.ToDeclarationPrefix()}{field.ToSourceCode()};
         /// <param name="visibility">Visibility specifier of the property</param>
         /// <param name="annotations">Attribute annotations of the property</param>
         /// <returns><c>this</c></returns>
-        public DelphiSourceCodeWriter Append(PropertyDeclaration property, Visibility visibility, IEnumerable<AttributeAnnotation> annotations)
+        public DelphiSourceCodeWriter Append(PropertyDeclaration property, Visibility visibility, IEnumerable<ConditionalAttributeAnnotation> annotations)
         {
             if (property.Comment != null) Append(property.Comment);
-            foreach (AttributeAnnotation annotation in annotations) AppendDelphiCode(
-$@"{annotation.ToSourceCode()}
-"
-            );
+            foreach (ConditionalAttributeAnnotation annotation in annotations) Append(annotation);
             return AppendDelphiCode(
 $@"{visibility.ToDeclarationPrefix()}{property.ToSourceCode()};
 "

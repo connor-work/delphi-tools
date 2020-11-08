@@ -212,8 +212,9 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         public void ProducesUnitSourceThatCanBeCompiled(UnitTestVector vector)
         {
             // TODO this test should actually be skipped, waiting for xUnit support https://github.com/xunit/xunit/issues/2073#issuecomment-673632823
-            // Vector only skipped until FPC attribute feature (in 3.3.1 preview) is available https://wiki.freepascal.org/Custom_Attributes
-            if (vector.Name == "uAttributes") return;
+            // Vectors only skipped until FPC attribute feature (in 3.3.1 preview) is available https://wiki.freepascal.org/Custom_Attributes
+            if (vector.Name == "uAttributes"
+             || vector.Name == "uConditionalCompilation") return;
 
             // Write the unit source code
             Unit unit = vector.Unit;

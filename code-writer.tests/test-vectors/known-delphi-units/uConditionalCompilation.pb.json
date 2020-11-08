@@ -1,0 +1,84 @@
+{
+    "heading": {
+        "unit": "uConditionalCompilation"
+    },
+    "includeFiles": [
+        "testIncludeFile.inc"
+    ],
+    "interface": {
+        "usesClause": [
+            {
+                "element": {
+                    "unit": {
+                        "unit": "uReferenced"
+                    }
+                },
+                "condition": {
+                    "symbol": "TEST_FILE_INCLUDED"
+                }
+            },
+            {
+                "alternativeElement": {
+                    "unit": {
+                        "unit": "uReferenced2"
+                    }
+                },
+                "condition": {
+                    "symbol": "TEST_FILE_INCLUDED"
+                }
+            },
+            {
+                "element": {
+                    "unit": {
+                        "unit": "uReferenced2"
+                    }
+                },
+                "alternativeElement": {
+                    "unit": {
+                        "unit": "uReferenced"
+                    }
+                },
+                "condition": {
+                    "symbol": "TEST_FILE_INCLUDED"
+                }
+            }
+        ],
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "attributeAnnotations": [
+                        {
+                            "element": {
+                                "attribute": "volatile"
+                            },
+                            "condition": {
+                                "symbol": "TEST_FILE_INCLUDED"
+                            }
+                        },
+                        {
+                            "alternativeElement": {
+                                "attribute": "Example"
+                            },
+                            "condition": {
+                                "symbol": "TEST_FILE_INCLUDED"
+                            }
+                        },
+                        {
+                            "element": {
+                                "attribute": "Example"
+                            },
+                            "alternativeElement": {
+                                "attribute": "volatile"
+                            },
+                            "condition": {
+                                "symbol": "TEST_FILE_INCLUDED"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

@@ -5,8 +5,10 @@
     "interface": {
         "usesClause": [
             {
-                "unit": {
-                    "unit": "uExampleAttribute"
+                "element": {
+                    "unit": {
+                        "unit": "uExampleAttribute"
+                    }
                 }
             }
         ],
@@ -23,10 +25,14 @@
                                 },
                                 "attributeAnnotations": [
                                     {
-                                        "attribute": "volatile"
+                                        "element": {
+                                            "attribute": "volatile"
+                                        }
                                     },
                                     {
-                                        "attribute": "Example"
+                                        "element": {
+                                            "attribute": "Example"
+                                        }
                                     }
                                 ]
                             }
@@ -34,7 +40,9 @@
                     ],
                     "attributeAnnotations": [
                         {
-                            "attribute": "Example()"
+                            "element": {
+                                "attribute": "Example()"
+                            }
                         }
                     ]
                 }

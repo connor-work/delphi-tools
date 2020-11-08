@@ -29,13 +29,13 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         [Fact]
         public void SortsUsesClauseCorrectly()
         {
-            RepeatedField<UnitReference> unsortedClause = new RepeatedField<UnitReference>
+            RepeatedField<ConditionalUnitReference> unsortedClause = new RepeatedField<ConditionalUnitReference>
             {
                 new UnitReference() { Unit = new UnitIdentifier() { Unit = "SysUtils", Namespace = { "System" } } },
                 new UnitReference() { Unit = new UnitIdentifier() { Unit = "Collections", Namespace = { "System", "Generics" } } },
                 new UnitReference() { Unit = new UnitIdentifier() { Unit = "System" } }
             };
-            RepeatedField<UnitReference> sortedClause = new RepeatedField<UnitReference>
+            RepeatedField<ConditionalUnitReference> sortedClause = new RepeatedField<ConditionalUnitReference>
             {
                 unsortedClause[2], unsortedClause[1], unsortedClause[0]
             };

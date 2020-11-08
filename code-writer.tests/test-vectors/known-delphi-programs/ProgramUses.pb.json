@@ -2,17 +2,21 @@
     "heading": "ProgramUses",
     "usesClause": [
         {
-            "unit": {
-                "unit": "uReferenced"
+            "element": {
+                "unit": {
+                    "unit": "uReferenced"
+                }
             }
         },
         {
-            "unit": {
-                "unit": "uReferencedInNameSpace",
-                "namespace": [
-                    "Space1",
-                    "Space2"
-                ]
+            "element": {
+                "unit": {
+                    "unit": "uReferencedInNameSpace",
+                    "namespace": [
+                        "Space1",
+                        "Space2"
+                    ]
+                }
             }
         }
     ]

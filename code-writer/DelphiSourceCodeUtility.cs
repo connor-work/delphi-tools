@@ -54,6 +54,33 @@ namespace Work.Connor.Delphi
 
         public static bool operator !=(UnitReference? left, UnitReference? right) => !(left == right);
     }
+    
+    public sealed partial class ConditionalUnitReference : IComparable<ConditionalUnitReference?>
+    {
+        // Implement lexicographical comparison of conditionally compiled unit references
+
+        public int CompareTo(ConditionalUnitReference? other) => other == null ? 1
+                                                                               : ElementForComparable.CompareTo(other.ElementForComparable);
+
+        /// <summary>
+        /// Source code element that is used for lexicographical comparison.
+        /// </summary>
+        private UnitReference ElementForComparable => Element ?? AlternativeElement;
+
+        public static bool operator ==(ConditionalUnitReference? left, ConditionalUnitReference? right) => (left is null) ? (right is null)
+                                                                                                                          : left.Equals(right);
+
+        public static bool operator >(ConditionalUnitReference? left, ConditionalUnitReference? right) => (left is object) && left.CompareTo(right) > 0;
+
+        public static bool operator <(ConditionalUnitReference? left, ConditionalUnitReference? right) => (left is null) ? (right is object)
+                                                                                                                         : left.CompareTo(right) > 0;
+
+        public static bool operator >=(ConditionalUnitReference? left, ConditionalUnitReference? right) => (left == right) || (left < right);
+
+        public static bool operator <=(ConditionalUnitReference? left, ConditionalUnitReference? right) => (left == right) || (left > right);
+
+        public static bool operator !=(ConditionalUnitReference? left, ConditionalUnitReference? right) => !(left == right);
+    }
 
     /// <summary>
     /// Extensions to Delphi source code types for convenient source code manipulation.
@@ -64,11 +91,25 @@ namespace Work.Connor.Delphi
         /// Sorts a Delphi uses clause in-place.
         /// </summary>
         /// <param name="usesClause">The uses clause to sort</param>
-        public static void SortUsesClause(this RepeatedField<UnitReference> usesClause)
+        public static void SortUsesClause(this RepeatedField<ConditionalUnitReference> usesClause)
         {
-            RepeatedField<UnitReference> oldClause = usesClause.Clone();
+            RepeatedField<ConditionalUnitReference> oldClause = usesClause.Clone();
             usesClause.Clear();
             usesClause.AddRange(oldClause.OrderBy(reference => reference));
         }
+
+        /// <summary>
+        /// Adds an unconditionally compiled source code element to a sequence of conditionally compiled elements.
+        /// </summary>
+        /// <param name="sequence">The sequence append to</param>
+        /// <param name="element">The element to append</param>
+        public static void Add(this RepeatedField<ConditionalUnitReference> sequence, UnitReference element) => sequence.Add(new ConditionalUnitReference() { Element = element });
+
+        /// <summary>
+        /// Adds an unconditionally compiled source code element to a sequence of conditionally compiled elements.
+        /// </summary>
+        /// <param name="sequence">The sequence append to</param>
+        /// <param name="element">The element to append</param>
+        public static void Add(this RepeatedField<ConditionalAttributeAnnotation> sequence, AttributeAnnotation element) => sequence.Add(new ConditionalAttributeAnnotation() { Element = element });
     }
 }

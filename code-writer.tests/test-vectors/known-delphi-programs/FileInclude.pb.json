@@ -1,0 +1,6 @@
+{
+    "heading": "FileInclude",
+    "includeFiles": [
+        "testIncludeFile.inc"
+    ]
+}

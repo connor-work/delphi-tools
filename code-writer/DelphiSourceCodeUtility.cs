@@ -106,10 +106,24 @@ namespace Work.Connor.Delphi
         public static void Add(this RepeatedField<ConditionalUnitReference> sequence, UnitReference element) => sequence.Add(new ConditionalUnitReference() { Element = element });
 
         /// <summary>
+        /// Adds a sequence of unconditionally compiled source code elements to a sequence of conditionally compiled elements.
+        /// </summary>
+        /// <param name="sequence">The sequence append to</param>
+        /// <param name="elements">The elements to append</param>
+        public static void Add(this RepeatedField<ConditionalUnitReference> sequence, IEnumerable<UnitReference> elements) => sequence.Add(elements.Select(element => new ConditionalUnitReference() { Element = element }));
+
+        /// <summary>
         /// Adds an unconditionally compiled source code element to a sequence of conditionally compiled elements.
         /// </summary>
         /// <param name="sequence">The sequence append to</param>
         /// <param name="element">The element to append</param>
         public static void Add(this RepeatedField<ConditionalAttributeAnnotation> sequence, AttributeAnnotation element) => sequence.Add(new ConditionalAttributeAnnotation() { Element = element });
+
+        /// <summary>
+        /// Adds a sequence of unconditionally compiled source code elements to a sequence of conditionally compiled elements.
+        /// </summary>
+        /// <param name="sequence">The sequence append to</param>
+        /// <param name="elements">The elements to append</param>
+        public static void Add(this RepeatedField<ConditionalAttributeAnnotation> sequence, IEnumerable<AttributeAnnotation> elements) => sequence.Add(elements.Select(element => new ConditionalAttributeAnnotation() { Element = element }));
     }
 }

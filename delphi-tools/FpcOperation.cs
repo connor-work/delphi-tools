@@ -13,18 +13,15 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Work.Connor.Delphi.Tools
 {
     /// <summary>
-    /// Represents a planned invocation of the Free Pascal Compiler (FPC).
+    /// Represents a planned invocation of the Free Pascal Compiler (FPC)
     /// </summary>
-    public class FpcOperation
+    public class FpcOperation : DelphiCompilerOperation
     {
         /// <summary>
         /// Optional location of the <c>fpc</c> executable.
@@ -33,54 +30,12 @@ namespace Work.Connor.Delphi.Tools
         public string? FpcExecutablePath { get; set; }
 
         /// <summary>
-        /// <i>Unit path</i> for FPC.
-        /// </summary>
-        public List<string> UnitPath { get; } = new List<string>();
-
-        /// <summary>
-        /// <i>Include path</i> for FPC.
-        /// </summary>
-        public List<string> IncludePath { get; } = new List<string>();
-
-        /// <summary>
-        /// <i>Output path</i> for FPC.
-        /// </summary>
-        public string? OutputPath { get; set; }
-
-        /// <summary>
-        /// <i>Input file</i> for FPC.
-        /// </summary>
-        public string InputFile { get; }
-
-        /// <summary>
-        /// <see langword="true"/> if debug information shall be generated.
-        /// </summary>
-        public bool GenerateDebugInfo { get; set; } = false;
-
-        /// <summary>
         /// Constructs a new planned FPC invocation.
         /// </summary>
-        /// <param name="InputFile">FPC input file, see <see cref="InputFile"/></param>
-        public FpcOperation(string InputFile) => this.InputFile = InputFile;
+        /// <param name="inputFile">FPC input file, see <see cref="InputFile"/></param>
+        public FpcOperation(string inputFile) : base(inputFile) { }
 
-        /// <summary>
-        /// Constructs an executable file name for the current platform.
-        /// </summary>
-        /// <param name="name">The base name, without extension</param>
-        /// <returns>The executable file name</returns>
-        private static string GetExecutableName(string name)
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return $"{name}.exe";
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) return name;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return name;
-            throw new NotImplementedException("Unsupported OS");
-        }
-
-        /// <summary>
-        /// Performs the planned FPC invocation.
-        /// </summary>
-        /// <returns><see langword="true" /> if the operation succeeded, the exit code of FPC and an optional error message</returns>
-        public (bool success, int exitCode, string? errorText) Perform()
+        public override (bool success, int exitCode, string? errorText) Perform()
         {
             using Process fpc = new Process();
             // By default, fpc resides in PATH

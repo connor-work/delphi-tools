@@ -14,11 +14,13 @@
 /// limitations under the License.
 
 using Google.Protobuf;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Work.Connor.Delphi.Tools;
+using Work.Connor.Protobuf.Delphi.CodeWriter.Tests;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -50,14 +52,19 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         private static readonly IResourceSet testSupportCodeIncludeFileResources = IResourceSet.Root.Nest("[Delphi test support code include file]");
 
         /// <summary>
-        /// Names of all known test vectors for Delphi units
+        /// Names of all known test message for Delphi units
         /// </summary>
-        private static IEnumerable<string> UnitTestVectorNames => allUnitMessageResources.GetIDs().WhereSuffixed(new Regex(Regex.Escape($".{protobufJsonFileExtension}")));
+        private static IEnumerable<string> UnitTestMessageNames => allUnitMessageResources.GetIDs().WhereSuffixed(new Regex(Regex.Escape($".{protobufJsonFileExtension}")));
 
         /// <summary>
-        /// Names of all known test vectors for Delphi programs
+        /// Names of all known test messages for Delphi programs
         /// </summary>
-        private static IEnumerable<string> ProgramTestVectorNames => allProgramMessageResources.GetIDs().WhereSuffixed(new Regex(Regex.Escape($".{protobufJsonFileExtension}")));
+        private static IEnumerable<string> ProgramTestMessageNames => allProgramMessageResources.GetIDs().WhereSuffixed(new Regex(Regex.Escape($".{protobufJsonFileExtension}")));
+
+        /// <summary>
+        /// Delphi compilers used for testing
+        /// </summary>
+        private static IEnumerable<DelphiCompiler> TestCompilers => (DelphiCompiler[])  Enum.GetValues(typeof(DelphiCompiler));
 
         /// <summary>
         /// File name extension (without leading dot) for JSON-encoded protobuf messages in test data
@@ -73,7 +80,6 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         /// Parser settings for decoding protobuf messages from JSON for test data
         /// </summary>
         public static readonly JsonParser.Settings protobufJsonParseSettings = JsonParser.Settings.Default.WithIgnoreUnknownFields(false);
-
 
         /// <summary>
         /// Utility function to create a temporary scratch folder for testing.
@@ -98,14 +104,24 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
             private static readonly JsonParser jsonParser = new JsonParser(protobufJsonParseSettings);
 
             /// <summary>
-            /// Name of the test vector
+            /// Name of the test message
             /// </summary>
-            private string name;
+            private string messageName;
+
+            /// <summary>
+            /// Compiler used for testing
+            /// </summary>
+            private DelphiCompiler compiler;
 
             /// <summary>
             /// Name of the test vector
             /// </summary>
-            public string Name => name;
+            public string Name => $"{messageName}-{compiler}";
+
+            /// <summary>
+            /// Compiler used for testing
+            /// </summary>
+            public DelphiCompiler Compiler => compiler;
 
             /// <summary>
             /// Constructs a new test vector for deserialization by xUnit.
@@ -117,8 +133,13 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
             /// <summary>
             /// Constructs a new test vector.
             /// </summary>
-            /// <param name="name">Name of the test vector</param>
-            public UnitTestVector(string name) => this.name = name;
+            /// <param name="messageName">Name of the test message</param>
+            /// <param name="compiler">Compiler used for testing</param>
+            public UnitTestVector(string messageName, DelphiCompiler compiler)
+            {
+                this.messageName = messageName;
+                this.compiler = compiler;
+            }
 
             /// <summary>
             /// Protobuf message representing the Delphi unit source code
@@ -127,17 +148,25 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
             {
                 get
                 {
-                    string resourceName = $"{name}.{protobufJsonFileExtension}";
+                    string resourceName = $"{messageName}.{protobufJsonFileExtension}";
                     using StreamReader reader = new StreamReader(allUnitMessageResources.GetResourceStream(resourceName) ?? throw new FileNotFoundException(resourceName));
                     return jsonParser.Parse<Unit>(reader);
                 }
             }
 
-            public void Deserialize(IXunitSerializationInfo info) => name = info.GetValue<string>(nameof(name));
+            public void Deserialize(IXunitSerializationInfo info)
+            {
+                messageName = info.GetValue<string>(nameof(messageName));
+                compiler = info.GetValue<DelphiCompiler>(nameof(compiler));
+            }
 
-            public void Serialize(IXunitSerializationInfo info) => info.AddValue(nameof(name), name);
+            public void Serialize(IXunitSerializationInfo info)
+            {
+                info.AddValue(nameof(messageName), messageName);
+                info.AddValue(nameof(compiler), compiler);
+            }
 
-            public override string? ToString() => name;
+            public override string? ToString() => Name;
         }
 
         /// <summary>
@@ -151,14 +180,24 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
             private static readonly JsonParser jsonParser = new JsonParser(protobufJsonParseSettings);
 
             /// <summary>
-            /// Name of the test vector
+            /// Name of the test message
             /// </summary>
-            private string name;
+            private string messageName;
+
+            /// <summary>
+            /// Compiler used for testing
+            /// </summary>
+            private DelphiCompiler compiler;
 
             /// <summary>
             /// Name of the test vector
             /// </summary>
-            public string Name => name;
+            public string Name => $"{messageName}-{compiler}";
+
+            /// <summary>
+            /// Compiler used for testing
+            /// </summary>
+            public DelphiCompiler Compiler => compiler;
 
             /// <summary>
             /// Constructs a new test vector for deserialization by xUnit.
@@ -170,8 +209,13 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
             /// <summary>
             /// Constructs a new test vector.
             /// </summary>
-            /// <param name="name">Name of the test vector</param>
-            public ProgramTestVector(string name) => this.name = name;
+            /// <param name="messageName">Name of the test message</param>
+            /// <param name="compiler">Compiler used for testing</param>
+            public ProgramTestVector(string messageName, DelphiCompiler compiler)
+            {
+                this.messageName = messageName;
+                this.compiler = compiler;
+            }
 
             /// <summary>
             /// Protobuf message representing the Delphi program source code
@@ -180,28 +224,36 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
             {
                 get
                 {
-                    string resourceName = $"{name}.{protobufJsonFileExtension}";
+                    string resourceName = $"{messageName}.{protobufJsonFileExtension}";
                     using StreamReader reader = new StreamReader(allProgramMessageResources.GetResourceStream(resourceName) ?? throw new FileNotFoundException(resourceName));
                     return jsonParser.Parse<Program>(reader);
                 }
             }
 
-            public void Deserialize(IXunitSerializationInfo info) => name = info.GetValue<string>(nameof(name));
+            public void Deserialize(IXunitSerializationInfo info)
+            {
+                messageName = info.GetValue<string>(nameof(messageName));
+                compiler = info.GetValue<DelphiCompiler>(nameof(compiler));
+            }
 
-            public void Serialize(IXunitSerializationInfo info) => info.AddValue(nameof(name), name);
+            public void Serialize(IXunitSerializationInfo info)
+            {
+                info.AddValue(nameof(messageName), messageName);
+                info.AddValue(nameof(compiler), compiler);
+            }
 
-            public override string? ToString() => name;
+            public override string? ToString() => Name;
         }
 
         /// <summary>
         /// All known test vectors for Delphi units
         /// </summary>
-        public static IEnumerable<object[]> UnitTestVectors => UnitTestVectorNames.Select(name => new object[] { new UnitTestVector(name) });
+        public static IEnumerable<object[]> UnitTestVectors => UnitTestMessageNames.SelectMany(messageName => TestCompilers, (messageName, compiler) => new object[] { new UnitTestVector(messageName, compiler) });
 
         /// <summary>
         /// All known test vectors for Delphi programs
         /// </summary>
-        public static IEnumerable<object[]> ProgramTestVectors => ProgramTestVectorNames.Select(name => new object[] { new ProgramTestVector(name) });
+        public static IEnumerable<object[]> ProgramTestVectors => ProgramTestMessageNames.SelectMany(messageName => TestCompilers, (messageName, compiler) => new object[] { new ProgramTestVector(messageName, compiler) });
 
         /// <summary>
         /// <see cref="DelphiSourceCodeWriter"/> produces Delphi unit source code that can be compiled using FPC
@@ -212,15 +264,17 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         public void ProducesUnitSourceThatCanBeCompiled(UnitTestVector vector)
         {
             // TODO this test should actually be skipped, waiting for xUnit support https://github.com/xunit/xunit/issues/2073#issuecomment-673632823
+            if (vector.Compiler == DelphiCompiler.DCC64
+             && TestOptions.DisableDCC64) return;
             // Vectors only skipped until FPC attribute feature (in 3.3.1 preview) is available https://wiki.freepascal.org/Custom_Attributes
-            if (vector.Name == "uAttributes"
-             || vector.Name == "uConditionalCompilation") return;
+            if (vector.Name == "uAttributes-FPC"
+             || vector.Name == "uConditionalCompilation-FPC") return;
 
             // Write the unit source code
             Unit unit = vector.Unit;
             string sourceCode = unit.ToSourceCode();
 
-            // Create a test runner program as input for FPC
+            // Create a test runner program as input for the Delphi compiler
             string programFile = Path.Join(CreateScratchFolder(), "DelphiCompilationTestProgram.pas");
             Program program = new Program()
             {
@@ -229,9 +283,10 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
             };
             File.WriteAllText(programFile, program.ToSourceCode());
 
-            // Run FPC
-            FpcOperation fpc = new FpcOperation(programFile) { OutputPath = CreateScratchFolder() };
-            // Adds units from a resource set to FPC
+            // Run the Delphi compiler
+            DelphiCompilerOperation compilation = DelphiCompilerOperation.Plan(vector.Compiler, programFile);
+            compilation.OutputPath = CreateScratchFolder();
+            // Adds units from a resource set to the compilation
             void addUnits(IEnumerable<(string name, string content)> resources, string rootFolder)
             {
                 foreach ((string name, string content) in resources)
@@ -240,10 +295,10 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
                     string folder = Directory.GetParent(path).FullName;
                     Directory.CreateDirectory(folder);
                     File.WriteAllText(path, content);
-                    if (!fpc.UnitPath.Contains(folder)) fpc.UnitPath.Add(folder);
+                    if (!compilation.UnitPath.Contains(folder)) compilation.UnitPath.Add(folder);
                 }
             }
-            // Adds include files from a resource set to FPC
+            // Adds include files from a resource set to the compilation
             void addIncludeFiles(IEnumerable<(string name, string content)> resources, string rootFolder)
             {
                 foreach ((string name, string content) in resources)
@@ -252,7 +307,7 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
                     string folder = Directory.GetParent(path).FullName;
                     Directory.CreateDirectory(folder);
                     File.WriteAllText(path, content);
-                    if (!fpc.IncludePath.Contains(folder)) fpc.IncludePath.Add(folder);
+                    if (!compilation.IncludePath.Contains(folder)) compilation.IncludePath.Add(folder);
                 }
             }
             // Add written source code
@@ -260,8 +315,8 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
             // Add support files (may contain required source code)
             addUnits(testSupportCodeUnitResources.ReadAllResources(), CreateScratchFolder());
             addIncludeFiles(testSupportCodeIncludeFileResources.ReadAllResources(), CreateScratchFolder());
-            (bool fpcSuccess, _, string? fpcError) = fpc.Perform();
-            Assert.True(fpcSuccess, fpcError!);
+            (bool compilationSuccess, _, string? fpcError) = compilation.Perform();
+            Assert.True(compilationSuccess, fpcError!);
         }
 
         /// <summary>
@@ -272,14 +327,19 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
         [MemberData(nameof(ProgramTestVectors))]
         public void ProducesProgramSourceThatCanBeCompiled(ProgramTestVector vector)
         {
+            // TODO this test should actually be skipped, waiting for xUnit support https://github.com/xunit/xunit/issues/2073#issuecomment-673632823
+            if (vector.Compiler == DelphiCompiler.DCC64
+             && TestOptions.DisableDCC64) return;
+
             // Write the program source code
             Program program = vector.Program;
             string programFile = Path.Join(CreateScratchFolder(), Path.Join(program.ToSourceFilePath().ToArray()));
             File.WriteAllText(programFile, program.ToSourceCode());
 
-            // Run FPC
-            FpcOperation fpc = new FpcOperation(programFile) { OutputPath = CreateScratchFolder() };
-            // Adds units from a resource set to FPC
+            // Run the Delphi compiler
+            DelphiCompilerOperation compilation = DelphiCompilerOperation.Plan(vector.Compiler, programFile);
+            compilation.OutputPath = CreateScratchFolder();
+            // Adds units from a resource set to the compilation
             void addUnits(IEnumerable<(string name, string content)> resources, string rootFolder)
             {
                 foreach ((string name, string content) in resources)
@@ -288,10 +348,10 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
                     string folder = Directory.GetParent(path).FullName;
                     Directory.CreateDirectory(folder);
                     File.WriteAllText(path, content);
-                    if (!fpc.UnitPath.Contains(folder)) fpc.UnitPath.Add(folder);
+                    if (!compilation.UnitPath.Contains(folder)) compilation.UnitPath.Add(folder);
                 }
             }
-            // Adds include files from a resource set to FPC
+            // Adds include files from a resource set to the compilation
             void addIncludeFiles(IEnumerable<(string name, string content)> resources, string rootFolder)
             {
                 foreach ((string name, string content) in resources)
@@ -300,13 +360,13 @@ namespace Work.Connor.Delphi.CodeWriter.Tests
                     string folder = Directory.GetParent(path).FullName;
                     Directory.CreateDirectory(folder);
                     File.WriteAllText(path, content);
-                    if (!fpc.IncludePath.Contains(folder)) fpc.IncludePath.Add(folder);
+                    if (!compilation.IncludePath.Contains(folder)) compilation.IncludePath.Add(folder);
                 }
             }
             // Add support files (may contain required source code)
             addUnits(testSupportCodeUnitResources.ReadAllResources(), CreateScratchFolder());
             addIncludeFiles(testSupportCodeIncludeFileResources.ReadAllResources(), CreateScratchFolder());
-            (bool fpcSuccess, _, string? fpcError) = fpc.Perform();
+            (bool fpcSuccess, _, string? fpcError) = compilation.Perform();
             Assert.True(fpcSuccess, fpcError!);
         }
     }

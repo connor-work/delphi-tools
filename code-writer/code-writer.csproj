@@ -3,7 +3,6 @@
     <CoreVersion>0.13.0</CoreVersion>
     <PrereleaseVersionSuffix></PrereleaseVersionSuffix>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <SnapshotVersion>true</SnapshotVersion>
     <RootNamespace>Work.Connor.Delphi.CodeWriter</RootNamespace>
     <Title>Delphi Source Code Writer</Title>
     <PackageId>Work.Connor.Delphi.CodeWriter</PackageId>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Google.Protobuf.Collections;
 
 namespace Work.Connor.Delphi
 {
@@ -80,50 +79,5 @@ namespace Work.Connor.Delphi
         public static bool operator <=(ConditionalUnitReference? left, ConditionalUnitReference? right) => (left == right) || (left > right);
 
         public static bool operator !=(ConditionalUnitReference? left, ConditionalUnitReference? right) => !(left == right);
-    }
-
-    /// <summary>
-    /// Extensions to Delphi source code types for convenient source code manipulation.
-    /// </summary>
-    public static partial class SourceCodeExtensions
-    {
-        /// <summary>
-        /// Sorts a Delphi uses clause in-place.
-        /// </summary>
-        /// <param name="usesClause">The uses clause to sort</param>
-        public static void SortUsesClause(this RepeatedField<ConditionalUnitReference> usesClause)
-        {
-            RepeatedField<ConditionalUnitReference> oldClause = usesClause.Clone();
-            usesClause.Clear();
-            usesClause.AddRange(oldClause.OrderBy(reference => reference));
-        }
-
-        /// <summary>
-        /// Adds an unconditionally compiled source code element to a sequence of conditionally compiled elements.
-        /// </summary>
-        /// <param name="sequence">The sequence append to</param>
-        /// <param name="element">The element to append</param>
-        public static void Add(this RepeatedField<ConditionalUnitReference> sequence, UnitReference element) => sequence.Add(new ConditionalUnitReference() { Element = element });
-
-        /// <summary>
-        /// Adds a sequence of unconditionally compiled source code elements to a sequence of conditionally compiled elements.
-        /// </summary>
-        /// <param name="sequence">The sequence append to</param>
-        /// <param name="elements">The elements to append</param>
-        public static void Add(this RepeatedField<ConditionalUnitReference> sequence, IEnumerable<UnitReference> elements) => sequence.Add(elements.Select(element => new ConditionalUnitReference() { Element = element }));
-
-        /// <summary>
-        /// Adds an unconditionally compiled source code element to a sequence of conditionally compiled elements.
-        /// </summary>
-        /// <param name="sequence">The sequence append to</param>
-        /// <param name="element">The element to append</param>
-        public static void Add(this RepeatedField<ConditionalAttributeAnnotation> sequence, AttributeAnnotation element) => sequence.Add(new ConditionalAttributeAnnotation() { Element = element });
-
-        /// <summary>
-        /// Adds a sequence of unconditionally compiled source code elements to a sequence of conditionally compiled elements.
-        /// </summary>
-        /// <param name="sequence">The sequence append to</param>
-        /// <param name="elements">The elements to append</param>
-        public static void Add(this RepeatedField<ConditionalAttributeAnnotation> sequence, IEnumerable<AttributeAnnotation> elements) => sequence.Add(elements.Select(element => new ConditionalAttributeAnnotation() { Element = element }));
     }
 }

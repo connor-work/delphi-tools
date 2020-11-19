@@ -2,6 +2,7 @@
   <PropertyGroup>
     <CoreVersion>0.5.0</CoreVersion>
     <PrereleaseVersionSuffix></PrereleaseVersionSuffix>
+    <SnapshotVersion>true</SnapshotVersion>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Work.Connor.Delphi.Tools</RootNamespace>
     <Title>Delphi Tools</Title>

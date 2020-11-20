@@ -67,13 +67,26 @@ namespace Work.Connor.Delphi.CodeWriter
         };
 
         /// <summary>
+        /// Constructs a regular expression that matches a valid identifier string with a specific identifier case. 
+        /// </summary>>
+        /// <param name="case">The expected identifier case</param>
+        /// <returns>Matching regular expression</returns>
+        public static Regex IdentifierRegex(this IdentifierCase @case) => @case switch
+        {
+            IdentifierCase.None => new Regex(@"\S*"),
+            IdentifierCase.Pascal => new Regex(@"(?:[A-Z][a-z]*[0-9]*)+"),
+            IdentifierCase.ScreamingSnake => new Regex(@"[A-Z]+[0-9]*(?:_[A-Z]+[0-9]*)*"),
+            _ => throw new System.NotImplementedException()
+        };
+
+        /// <summary>
         /// Disjunction of recognized separator patterns for syllables in an identifier string
         /// </summary>
         private static readonly Regex syllableSeparator = new Regex(
-            "(?:_)"                              /* a dash (variations of snake case, as in "my_name") */
-            + "|" + "(?:-)"                      /* an underscore (variations of kebab case, as in "my-name") */
-            + "|" + "(?:(?<=[a-z])(?=[A-Z]))"    /* boundary after a lowercase letter and before an uppercase letter (variations of Pascal case, as in "MyName") */
-            + "|" + "(?:(?<=[0-9])(?=[a-zA-Z]))" /* boundary after a digit and before a letter (variations of Pascal case, as in "MyTop5Names") */
+            @"(?:_)"                               /* a dash (variations of snake case, as in "my_name") */
+            + @"|" + @"(?:-)"                      /* an underscore (variations of kebab case, as in "my-name") */
+            + @"|" + @"(?:(?<=[a-z])(?=[A-Z]))"    /* boundary after a lowercase letter and before an uppercase letter (variations of Pascal case, as in "MyName") */
+            + @"|" + @"(?:(?<=[0-9])(?=[a-zA-Z]))" /* boundary after a digit and before a letter (variations of Pascal case, as in "MyTop5Names") */
             );
 
         /// <summary>

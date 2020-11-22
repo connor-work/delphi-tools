@@ -189,6 +189,13 @@ namespace Work.Connor.Delphi.CodeWriter
         /// <returns>The Delphi source code</returns>
         public static string ToSourceCode(this Program program) => new DelphiSourceCodeWriter().Append(program).ToString();
 
+        /// <summary>
+        /// Constructs Delphi source code string that is a reserved word of the language.
+        /// </summary>
+        /// <param name="reservedWord">The reserved word</param>
+        /// <returns>The Delphi source code</returns>
+        public static string ToSourceCode(this ReservedWord reservedWord) => reservedWord.ToString().ToLower();
+
 #pragma warning restore S4136 // Method overloads should be grouped together
 
     }

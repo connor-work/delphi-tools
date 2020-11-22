@@ -226,7 +226,7 @@ message ClassMemberDeclaration {
                                                                       * The list contents can be controlled through conditional compilation. */
 }
 
-/** *Visibility specifiers* used to define the *visibility attribute* of a class declaration element.
+/** *Visibility specifier* used to define the *visibility attribute* of a class declaration element.
   * > Visibility determines where and how a member can be accessed, with **private** representing the least accessibility, **protected** representing an intermediate level of accessibility,
   * > and **public**, **published**, and **automated** representing the greatest accessibility.
   * Besides class members, nested types and nested constants can also be attributed with a visibility specifier,
@@ -290,7 +290,7 @@ message MethodInterfaceDeclaration {
   * *Directives* (except for the *special method directives* used to implement `MethodInterfaceDeclaration.Binding`) are not supported by this schema.
   * See [Declaring Procedures and Functions](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Procedures_and_Functions_(Delphi)#Declaring_Procedures_and_Functions). */
 message Prototype {
-  /** Types of Delphi routines. */
+  /** Type of Delphi routines. */
   enum Type {
     PROCEDURE   = 0; /** Routine that is a *procedure*, but neither a constructor nor a destructor.
                        * > A procedure is a routine that does not return a value.
@@ -512,4 +512,74 @@ message Program {
                                                       * Each field value corresponds to one source code line of the block.
                                                       * See [The Block](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Block). */
   AnnotationComment comment                    = 6; /** Annotation comment describing the program. Optional. */
+}
+
+/** Reserved word of the Delphi language.
+ * > The [...] reserved words cannot be redefined or used as identifiers.
+ * See [Reserved Words](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Fundamental_Syntactic_Elements_(Delphi)#Reserved_Words). */
+enum ReservedWord {
+  AND = 0;
+  ARRAY = 1;
+  AS = 2;
+  ASM = 3;
+  BEGIN = 4;
+  CASE = 5;
+  CLASS = 6;
+  CONST = 7;
+  CONSTRUCTOR = 8;
+  DESTRUCTOR = 9;
+  DISPINTERFACE = 10;
+  DIV = 11;
+  DO = 12;
+  DOWNTO = 13;
+  ELSE = 14;
+  END = 15;
+  EXCEPT = 16;
+  EXPORTS = 17;
+  FILE = 18;
+  FINALIZATION = 19;
+  FINALLY = 20;
+  FOR = 21;
+  FUNCTION = 22;
+  GOTO = 23;
+  IF = 24;
+  IMPLEMENTATION = 25;
+  IN = 26;
+  INHERITED = 27;
+  INITIALIZATION = 28;
+  INLINE = 29;
+  INTERFACE = 30;
+  IS = 31;
+  LABEL = 32;
+  LIBRARY = 33;
+  MOD = 34;
+  NIL = 35;
+  NOT = 36;
+  OBJECT = 37;
+  OF = 38;
+  OR = 39;
+  PACKED = 40;
+  PROCEDURE = 41;
+  PROGRAM = 42;
+  PROPERTY = 43;
+  RAISE = 44;
+  RECORD = 45;
+  REPEAT = 46;
+  RESOURCESTRING = 47;
+  SET = 48;
+  SHL = 49;
+  SHR = 50;
+  STRING = 51;
+  THEN = 52;
+  THREADVAR = 53;
+  TO = 54;
+  TRY = 55;
+  TYPE = 56;
+  UNIT = 57;
+  UNTIL = 58;
+  USES = 59;
+  VAR = 60;
+  WHILE = 61;
+  WITH = 62;
+  XOR = 63;
 }

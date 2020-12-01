@@ -3,6 +3,7 @@ on : [push]
 defaults:
   run:
     shell: pwsh
+
 jobs:
   development-test:
     runs-on: ubuntu-20.04

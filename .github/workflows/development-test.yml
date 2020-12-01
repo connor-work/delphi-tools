@@ -7,6 +7,6 @@ jobs:
   development-test:
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v2
       - name: Check expected end-of-line types in text files
-        uses: actions/checkout@v2
         run: ./script/check-eol.ps1

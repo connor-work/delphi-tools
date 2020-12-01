@@ -1,0 +1,11 @@
+name: development-test
+on : [push]
+defaults:
+  run:
+    shell: pwsh
+jobs:
+  development-test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check expected end-of-line types in text files
+        run: script/check-eol

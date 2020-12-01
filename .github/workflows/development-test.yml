@@ -8,4 +8,4 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Check expected end-of-line types in text files
-        run: script/check-eol
+        run: ./script/check-eol.ps1

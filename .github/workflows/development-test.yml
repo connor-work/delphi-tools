@@ -6,8 +6,11 @@ defaults:
 
 jobs:
   development-test:
-    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - name: Check expected end-of-line types in text files
-        run: ./script/check-eol.ps1
+      - name: Test stability for development
+        run: ./script/github-actions-development-test.ps1

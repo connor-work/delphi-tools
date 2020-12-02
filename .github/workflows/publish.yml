@@ -1,4 +1,4 @@
-name: development-test
+name: publish
 on : [push]
 defaults:
   run:
@@ -22,3 +22,12 @@ jobs:
         env:
           Work_Connor_Delphi_CodeWriter_Tests_SkipDcc64: 1
         run: ./script/github-actions-test.ps1
+  deploy:
+    needs: test
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy NuGet packages
+        env:
+          NU_GET_ORG_API_KEY: {{ secrets.NU_GET_ORG_API_KEY }}
+        run: ./script/github-actions-deploy.ps1 -NuGetOrgApiKey (ConvertTo-SecureString -AsPlainText -Force -String $env:NU_GET_ORG_API_KEY)

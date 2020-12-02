@@ -12,7 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Performs stability tests during development in GitHub Actions
+# Performs the CI deployment step for GitHub Actions
 # Requires Powershell 7+, the .NET Core CLI and Git
 
-& $PSScriptRoot/integrate.ps1 -NoDeploy
+param (
+    [Parameter(HelpMessage='Mark the package versions as stable')]
+    [switch] $Stable,
+    [Parameter(Mandatory=$true,
+               HelpMessage='NuGet API key for NuGet.org')]
+    [Security.SecureString] $NuGetOrgApiKey
+)
+
+$unstableCauses = @()
+if (!$Stable) { $unstableCauses += "Package failed stability test" }
+# Deploy
+& $PSScriptRoot/integrate.ps1 -KnownUnstableCauses $unstableCauses -Production -ApiKey $NuGetOrgApiKey

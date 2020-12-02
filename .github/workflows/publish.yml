@@ -27,6 +27,7 @@ jobs:
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Deploy NuGet packages
         env:
           NU_GET_ORG_API_KEY: ${{ secrets.NU_GET_ORG_API_KEY }}

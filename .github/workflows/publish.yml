@@ -29,5 +29,5 @@ jobs:
     steps:
       - name: Deploy NuGet packages
         env:
-          NU_GET_ORG_API_KEY: {{ secrets.NU_GET_ORG_API_KEY }}
+          NU_GET_ORG_API_KEY: ${{ secrets.NU_GET_ORG_API_KEY }}
         run: ./script/github-actions-deploy.ps1 -NuGetOrgApiKey (ConvertTo-SecureString -AsPlainText -Force -String $env:NU_GET_ORG_API_KEY)

@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Deploy NuGet packages
+      - name: Deploy stable NuGet packages
         env:
           NU_GET_ORG_API_KEY: ${{ secrets.NU_GET_ORG_API_KEY }}
-        run: ./script/github-actions-deploy.ps1 -NuGetOrgApiKey (ConvertTo-SecureString -AsPlainText -Force -String $env:NU_GET_ORG_API_KEY)
+        run: ./script/github-actions-deploy.ps1 -Stable:$(${{ job.status }} == 'success') -NuGetOrgApiKey (ConvertTo-SecureString -AsPlainText -Force -String $env:NU_GET_ORG_API_KEY)

@@ -10,7 +10,7 @@ jobs:
         os: [ubuntu-18.04, macos-11.0]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Install FPC 3.2.0
+      - name: Install FPC 3.2.0 (Linux)
         if: ${{ runner.os == 'Linux' }}
         shell: bash
         run: |
@@ -18,11 +18,9 @@ jobs:
           sudo dpkg -i fp-units-rtl-3.2.0_3.2.0+dfsg-8build2_amd64.deb
           curl -LO http://launchpadlibrarian.net/494661053/fp-compiler-3.2.0_3.2.0+dfsg-8build2_amd64.deb
           sudo dpkg -i fp-compiler-3.2.0_3.2.0+dfsg-8build2_amd64.deb
-      - name: Install FPC 3.2.0
+      - name: Install FPC 3.2.0 (macOS)
         if: ${{ runner.os == 'macOS' }}
-        run: |
-          brew update
-          brew install fpc@3.2.0
+        run: brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/1b5fde9e6da74588d2b85802748b9e37fb5683d6/Formula/fpc.rb
       - uses: actions/checkout@v2
       - name: Test package stability
         env:

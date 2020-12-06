@@ -7,11 +7,10 @@ unit uClassInterface;
 interface
 
 uses
-  uBaseClass,
   uExampleInterface;
 
 type
-  ClassX = class(uBaseClass.TBaseClass, uExampleInterface.IExampleInterface)
+  ClassX = class(TInterfacedObject, uExampleInterface.IExampleInterface)
   end;
 
 implementation

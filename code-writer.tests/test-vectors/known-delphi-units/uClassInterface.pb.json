@@ -7,13 +7,6 @@
             {
                 "element": {
                     "unit": {
-                        "unit": "uBaseClass"
-                    }
-                }
-            },
-            {
-                "element": {
-                    "unit": {
                         "unit": "uExampleInterface"
                     }
                 }
@@ -23,7 +16,7 @@
             {
                 "classDeclaration": {
                     "name": "ClassX",
-                    "ancestor": "uBaseClass.TBaseClass",
+                    "ancestor": "TInterfacedObject",
                     "interfaces": [
                         "uExampleInterface.IExampleInterface"
                     ]

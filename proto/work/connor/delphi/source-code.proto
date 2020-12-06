@@ -145,11 +145,15 @@ message ClassDeclaration {
   string ancestor                                               = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
                                                                        * > When you declare a class, you can specify its immediate ancestor.
                                                                        * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
-  repeated ClassDeclarationNestedDeclaration nestedDeclarations = 3; /** List of declarations that are nested within the class declarations (elements of *nestedTypeDeclaration*, *nestedConstDeclaration* and *memberList*). */
-  repeated ConditionalAttributeAnnotation attributeAnnotations  = 4; /** Attribute annotations of the class type.
+  repeated string interfaces                                    = 3; /** Names of the interfaces implemented by the class (*interface1, ..., interfaceN*).
+                                                                      * > The interfaces implemented by a class are specified in the declaration of the class, after the name of the class ancestor.
+                                                                      * See [Implementing Interfaces](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Implementing_Interfaces). */
+  repeated ClassDeclarationNestedDeclaration nestedDeclarations = 4; /** List of declarations that are nested within the class declarations (elements of *nestedTypeDeclaration*, *nestedConstDeclaration* and *memberList*). */
+  
+  repeated ConditionalAttributeAnnotation attributeAnnotations  = 5; /** Attribute annotations of the class type.
                                                                        * See [Annotating Types and Type Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Annotating_Types_and_Type_Members).
                                                                        * The list contents can be controlled through conditional compilation. */
-  AnnotationComment comment                                     = 5; /** Annotation comment describing the class. Optional. */
+  AnnotationComment comment                                     = 6; /** Annotation comment describing the class. Optional. */
 }
 
 /** Declarations that is nested within a class declarations (elements of *nestedTypeDeclaration*, *nestedConstDeclaration* and *memberList*).
@@ -442,7 +446,7 @@ message MethodDeclaration {
   * See [Enumerated Types](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Simple_Types_(Delphi)#Enumerated_Types). */
 message EnumDeclaration {
   string name                                       = 1; /** Name of the enumerated type (*typeName*). Required (non-empty). */
-  repeated EnumValueDeclaration values              = 2; /** Enumerated values (*val1*, ...,*valn*).
+  repeated EnumValueDeclaration values              = 2; /** Enumerated values (*val1, ..., valn*).
                                                            * > The values have no inherent meaning. */
   repeated AttributeAnnotation attributeAnnotations = 3; /** Attribute annotations of the enumerated type.
                                                            * See [Annotating Types and Type Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Annotating_Types_and_Type_Members). */

@@ -1,0 +1,35 @@
+{
+    "heading": {
+        "unit": "uClassInterface"
+    },
+    "interface": {
+        "usesClause": [
+            {
+                "element": {
+                    "unit": {
+                        "unit": "uBaseClass"
+                    }
+                }
+            },
+            {
+                "element": {
+                    "unit": {
+                        "unit": "uExampleInterface"
+                    }
+                }
+            }
+        ],
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "ancestor": "uBaseClass.TBaseClass",
+                    "interfaces": [
+                        "uExampleInterface.IExampleInterface"
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

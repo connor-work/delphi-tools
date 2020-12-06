@@ -14,7 +14,6 @@ jobs:
         os: [ubuntu-18.04, macos-11.0]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Install 
       - name: Install FPC 3.2.0 (Linux)
         if: ${{ runner.os == 'Linux' }}
         shell: bash

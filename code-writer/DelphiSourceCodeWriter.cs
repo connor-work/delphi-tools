@@ -309,9 +309,10 @@ $@"{visibility.ToDeclarationPrefix()}type
             Indent(1);
             if (@class.Comment != null) Append(@class.Comment);
             foreach (ConditionalAttributeAnnotation annotation in @class.AttributeAnnotations) Append(annotation);
-            string ancestorSpecifier = @class.Ancestor.Length != 0 ? $"({@class.Ancestor})" : "";
+            string inheritanceSpecifierContent = string.Join(", ", @class.Interfaces.Prepend(@class.Ancestor));
+            string inheritanceSpecifier = inheritanceSpecifierContent.Length != 0 ? $"({inheritanceSpecifierContent})" : "";
             return AppendDelphiCode(
-$@"{@class.Name} = class{ancestorSpecifier}
+$@"{@class.Name} = class{inheritanceSpecifier}
 "
             ).Indent(1)
             .AppendMultiplePadded(@class.NestedDeclarations.PartiallyApply(declaration => Append(declaration)))

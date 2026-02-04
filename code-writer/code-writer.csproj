@@ -2,12 +2,12 @@
   <PropertyGroup>
     <CoreVersion>0.16.0</CoreVersion>
     <PrereleaseVersionSuffix></PrereleaseVersionSuffix>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>Work.Connor.Delphi.CodeWriter</RootNamespace>
     <Title>Delphi Source Code Writer</Title>
     <PackageId>Work.Connor.Delphi.CodeWriter</PackageId>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Copyright>Copyright 2020 Connor Roehricht (connor.work) and other contributors (see repository)</Copyright>
+    <Copyright>Copyright 2025 Connor Erdmann (connor.work) and other contributors (see repository)</Copyright>
     <Authors>connor.work</Authors>
     <Nullable>enable</Nullable>
     <IncludeSymbols>true</IncludeSymbols>

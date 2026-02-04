@@ -1,4 +1,4 @@
-# Copyright 2020 Connor Roehricht (connor.work)
+# Copyright 2025 Connor Erdmann (connor.work)
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,5 +14,7 @@
 
 # Performs stability tests in GitHub Actions
 # Requires Powershell 7+, the .NET Core CLI and Git
+
+$ErrorActionPreference = 'Stop'
 
 & $PSScriptRoot/integrate.ps1 -NoDeploy

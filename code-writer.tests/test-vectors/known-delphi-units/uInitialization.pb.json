@@ -1,0 +1,13 @@
+{
+    "heading": {
+        "unit": "uInitialization"
+    },
+    "interface": {},
+    "implementation": {},
+    "initialization": {
+        "statements": [
+            "writeln('Hello world 1');",
+            "writeln('Hello world 2');"
+        ]
+    }
+}

@@ -13,7 +13,6 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 
-using Google.Protobuf;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -154,7 +153,7 @@ namespace Work.Connor.Delphi.CodeWriter
         public DelphiSourceCodeWriter Append(Unit unit)
         {
             if (unit.Comment != null) Append(unit.Comment);
-            return AppendDelphiCode(
+            AppendDelphiCode(
 $@"unit {unit.Heading.ToSourceCode()};
 
 "
@@ -168,8 +167,9 @@ $@"{{$IFDEF FPC}}
 
 "
             ).Append(unit.Interface)
-            .Append(unit.Implementation)
-            .AppendDelphiCode(
+            .Append(unit.Implementation);
+            if (unit.Initialization is not null) Append(unit.Initialization);
+            return AppendDelphiCode(
 $@"end.
 "
             );
@@ -597,6 +597,18 @@ $@"end;
                 _ => throw new NotImplementedException()
             };
         }
+
+        /// <summary>
+        /// Appends Delphi source code for an initialization section of a unit.
+        /// </summary>
+        /// <param name="initialization">The initialization section</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(Initialization initialization) => AppendDelphiCode(
+$@"initialization
+
+"
+            ).AppendMultiplePadded(initialization.Statements.PartiallyApply(line => AppendDelphiCode(line).AppendLine()), padEnd: true, padBetween: false);
+
 
         /// <summary>
         /// Appends Delphi source code for an annotation comment that describes a source code element.

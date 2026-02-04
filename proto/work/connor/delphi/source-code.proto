@@ -48,8 +48,12 @@ message Unit {
                                        * Required. */
   Implementation implementation = 4; /** *Implementation section* of a unit that defines routines declared in the interface section.
                                        * See [The Implementation Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Implementation_Section).
-                                       *  Required. */
-  AnnotationComment comment     = 5; /** Annotation comment describing the unit. Optional. */
+                                       * Required. */
+  Initialization initialization = 5; /** *Initialization section* of the unit.
+                                       * > The initialization section contains statements that are executed, in the order in which they appear, on program start-up. 
+                                       * See [The Initialization Section](https://docwiki.embarcadero.com/RADStudio/Athens/en/Programs_and_Units_(Delphi)#The_Initialization_Section).
+                                       * Optional. */
+  AnnotationComment comment     = 6; /** Annotation comment describing the unit. Optional. */
 }
 
 /** Delphi identifier for a unit, used within a unit heading or a uses clause.
@@ -506,6 +510,16 @@ message InterfaceMemberDeclaration {
   repeated ConditionalAttributeAnnotation attributeAnnotations = 3; /** Attribute annotations of the member.
                                                                       * See [Annotating Types and Type Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Annotating_Types_and_Type_Members).
                                                                       * The list contents can be controlled through conditional compilation. */
+}
+
+/** *Initialization section* of a unit.
+  * > The initialization section contains statements that are executed, in the order in which they appear, on program start-up.
+  * See [The Initialization Section](https://docwiki.embarcadero.com/RADStudio/Athens/en/Programs_and_Units_(Delphi)#The_Initialization_Section). */
+message Initialization {
+  repeated string statements = 1; /** Statements of the initialization section.
+                                    * Each value contains a single line of source code.
+                                    * This schema does not model the internal structure of the statements.
+                                    * Each field value corresponds to one source code line of the statements. */
 }
 
 /** Comment that annotates a source code element for documentation purposes.

@@ -1,4 +1,4 @@
-# Copyright 2020 Connor Roehricht (connor.work)
+# Copyright 2025 Connor Erdmann (connor.work)
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,6 +44,8 @@ param (
     [Security.SecureString] $ApiKey
 )
 
+$ErrorActionPreference = 'Stop'
+
 # Helper function to create a temporary directory as described at https://stackoverflow.com/a/34559554
 function New-TemporaryDirectory {
     $parent = [System.IO.Path]::GetTempPath()
@@ -51,7 +53,7 @@ function New-TemporaryDirectory {
     New-Item -ItemType Directory -Path (Join-Path $parent $name)
 }
 
-$packOptions = @('pack', '--no-build', '--no-restore')
+$packOptions = @('pack', '--no-build', '--no-restore', '--configuration', 'Release')
 # Determine additional pack options to tag versions
 if ($Production) { $packOptions += '/p:LocalVersion=false' }
 if ($PrivateVersionOwner -ne '') { $packOptions += "/p:PrivateVersionOwner=$PrivateVersionOwner" }

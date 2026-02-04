@@ -1,4 +1,4 @@
-# Copyright 2020 Connor Roehricht (connor.work)
+# Copyright 2025 Connor Erdmann (connor.work)
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ param (
                HelpMessage='NuGet API key for NuGet.org')]
     [Security.SecureString] $NuGetOrgApiKey
 )
+
+$ErrorActionPreference = 'Stop'
 
 $unstableCauses = @()
 if (!$Stable) { $unstableCauses += "Package failed stability test" }

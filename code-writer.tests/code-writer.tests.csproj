@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>Work.Connor.Delphi.CodeWriter.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>

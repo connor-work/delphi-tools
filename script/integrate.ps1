@@ -1,4 +1,4 @@
-# Copyright 2020 Connor Roehricht (connor.work)
+# Copyright 2025 Connor Erdmann (connor.work)
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,6 +48,8 @@ param (
     [Security.SecureString] $ApiKey
 )
 
+$ErrorActionPreference = 'Stop'
+
 $unstableCauses = @()
 
 # Helper function to signal an issue that renders the current version unstable
@@ -82,14 +84,14 @@ if ($LastExitCode -ne 0) { throw "dotnet restore failed" }
 else { Write-SuccessEvent "Restore successful" }
 
 Write-HostSection "Building .NET projects:"
-dotnet build --no-restore | Out-Host
+dotnet build --no-restore --configuration Release | Out-Host
 if ($LastExitCode -ne 0) { throw "dotnet build failed" }
 else { Write-SuccessEvent "Build successful" }
 
 if ($null -eq $KnownUnstableCauses)
 {
     Write-HostSection "Testing .NET projects:"
-    dotnet test --no-build --no-restore | Out-Host
+    dotnet test --no-build --no-restore --configuration Release | Out-Host
     if ($LastExitCode -ne 0) { New-UnstableCause "dotnet test failed" }
     else { Write-SuccessEvent "Tests successful" }
 

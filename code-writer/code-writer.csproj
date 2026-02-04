@@ -2,12 +2,12 @@
   <PropertyGroup>
     <CoreVersion>0.16.0</CoreVersion>
     <PrereleaseVersionSuffix></PrereleaseVersionSuffix>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>Work.Connor.Delphi.CodeWriter</RootNamespace>
     <Title>Delphi Source Code Writer</Title>
     <PackageId>Work.Connor.Delphi.CodeWriter</PackageId>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Copyright>Copyright 2020 Connor Roehricht (connor.work) and other contributors (see repository)</Copyright>
+    <Copyright>Copyright 2025 Connor Erdmann (connor.work) and other contributors (see repository)</Copyright>
     <Authors>connor.work</Authors>
     <Nullable>enable</Nullable>
     <IncludeSymbols>true</IncludeSymbols>
@@ -60,8 +60,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.13.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.23.0" PrivateAssets="All" />
+    <PackageReference Include="Google.Protobuf" Version="[3.33.1]" />
+    <PackageReference Include="Grpc.Tools" Version="[2.76.0]" PrivateAssets="All" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="8.12.0.21095">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

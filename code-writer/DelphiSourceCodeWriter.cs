@@ -13,6 +13,7 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 
+using Google.Protobuf;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -430,9 +431,10 @@ $@"{visibility.ToDeclarationPrefix()}const {trueConst.Identifier} = {trueConst.V
         public DelphiSourceCodeWriter Append(MethodInterfaceDeclaration method, Visibility visibility, IEnumerable<ConditionalAttributeAnnotation> annotations)
         {
             if (method.Comment != null) Append(method.Comment);
+            string finalDeclarationSuffix = method.IsFinal ? " final;" : "";
             foreach (ConditionalAttributeAnnotation annotation in annotations) Append(annotation);
             return AppendDelphiCode(
-$@"{visibility.ToDeclarationPrefix()}{method.Prototype.ToSourceCode()};{method.Binding.ToDeclarationSuffix()}
+$@"{visibility.ToDeclarationPrefix()}{method.Prototype.ToSourceCode()};{method.Binding.ToDeclarationSuffix()}{finalDeclarationSuffix}
 "
             );
         }

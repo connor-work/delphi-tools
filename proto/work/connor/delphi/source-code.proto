@@ -286,7 +286,8 @@ message MethodInterfaceDeclaration {
 
   Prototype prototype       = 1; /** Prototype (heading) of the method. Required. */
   Binding binding           = 2; /** Binding of the method. Required, explicit construction should avoid default initialization. */
-  AnnotationComment comment = 3; /** Annotation comment describing the method. Optional. */
+  bool isFinal              = 3; /** `true` if the method is final. */
+  AnnotationComment comment = 4; /** Annotation comment describing the method. Optional. */
 }
 
 /** *Prototype* of a Delphi routine.

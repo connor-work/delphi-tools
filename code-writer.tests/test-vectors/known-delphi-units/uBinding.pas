@@ -13,7 +13,7 @@ type
   ClassX = class(TAbstractBaseClass)
     procedure ProcedureX; virtual;
 
-    procedure VirtualProcedure; override;
+    procedure VirtualProcedure; override; final;
   end;
 
 implementation

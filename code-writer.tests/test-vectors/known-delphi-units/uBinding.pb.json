@@ -34,7 +34,8 @@
                                     "prototype": {
                                         "name": "VirtualProcedure"
                                     },
-                                    "binding": "OVERRIDE"
+                                    "binding": "OVERRIDE",
+                                    "isFinal": true
                                 }
                             }
                         }

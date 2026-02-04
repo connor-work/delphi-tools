@@ -2,7 +2,7 @@
   <PropertyGroup>
     <CoreVersion>0.17.0</CoreVersion>
     <PrereleaseVersionSuffix></PrereleaseVersionSuffix>
-    <SnapshotVersion>true</SnapshotVersion>
+    <SnapshotVersion>false</SnapshotVersion>
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>Work.Connor.Delphi.CodeWriter</RootNamespace>
     <Title>Delphi Source Code Writer</Title>

@@ -1,4 +1,4 @@
-/** Copyright 2020 Connor Roehricht (connor.work)
+/** Copyright 2025 Connor Erdmann (connor.work)
   * Copyright 2020 Sotax AG
   * 
   * Licensed under the Apache License, Version 2.0 (the "License");
@@ -128,12 +128,13 @@ message Implementation {
 
 /** Declaration within the interface section of a unit, that is available to clients.
   * > The interface section declares constants, types, variables, procedures, and functions [...]
-  * Declarations of constants, variables, routines and types other than classes and enumerated types are not supported by this schema.
+  * Declarations of constants, variables, routines and types other than classes, enumerated types and object interfaces are not supported by this schema.
   * See [The Interface Section](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Programs_and_Units_(Delphi)#The_Interface_Section) */
 message InterfaceDeclaration {
   oneof declaration {
-    ClassDeclaration classDeclaration = 1; /** Declaration of a class */
-    EnumDeclaration enumDeclaration   = 2; /** Declaration of an enumerated type */
+    ClassDeclaration classDeclaration                 = 1; /** Declaration of a class */
+    EnumDeclaration enumDeclaration                   = 2; /** Declaration of an enumerated type */
+    InterfaceTypeDeclaration interfaceTypeDeclaration = 3; /** Declaration of an object interface */
   } /** Specific declaration (polymorphic). Required. */
 }
 
@@ -470,6 +471,40 @@ message EnumValueDeclaration {
                                    * See [Enumerated Types with Explicitly Assigned Ordinality](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Simple_Types_(Delphi)#Enumerated_Types_with_Explicitly_Assigned_Ordinality). */
   } /** Oneof wrapper for `ordinality` field. Optional (may have no member present). */
   AnnotationComment comment = 3; /** Annotation comment describing the value. Optional. */
+}
+
+/** Declaration of an *object interface* (also called *interface* or *interface type*).
+  * > An object interface, or simply interface, defines methods that can be implemented by a class.
+  * See [Object Interfaces](https://docwiki.embarcadero.com/RADStudio/Athens/en/Object_Interfaces_(Delphi)). */
+message InterfaceTypeDeclaration {
+  string name                                                  = 1; /** Name of the interface (*interfaceName*). Required (non-empty). */
+  string ancestor                                              = 2; /** Name of the *ancestor* (*ancestorInterface*). Required (non-empty).
+                                                                      * > An interface, like a class, inherits all of its ancestors' methods. [...]
+                                                                      * > The declaration of an interface can specify an ancestor interface.
+                                                                      * See [IInterface and Inheritance](https://docwiki.embarcadero.com/RADStudio/Athens/en/Object_Interfaces_(Delphi)#IInterface_and_Inheritance). */
+  string guid                                                  = 3; /** GUID of the interface.
+                                                                      * > A GUID is a 16-byte binary value that uniquely identifies an interface.
+                                                                      * See [Interface Identification and GUIDs](https://docwiki.embarcadero.com/RADStudio/Athens/en/Object_Interfaces_(Delphi)#Interface_Identification_and_GUIDs).
+                                                                      * NOTE We might later replace this with a dedicated UUID type. */                                                                    
+  repeated InterfaceMemberDeclaration memberDeclarations       = 4; /** List of member declarations that are nested within the interface declaration (elements of *memberList*). */
+  
+  repeated ConditionalAttributeAnnotation attributeAnnotations = 5; /** Attribute annotations of the interface type.
+                                                                      * See [Annotating Types and Type Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Annotating_Types_and_Type_Members).
+                                                                      * The list contents can be controlled through conditional compilation. */
+  AnnotationComment comment                                    = 6; /** Annotation comment describing the class. Optional. */
+}
+
+/** Declaration of a *member* of an object interface.
+  * See [Object Interfaces](https://docwiki.embarcadero.com/RADStudio/Athens/en/Object_Interfaces_(Delphi)). */
+message InterfaceMemberDeclaration {
+  oneof declaration {
+    MethodInterfaceDeclaration methodDeclaration               = 1; /** Interface declaration of a method.
+                                                                      * `binding` must be `STATIC`. */
+    PropertyDeclaration propertyDeclaration                    = 2; /** Declaration of a property. */
+  } /** Specific member declaration (polymorphic). Required. */
+  repeated ConditionalAttributeAnnotation attributeAnnotations = 3; /** Attribute annotations of the member.
+                                                                      * See [Annotating Types and Type Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Annotating_Types_and_Type_Members).
+                                                                      * The list contents can be controlled through conditional compilation. */
 }
 
 /** Comment that annotates a source code element for documentation purposes.

@@ -291,6 +291,7 @@ $@"implementation
         {
             InterfaceDeclaration.DeclarationOneofCase.ClassDeclaration => Append(declaration.ClassDeclaration),
             InterfaceDeclaration.DeclarationOneofCase.EnumDeclaration => Append(declaration.EnumDeclaration),
+            InterfaceDeclaration.DeclarationOneofCase.InterfaceTypeDeclaration => Append(declaration.InterfaceTypeDeclaration),
             _ => throw new NotImplementedException()
         };
 
@@ -548,6 +549,51 @@ $@"
 );
 "
             ).Indent(-1);
+        }
+
+        /// <summary>
+        /// Appends Delphi source code for the declaration of an interface type.
+        /// </summary>
+        /// <param name="interface">The declaration of the interface type</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(InterfaceTypeDeclaration @interface)
+        {
+            AppendDelphiCode(
+$@"type
+"
+            );
+            Indent(1);
+            if (@interface.Comment != null) Append(@interface.Comment);
+            foreach (ConditionalAttributeAnnotation annotation in @interface.AttributeAnnotations) Append(annotation);
+            return AppendDelphiCode(
+$@"{@interface.Name} = interface({@interface.Ancestor})
+"
+            ).Indent(1)
+            .AppendDelphiCode(
+$@"['{{{@interface.Guid}}}']
+"
+            )
+            .AppendMultiplePadded(@interface.MemberDeclarations.PartiallyApply(declaration => Append(declaration)))
+            .Indent(-1)
+            .AppendDelphiCode(
+$@"end;
+"
+            ).Indent(-1);
+        }
+
+        /// <summary>
+        /// Appends Delphi source code for the declaration of a member of an interface.
+        /// </summary>
+        /// <param name="interfaceMember">The interface member's declaration</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(InterfaceMemberDeclaration interfaceMember)
+        {
+            return interfaceMember.DeclarationCase switch
+            {
+                InterfaceMemberDeclaration.DeclarationOneofCase.MethodDeclaration => Append(interfaceMember.MethodDeclaration, Visibility.Unspecified, interfaceMember.AttributeAnnotations),
+                InterfaceMemberDeclaration.DeclarationOneofCase.PropertyDeclaration => Append(interfaceMember.PropertyDeclaration, Visibility.Unspecified, interfaceMember.AttributeAnnotations),
+                _ => throw new NotImplementedException()
+            };
         }
 
         /// <summary>

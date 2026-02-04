@@ -1,0 +1,56 @@
+{
+    "heading": {
+        "unit": "uInterfaceMembers"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "interfaceTypeDeclaration": {
+                    "name": "InterfaceX",
+                    "ancestor": "IInterface",
+                    "guid": "6D5D8C25-12EC-42F8-BAFC-3BFAC05837E5",
+                    "memberDeclarations": [
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "GetX",
+                                    "type": "FUNCTION",
+                                    "returnType": "Integer"
+                                }
+                            }
+                        },
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "SetX",
+                                    "parameterList": [
+                                        {
+                                            "name": "ParamX",
+                                            "type": "Integer"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "propertyDeclaration": {
+                                "name": "PropertyX",
+                                "type": "Integer",
+                                "readSpecifier": "GetX",
+                                "writeSpecifier": "SetX",
+                                "comment": {
+                                    "commentLines": [
+                                        "<summary>",
+                                        "This is a property used for testing.",
+                                        "</summary>"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

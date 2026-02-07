@@ -314,7 +314,7 @@ $@"{visibility.ToDeclarationPrefix()}type
             string inheritanceSpecifierContent = string.Join(", ", @class.Interfaces.Prepend(@class.Ancestor));
             string inheritanceSpecifier = inheritanceSpecifierContent.Length != 0 ? $"({inheritanceSpecifierContent})" : "";
             return AppendDelphiCode(
-$@"{@class.Name} = class{inheritanceSpecifier}
+$@"{@class.Name} = class{@class.InheritanceModifier.ToDeclarationSuffix()}{inheritanceSpecifier}
 "
             ).Indent(1)
             .AppendMultiplePadded(@class.NestedDeclarations.PartiallyApply(declaration => Append(declaration)))

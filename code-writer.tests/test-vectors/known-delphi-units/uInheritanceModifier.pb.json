@@ -1,0 +1,23 @@
+{
+    "heading": {
+        "unit": "uInheritanceModifier"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "inheritanceModifier": "ABSTRACT"
+                }
+            },
+            {
+                "classDeclaration": {
+                    "name": "ClassY",
+                    "inheritanceModifier": "SEALED",
+                    "ancestor": "ClassX"
+                }
+            }
+        ]
+    },
+    "implementation": {}
+}

@@ -55,6 +55,30 @@ namespace Work.Connor.Delphi.CodeWriter
         public static string ToSourceCode(this UnitIdentifier identifier) => string.Join(".", identifier.Namespace.Append(identifier.Unit));
 
         /// <summary>
+        /// Constructs an optional Delphi keyword string for the inheritance modifier of a Delphi class.
+        /// </summary>
+        ///  <param name="inheritanceModifier">The inheritance modifier</param>
+        /// <returns>The Delphi keyword string, if one is required</returns>
+        internal static string? ToSourceCode(this ClassDeclaration.Types.InheritanceModifier inheritanceModifier) => inheritanceModifier switch
+        {
+            ClassDeclaration.Types.InheritanceModifier.Virtual => null,
+            ClassDeclaration.Types.InheritanceModifier.Abstract => "abstract",
+            ClassDeclaration.Types.InheritanceModifier.Sealed => "sealed",
+            _ => throw new NotImplementedException()
+        };
+
+        /// <summary>
+        /// Constructs a Delphi source code string that is appended to the class keyword in declaration of a Delphi class to specify its inheritance modifier.
+        /// </summary>
+        ///  <param name="inheritanceModifier">The inheritance modifier</param>
+        /// <returns>The Delphi source code string</returns>
+        internal static string ToDeclarationSuffix(this ClassDeclaration.Types.InheritanceModifier inheritanceModifier)
+        {
+            string? keyword = inheritanceModifier.ToSourceCode();
+            return keyword == null ? "" : $" {keyword}";
+        }
+
+        /// <summary>
         /// Constructs an optional Delphi visibility specifier string for declaring the visibility attribute of a Delphi class member.
         /// </summary>
         /// <param name="visibility">The visibility specifier</param>

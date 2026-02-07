@@ -146,19 +146,38 @@ message InterfaceDeclaration {
   * > A class, or class type, defines a structure consisting of fields, methods, and properties.
   * See [Classes and Objects](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)) */
 message ClassDeclaration {
+  /** *Inheritance modifier* of the class.
+    * Specifies whether the class can be instantiated (i.e. it is concrete) and whether it can be extended through inheritance.
+    * See [Class Types](https://docwiki.embarcadero.com/RADStudio/Athens/en/Classes_and_Objects_(Delphi)#Class_Types). */
+  enum InheritanceModifier {
+    VIRTUAL  = 0; /** The class is *virtual* (concrete and extendable through inheritance). */
+    ABSTRACT = 1; /** The class is *abstract* (not concrete).
+                    * It cannot be instantiated.
+                    * It is extendable through inheritance.
+                    * > An entire class can be declared abstract even if it does not contain any abstract virtual methods.*
+                    *
+                    * [//]: # (blockquote_separator)
+                    * > Note: Delphi allows instantiating a class declared abstract, for backward compatibility, but this feature should not be used anymore.
+                    * See [Class Types](https://docwiki.embarcadero.com/RADStudio/Athens/en/Classes_and_Objects_(Delphi)#Class_Types). */
+    SEALED   = 2; /** The class is *sealed*.
+                    * It can be instantiated.
+                    * > A sealed class cannot be extended through inheritance.
+                    * See [Class Types](https://docwiki.embarcadero.com/RADStudio/Athens/en/Classes_and_Objects_(Delphi)#Class_Types). */
+  }
   string name                                                   = 1; /** Name of the class (*className*). Required (non-empty). */
-  string ancestor                                               = 2; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
+  InheritanceModifier inheritanceModifier                       = 2; /** Inheritance modifier of the class. Required, explicit construction should avoid default initialization. */
+  string ancestor                                               = 3; /** Name of the *ancestor* (*ancestorClass*). Optional (empty if absent).
                                                                        * > When you declare a class, you can specify its immediate ancestor.
                                                                        * See [Inheritance and Scope](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Inheritance_and_Scope). */
-  repeated string interfaces                                    = 3; /** Names of the interfaces implemented by the class (*interface1, ..., interfaceN*).
+  repeated string interfaces                                    = 4; /** Names of the interfaces implemented by the class (*interface1, ..., interfaceN*).
                                                                       * > The interfaces implemented by a class are specified in the declaration of the class, after the name of the class ancestor.
                                                                       * See [Implementing Interfaces](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Implementing_Interfaces). */
-  repeated ClassDeclarationNestedDeclaration nestedDeclarations = 4; /** List of declarations that are nested within the class declarations (elements of *nestedTypeDeclaration*, *nestedConstDeclaration* and *memberList*). */
+  repeated ClassDeclarationNestedDeclaration nestedDeclarations = 5; /** List of declarations that are nested within the class declarations (elements of *nestedTypeDeclaration*, *nestedConstDeclaration* and *memberList*). */
   
-  repeated ConditionalAttributeAnnotation attributeAnnotations  = 5; /** Attribute annotations of the class type.
+  repeated ConditionalAttributeAnnotation attributeAnnotations  = 6; /** Attribute annotations of the class type.
                                                                        * See [Annotating Types and Type Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Annotating_Types_and_Type_Members).
                                                                        * The list contents can be controlled through conditional compilation. */
-  AnnotationComment comment                                     = 6; /** Annotation comment describing the class. Optional. */
+  AnnotationComment comment                                     = 7; /** Annotation comment describing the class. Optional. */
 }
 
 /** Declarations that is nested within a class declarations (elements of *nestedTypeDeclaration*, *nestedConstDeclaration* and *memberList*).

@@ -212,7 +212,7 @@ $@"interface
             {
                 if (reference is null) return null;
                 return () => AppendDelphiCode(
-$@"{reference.Unit.ToSourceCode()}{(last ? ";" : ",")}
+$@"{reference.ToSourceCode()}{(last ? ";" : ",")}
 "
                 , 1);
             }

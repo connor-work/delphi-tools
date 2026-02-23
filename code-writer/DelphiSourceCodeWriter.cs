@@ -361,7 +361,7 @@ $@"{annotation.ToSourceCode()}
             ClassDeclarationNestedDeclaration.DeclarationOneofCase.NestedTypeDeclaration => Append(declaration.NestedTypeDeclaration, declaration.Visibility),
             ClassDeclarationNestedDeclaration.DeclarationOneofCase.NestedConstDeclaration => Append(declaration.NestedConstDeclaration, declaration.Visibility),
             ClassDeclarationNestedDeclaration.DeclarationOneofCase.Member => Append(declaration.Member, declaration.Visibility),
-            _ => throw new NotImplementedException()
+            ClassDeclarationNestedDeclaration.DeclarationOneofCase.MethodResolutionClause => Append(declaration.MethodResolutionClause),
         };
 
         /// <summary>
@@ -472,6 +472,15 @@ $@"{visibility.ToDeclarationPrefix()}{property.ToSourceCode()};
 "
             );
         }
+
+        /// <summary>
+        /// Appends Delphi source code for a method resolution clause in a class declaration.
+        /// </summary>
+        /// <param name="clause">The method resolution clause</param>
+        /// <returns><c>this</c></returns>
+        public DelphiSourceCodeWriter Append(MethodResolutionClause clause) => AppendDelphiCode(
+$@"{clause.ToSourceCode()}
+");
 
         /// <summary>
         /// Appends Delphi source code for a declaration that appears in an implementation section.

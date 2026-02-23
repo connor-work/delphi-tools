@@ -1,0 +1,67 @@
+{
+    "heading": {
+        "unit": "uMethodResolutionClause"
+    },
+    "interface": {
+        "declarations": [
+            {
+                "interfaceTypeDeclaration": {
+                    "name": "InterfaceX",
+                    "ancestor": "IInterface",
+                    "guid": "6D5D8C25-12EC-42F8-BAFC-3BFAC05837E5",
+                    "memberDeclarations": [
+                        {
+                            "methodDeclaration": {
+                                "prototype": {
+                                    "name": "ProcedureX",
+                                    "type": "PROCEDURE"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "classDeclaration": {
+                    "name": "ClassX",
+                    "ancestor": "TInterfacedObject",
+                    "interfaces": [
+                        "InterfaceX"
+                    ],
+                    "nestedDeclarations": [
+                        {
+                            "member": {
+                                "methodDeclaration": {
+                                    "prototype": {
+                                        "name": "ProcedureX2",
+                                        "type": "PROCEDURE"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "methodResolutionClause": {
+                                "routineType": "PROCEDURE",
+                                "interface": "InterfaceX",
+                                "interfaceMethod": "ProcedureX",
+                                "implementingMethod": "ProcedureX2"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "implementation": {
+        "declarations": [
+            {
+                "methodDeclaration": {
+                    "class": "ClassX",
+                    "prototype": {
+                        "name": "ProcedureX2"
+                    }
+                }
+            }
+        ]
+    }
+}

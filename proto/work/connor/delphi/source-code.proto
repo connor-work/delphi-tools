@@ -191,15 +191,19 @@ message ClassDeclarationNestedDeclaration {
                                * Required, explicit construction should avoid default initialization.
                                * See [Visibility of Class Members](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Visibility_of_Class_Members). */
   oneof declaration {
-    NestedTypeDeclaration nestedTypeDeclaration = 2; /** *Nested type* (element of *nestedTypeDeclaration*) that is declared within the class (namespacing mechanism).
-                                                       * > [Nested types] present a way to keep conceptually related types together, and to avoid name collisions.
-                                                       * See [Nested Type Declarations](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Nested_Type_Declarations). */
-    ConstDeclaration nestedConstDeclaration     = 3; /** *Nested constants* (element of *nestedConstDeclaration*) that is declared within the class (namespacing mechanism).
-                                                       * > Constants can be declared in class types in the same manner as nested type sections.
-                                                       * See [Nested Constants](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Nested_Type_Declarations#Nested_Constants). */
-    ClassMemberDeclaration member               = 4; /** Declared member of the class (element of *memberList*).
-                                                       * > The fields, methods, and properties of a class are called its components or members.
-                                                       * See [Class Types](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Class_Types). */
+    NestedTypeDeclaration nestedTypeDeclaration   = 2; /** *Nested type* (element of *nestedTypeDeclaration*) that is declared within the class (namespacing mechanism).
+                                                         * > [Nested types] present a way to keep conceptually related types together, and to avoid name collisions.
+                                                         * See [Nested Type Declarations](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Nested_Type_Declarations). */
+    ConstDeclaration nestedConstDeclaration       = 3; /** *Nested constants* (element of *nestedConstDeclaration*) that is declared within the class (namespacing mechanism).
+                                                         * > Constants can be declared in class types in the same manner as nested type sections.
+                                                         * See [Nested Constants](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Nested_Type_Declarations#Nested_Constants). */
+    ClassMemberDeclaration member                 = 4; /** Declared member of the class (element of *memberList*).
+                                                         * > The fields, methods, and properties of a class are called its components or members.
+                                                         * See [Class Types](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)#Class_Types). */
+    MethodResolutionClause methodResolutionClause = 5; /** *Method resolution clause* that is included in the class declaration.
+                                                         * > You can override the default name-based mappings by including method resolution clauses in a class declaration.
+                                                         * If present, `visibility` must be `PUBLIC`.
+                                                         * See [Method Resolution Clause](https://docwiki.embarcadero.com/RADStudio/Athens/en/Implementing_Interfaces#Method_Resolution_Clause). */
   } /** Specific declaration (polymorphic). Required. */
 }
 
@@ -422,6 +426,21 @@ message AttributeAnnotation {
                           * This schema does not model the internal structure of the instantiation.
                           * Required (non-empty).
                           * See [General Syntax](http://docwiki.embarcadero.com/RADStudio/Sydney/en/Annotating_Types_and_Type_Members#General_Syntax). */
+}
+
+/** *Method resolution clause* that implements an interface method in a class.
+  * > You can override the default name-based mappings by including method resolution clauses in a class declaration.
+  * See [Method Resolution Clause](https://docwiki.embarcadero.com/RADStudio/Athens/en/Implementing_Interfaces#Method_Resolution_Clause). */
+message MethodResolutionClause {
+  Prototype.Type routineType = 1; /** Type of routine.
+                                    * Must be `PROCEDURE` or `FUNCTION`.
+                                    * Required, explicit construction should avoid default initialization. */ 
+  string interface           = 2; /** Name of the interface that contains the method. Required (non-empty). */
+  string interfaceMethod     = 3; /** Name of the interface method that is implemented by the clause. Required (non-empty). */
+  string implementingMethod  = 4; /** Name of the method that implements the interface method.
+                                    * > [...] where implementingMethod is a method declared in the class or one of its ancestors.
+                                    * > The implementingMethod can be a method declared later in the class declaration, but cannot be a private method of an ancestor class declared in another module.
+                                    * Required (non-empty). */
 }
 
 /** Declaration with the implementation section of a unit.

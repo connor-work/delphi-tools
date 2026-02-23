@@ -113,20 +113,6 @@ namespace Work.Connor.Delphi.CodeWriter
         }
 
         /// <summary>
-        /// Constructs a Delphi keyword string for declaring the specific type of a Delphi procedure prototype.
-        /// </summary>
-        /// <param name="type">The prototype type</param>
-        /// <returns>The Delphi keyword string</returns>
-        internal static string ToSourceCode(this Prototype.Types.Type type) => type switch
-        {
-            Prototype.Types.Type.Procedure => "procedure",
-            Prototype.Types.Type.Constructor => "constructor",
-            Prototype.Types.Type.Destructor => "destructor",
-            Prototype.Types.Type.Function => "function",
-            _ => throw new NotImplementedException()
-        };
-
-        /// <summary>
         /// Constructs an optional Delphi directive string for declaring the binding of a Delphi method.
         /// </summary>
         /// <param name="binding">The type of method binding</param>

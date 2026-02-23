@@ -24,7 +24,7 @@ public sealed partial class UnitIdentifier
     /// <summary>
     /// Regular expression for a Delphi identifier string that represents a <see cref="UnitIdentifier"/>.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The regular expression</returns>
     [GeneratedRegex("^(?:(?<namespaceElement>[A-Za-z][A-Za-z0-9]*)\\.)*(?<unit>[A-Za-z][A-Za-z0-9]*)$")]
     private static partial Regex UnitIdentifierRegex();
 
@@ -48,9 +48,8 @@ public sealed partial class UnitIdentifier
     public static implicit operator UnitIdentifier?(string? sourceCode) => sourceCode is null ? null : new(sourceCode);
 
     /// <summary>
-    /// Constructs a Delphi identifier string for a Delphi unit identifier.
+    /// Constructs a Delphi identifier string for this Delphi unit identifier.
     /// </summary>
-    /// <param name="name">The unit identifier, either a generic name or fully qualified name of the unit</param>
     /// <returns>The Delphi identifier string</returns>
     public string ToSourceCode() => string.Join(".", Namespace.Append(Unit));
 }

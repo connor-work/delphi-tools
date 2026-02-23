@@ -48,13 +48,6 @@ namespace Work.Connor.Delphi.CodeWriter
         public static string ToSourceCode(this Unit unit) => new DelphiSourceCodeWriter().Append(unit).ToString();
 
         /// <summary>
-        /// Constructs a Delphi identifier string for a Delphi unit identifier.
-        /// </summary>
-        /// <param name="name">The unit identifier, either a generic name or fully qualified name of the unit</param>
-        /// <returns>The Delphi identifier string</returns>
-        public static string ToSourceCode(this UnitIdentifier identifier) => string.Join(".", identifier.Namespace.Append(identifier.Unit));
-
-        /// <summary>
         /// Constructs an optional Delphi keyword string for the inheritance modifier of a Delphi class.
         /// </summary>
         ///  <param name="inheritanceModifier">The inheritance modifier</param>
